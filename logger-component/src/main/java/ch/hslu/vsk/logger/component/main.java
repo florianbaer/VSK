@@ -1,10 +1,14 @@
 package ch.hslu.vsk.logger.component;
 
+import ch.hslu.vsk.logger.api.LogLevel;
+
 import java.io.IOException;
 
 public class main {
 
     public static void main(String[] args) {
-        new LoggerComponent().debug("123");
+        new LoggerComponent().debug("test");
+        System.out.println(LogLevel.DEBUG.toString());
+        System.out.println(new IOException().getStackTrace().toString());
     }
 }

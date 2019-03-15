@@ -13,86 +13,95 @@ import java.util.Date;
  */
 public class LoggerComponent implements Logger {
 
-    private LogLevel logLevel;
+    private LogLevel logLevel; //Default Value = DEBUG
 
     //needs adjustment when implementing LoggerSetup interface
     public LoggerComponent() {
-        this.logLevel = LogLevel.OFF;
+        this.logLevel = LogLevel.DEBUG;
     }
 
     @Override
     public void debug(String s) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s));
+        if (isLogLevelHighEnough(LogLevel.DEBUG)) {
+            printInTerminal(getLogOutputPattern(LogLevel.DEBUG.toString(), s));
+        }
 
     }
 
     @Override
     public void debug(String s, Throwable throwable) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s, throwable));
+        if (isLogLevelHighEnough(LogLevel.DEBUG)) {
+            printInTerminal(getLogOutputPattern(LogLevel.DEBUG.toString(), s, throwable));
+        }
     }
 
     @Override
     public void info(String s) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s));
+        if (isLogLevelHighEnough(LogLevel.INFO)) {
+            printInTerminal(getLogOutputPattern(LogLevel.INFO.toString(), s));
+        }
 
     }
 
     @Override
     public void info(String s, Throwable throwable) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s, throwable));
+        if (isLogLevelHighEnough(LogLevel.INFO)) {
+            printInTerminal(getLogOutputPattern(LogLevel.INFO.toString(), s, throwable));
+        }
 
     }
 
     @Override
     public void warning(String s) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s));
+        if (isLogLevelHighEnough(LogLevel.WARNING)) {
+            printInTerminal(getLogOutputPattern(LogLevel.WARNING.toString(), s));
+        }
 
     }
 
     @Override
     public void warning(String s, Throwable throwable) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s, throwable));
+        if (isLogLevelHighEnough(LogLevel.WARNING)) {
+            printInTerminal(getLogOutputPattern(LogLevel.WARNING.toString(), s));
+        }
     }
 
     @Override
     public void error(String s) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s));
+        if (isLogLevelHighEnough(LogLevel.ERROR)) {
+            printInTerminal(getLogOutputPattern(LogLevel.ERROR.toString(), s));
+        }
 
     }
 
     @Override
     public void error(String s, Throwable throwable) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s, throwable));
+        if (isLogLevelHighEnough(LogLevel.ERROR)) {
+            printInTerminal(getLogOutputPattern(LogLevel.ERROR.toString(), s, throwable));
+        }
 
     }
 
     @Override
     public void critical(String s) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s));
+        if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
+            printInTerminal(getLogOutputPattern(LogLevel.CRITICAL.toString(), s));
+        }
 
     }
 
     @Override
     public void critical(String s, Throwable throwable) {
-        printInTerminal(getLogPattern((new Object() {
-        }.getClass().getEnclosingMethod().getName()), s, throwable));
+        if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
+            printInTerminal(getLogOutputPattern(LogLevel.CRITICAL.toString(), s, throwable));
+        }
     }
 
     @Override
     public void log(LogLevel logLevel, String s) {
         switch (logLevel) {
             case OFF:
-                //not sure what is meant with OFF
-                //OFF should probably not be available here
+                //TODO: Was ist der Sinn dieses Cases, wenn ja bei OFF nichts passieren sollte?
                 break;
             case INFO:
                 this.info(s);
@@ -117,8 +126,7 @@ public class LoggerComponent implements Logger {
     public void log(LogLevel logLevel, String s, Throwable throwable) {
         switch (logLevel) {
             case OFF:
-                //not sure what is meant with OFF
-                //OFF should probably not be available here
+                //TODO: Was ist der Sinn dieses Cases, wenn ja bei OFF nichts passieren sollte?
                 break;
             case INFO:
                 this.info(s, throwable);
@@ -153,46 +161,47 @@ public class LoggerComponent implements Logger {
      *
      * @param messageToPrint
      */
-    private void printInTerminal(String messageToPrint) {
-        System.out.println(messageToPrint);
+    private void printInTerminal(final String messageToPrint) {
+        System.out.print(messageToPrint);
     }
 
-    private String getCurrentDateAndTime() {
+    public String getCurrentDateAndTime() { //public because its used in tests
         SimpleDateFormat swissFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date currentDate = new Date();
-        String now = swissFormat.format(currentDate);
-        return now;
+        return swissFormat.format(currentDate);
     }
 
-    private int getLineNumberOfLogCaller() {
-        return new Exception().getStackTrace()[3].getLineNumber(); //3 --> depends on how many method calls are between the initial Log.deb() call and this line here
-    }
 
-    private String getLogPattern(String loggertyp, String message) {
-        return getCurrentDateAndTime() + " " + loggertyp.toUpperCase() + " " + this.getClass().getSimpleName() + ":" + getLineNumberOfLogCaller() + " " + message;
+    private String getLogOutputPattern(final String loggertyp, final String message) {
+        return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message;
     }
 
     //TODO Choose how to output the throwable object in the log message
-    private String getLogPattern(String loggertyp, String message, Throwable throwable) {
-        return getCurrentDateAndTime() + " " + loggertyp.toUpperCase() + " " + this.getClass().getSimpleName() + ":" + getLineNumberOfLogCaller() + " " + message + " " + throwable.toString();
+    private String getLogOutputPattern(final String loggertyp, final String message, final Throwable throwable) {
+        return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message + " " + throwable.toString();
     }
 
-    private int getLogLevelValue(LogLevel logLevel) {
+    private boolean isLogLevelHighEnough(final LogLevel logLevelOfMethod) {
+        return getLogLevelValue(logLevelOfMethod) >= getLogLevelValue(this.logLevel);
+    }
+
+    private int getLogLevelValue(final LogLevel logLevel) {
         switch (logLevel) {
-            case OFF:
+
+            case DEBUG:
                 return 0;
             case INFO:
                 return 1;
-            case DEBUG:
-                return 2;
             case WARNING:
-                return 3;
+                return 2;
             case ERROR:
-                return 4;
+                return 3;
             case CRITICAL:
+                return 4;
+            case OFF:
                 return 5;
             default:
-                return 0;
+                return -1;
         }
     }
 
