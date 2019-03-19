@@ -62,7 +62,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void warning(String s, Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
-            printInTerminal(getLogOutputPattern(LogLevel.WARNING.toString(), s));
+            printInTerminal(getLogOutputPattern(LogLevel.WARNING.toString(), s, throwable));
         }
     }
 
@@ -176,7 +176,7 @@ public class LoggerComponent implements Logger {
         return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message;
     }
 
-    //TODO Choose how to output the throwable object in the log message
+    //TODO Choose how to output the throwable object in the log message --> .toString() für den Moment.
     private String getLogOutputPattern(final String loggertyp, final String message, final Throwable throwable) {
         return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message + " " + throwable.toString();
     }

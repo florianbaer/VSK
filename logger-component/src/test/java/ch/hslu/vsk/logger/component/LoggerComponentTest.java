@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoggerComponentTest {
 
     private LoggerComponent logger;
+    private Throwable throwable;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -21,6 +22,12 @@ class LoggerComponentTest {
     @BeforeEach
     void setUpLogger() {
         logger = new LoggerComponent();
+    }
+
+    @BeforeEach
+    void setUpThrowable(){
+        this.throwable = new Throwable();
+
     }
 
     @BeforeEach
@@ -44,6 +51,8 @@ class LoggerComponentTest {
 
     @Test
     void testDebugThrowable() {
+        logger.debug("test", throwable);
+        assertEquals(logger.getCurrentDateAndTime() + " DEBUG LoggerComponent test " + throwable.toString(), outContent.toString());
     }
 
     @Test
@@ -54,6 +63,8 @@ class LoggerComponentTest {
 
     @Test
     void testInfoThrowable() {
+        logger.info("test", throwable);
+        assertEquals(logger.getCurrentDateAndTime() + " INFO LoggerComponent test " + throwable.toString(), outContent.toString());
     }
 
     @Test
@@ -64,6 +75,8 @@ class LoggerComponentTest {
 
     @Test
     void testWarningThrowable() {
+        logger.warning("test", throwable);
+        assertEquals(logger.getCurrentDateAndTime() + " WARNING LoggerComponent test " + throwable.toString(), outContent.toString());
     }
 
     @Test
@@ -74,6 +87,8 @@ class LoggerComponentTest {
 
     @Test
     void testErrorThrowable() {
+        logger.error("test", throwable);
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test " + throwable.toString(), outContent.toString());
     }
 
     @Test
@@ -84,6 +99,8 @@ class LoggerComponentTest {
 
     @Test
     void testCriticalThrowable() {
+        logger.critical("test", throwable);
+        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test " + throwable.toString(), outContent.toString());
     }
 
     @Test
@@ -93,7 +110,9 @@ class LoggerComponentTest {
     }
 
     @Test
-    void testLogThrowable() {
+    void testLogErrorThrowable() {
+        logger.log(LogLevel.ERROR, "test", throwable);
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test " + throwable.toString(), outContent.toString());
     }
 
     @Test
