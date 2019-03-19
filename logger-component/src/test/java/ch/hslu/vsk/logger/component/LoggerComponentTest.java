@@ -1,9 +1,13 @@
 package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
+import ch.hslu.vsk.logger.api.Logger;
+import ch.hslu.vsk.logger.api.LoggerSetupFactory;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -21,7 +25,7 @@ class LoggerComponentTest {
 
     @BeforeEach
     void setUpLogger() {
-        logger = new LoggerComponent();
+        logger =   (LoggerComponent) LoggerSetupFactory.createSetup().build();
     }
 
     @BeforeEach
