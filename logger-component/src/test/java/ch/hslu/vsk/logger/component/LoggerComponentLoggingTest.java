@@ -1,7 +1,6 @@
 package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
-import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +13,11 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoggerComponentTest {
+/**
+ * This test class focuses on Testing the logging-aspects of the LoggerComponent
+ */
+
+class LoggerComponentLoggingTest {
 
     private LoggerComponent logger;
     private Throwable throwable;

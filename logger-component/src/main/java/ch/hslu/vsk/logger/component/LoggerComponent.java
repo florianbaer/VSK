@@ -4,8 +4,6 @@ package ch.hslu.vsk.logger.component;
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetup;
-import ch.hslu.vsk.logger.api.LoggerSetupFactory;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,14 +13,16 @@ import java.util.Date;
  */
 public class LoggerComponent implements Logger, LoggerSetup{
 
-    private LogLevel logLevel; //Default Value = DEBUG
+    private LogLevel logLevel;
     private String connectionString;
     private String identifier;
     private String className;
-    
-    //needs adjustment when implementing LoggerSetup interface
+
     public LoggerComponent() {
-    	logLevel = logLevel == null ? LogLevel.DEBUG :logLevel;
+        this.logLevel = LogLevel.DEBUG;
+        this.connectionString = "";
+        this.identifier = "";
+        this.className = "";
     }
 
 	@Override
@@ -52,8 +52,7 @@ public class LoggerComponent implements Logger, LoggerSetup{
 
 	@Override
 	public Logger build() {
-		Logger log = new LoggerComponent();
-		return log;
+		return this;
 	}
     
     @Override
@@ -192,6 +191,15 @@ public class LoggerComponent implements Logger, LoggerSetup{
         return this.logLevel;
     }
 
+    public String getConnectionString(){return this.connectionString;}
+
+    public String getIdentifier(){return this.identifier;}
+
+    public String getClassName(){return this.className;}
+
+
+    // All following Methods are just a workaround because the server side is missing at the moment
+
     /**
      * method which is used as long as the logger-server is not implemented
      *
@@ -218,26 +226,6 @@ public class LoggerComponent implements Logger, LoggerSetup{
     }
 
     private boolean isLogLevelHighEnough(final LogLevel logLevelOfMethod) {
-        return getLogLevelValue(logLevelOfMethod) >= getLogLevelValue(this.logLevel);
-    }
-
-    private int getLogLevelValue(final LogLevel logLevel) {
-        switch (logLevel) {
-
-            case DEBUG:
-                return 0;
-            case INFO:
-                return 1;
-            case WARNING:
-                return 2;
-            case ERROR:
-                return 3;
-            case CRITICAL:
-                return 4;
-            case OFF:
-                return 5;
-            default:
-                return -1;
-        }
+        return logLevelOfMethod.ordinal() >= (this.logLevel).ordinal();
     }
 }
