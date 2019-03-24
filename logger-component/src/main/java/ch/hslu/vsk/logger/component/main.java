@@ -1,6 +1,8 @@
 package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
+import ch.hslu.vsk.logger.api.Logger;
+import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 
 import java.io.IOException;
 
