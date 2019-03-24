@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Matthias Egli, David Gut, Florian Bär, Dennis Dekker
  * @version 0.1
  */
-public class LoggerComponent implements Logger, LoggerSetup{
+public class LoggerComponent implements Logger, LoggerSetup {
 
     private LogLevel logLevel;
     private String connectionString;
@@ -25,36 +25,41 @@ public class LoggerComponent implements Logger, LoggerSetup{
         this.className = "";
     }
 
-	@Override
-	public LoggerSetup withConnectionString(String connectionString) {
-		this.connectionString = connectionString;
-		return this;
-	}
+    @Override
+    public LoggerSetup withConnectionString(String connectionString) {
+        this.connectionString = connectionString;
+        return this;
+    }
 
-	@Override
-	public LoggerSetup withMinLogLevel(LogLevel logLevel) {
-		this.logLevel = logLevel;
-		return this;
-	}
+    @Override
+    public LoggerSetup withMinLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel;
+        return this;
+    }
 
-	@Override
-	public LoggerSetup withIdentifier(String identifier) {
-		this.identifier = identifier;	
-		return this;
-	}
+    @Override
+    public LoggerSetup withIdentifier(String identifier) {
+        this.identifier = identifier;
+        return this;
+    }
 
-	@Override
-	public LoggerSetup withClass(Class clazz) {
-		this.className = clazz.getName();
-		return this;
-	}
-	
+    @Override
+    public LoggerSetup withClass(Class clazz) {
+        this.className = clazz.getName();
+        return this;
+    }
 
 	@Override
 	public Logger build() {
 		return this;
 	}
     
+    @Override
+    public Logger build() {
+        Logger log = new LoggerComponent();
+        return log;
+    }
+
     @Override
     public void debug(String s) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
@@ -136,7 +141,6 @@ public class LoggerComponent implements Logger, LoggerSetup{
     public void log(LogLevel logLevel, String s) {
         switch (logLevel) {
             case OFF:
-                //TODO: Was ist der Sinn dieses Cases, wenn ja bei OFF nichts passieren sollte?
                 break;
             case INFO:
                 this.info(s);
@@ -161,7 +165,6 @@ public class LoggerComponent implements Logger, LoggerSetup{
     public void log(LogLevel logLevel, String s, Throwable throwable) {
         switch (logLevel) {
             case OFF:
-                //TODO: Was ist der Sinn dieses Cases, wenn ja bei OFF nichts passieren sollte?
                 break;
             case INFO:
                 this.info(s, throwable);
