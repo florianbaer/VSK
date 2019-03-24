@@ -53,12 +53,6 @@ public class LoggerComponent implements Logger, LoggerSetup {
 	public Logger build() {
 		return this;
 	}
-    
-    @Override
-    public Logger build() {
-        Logger log = new LoggerComponent();
-        return log;
-    }
 
     @Override
     public void debug(String s) {
