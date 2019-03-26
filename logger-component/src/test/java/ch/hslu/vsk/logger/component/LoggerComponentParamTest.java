@@ -21,6 +21,6 @@ public class LoggerComponentParamTest {
         final LoggerComponent component = (LoggerComponent) LoggerSetupFactory.createSetup().withMinLogLevel(LogLevel.WARNING).
                 withConnectionString("localhost").withClass(LoggerComponentParamTest.class).withIdentifier("test").build();
         assertArrayEquals(new String[]{LogLevel.WARNING.name(), "localhost", LoggerComponentParamTest.class.getName(), "test"},
-        new String[]{component.getMinLogLevel().name(), component.getConnectionString(), component.getClassName(), component.getIdentifier()});
+        new String[]{component.getMinLogLevel().name(), component.getConnectionString(), component.getLoggingClass().getName(), component.getIdentifier()});
     }
 }
