@@ -3,56 +3,30 @@ package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
-import ch.hslu.vsk.logger.api.LoggerSetup;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * Represents a Logger which can be used to log messages with different log-levels. To obtain a instance
+ * of this class, the LoggerComponentSetup-class should be used.
+ *
  * @author Matthias Egli, David Gut, Florian Bär, Dennis Dekker
- * @version 0.1
+ * @version 0.5.0
  */
-public class LoggerComponent implements Logger, LoggerSetup {
+public class LoggerComponent implements Logger {
 
     private LogLevel logLevel;
     private String connectionString;
     private String identifier;
-    private String className;
+    private Class loggerClass;
 
-    public LoggerComponent() {
-        this.logLevel = LogLevel.DEBUG;
-        this.connectionString = "";
-        this.identifier = "";
-        this.className = "";
-    }
-
-    @Override
-    public LoggerSetup withConnectionString(String connectionString) {
+    public LoggerComponent(LogLevel level, String connectionString, String identifier, Class clazz) {
+        this.logLevel = level;
         this.connectionString = connectionString;
-        return this;
-    }
-
-    @Override
-    public LoggerSetup withMinLogLevel(LogLevel logLevel) {
-        this.logLevel = logLevel;
-        return this;
-    }
-
-    @Override
-    public LoggerSetup withIdentifier(String identifier) {
         this.identifier = identifier;
-        return this;
+        this.loggerClass = clazz;
     }
-
-    @Override
-    public LoggerSetup withClass(Class clazz) {
-        this.className = clazz.getName();
-        return this;
-    }
-
-	@Override
-	public Logger build() {
-		return this;
-	}
 
     @Override
     public void debug(String s) {
@@ -192,7 +166,7 @@ public class LoggerComponent implements Logger, LoggerSetup {
 
     public String getIdentifier(){return this.identifier;}
 
-    public String getClassName(){return this.className;}
+    public Class getLoggingClass(){return this.loggerClass;}
 
 
     // All following Methods are just a workaround because the server side is missing at the moment
