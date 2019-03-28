@@ -15,6 +15,6 @@
  */
 
 /**
- * VSK Logger Server.
+ * VSK logger Server.
  */
 package ch.hslu.vsk.logger.server;
