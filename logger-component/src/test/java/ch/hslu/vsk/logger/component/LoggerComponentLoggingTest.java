@@ -54,73 +54,73 @@ class LoggerComponentLoggingTest {
     @Test
     void testDebug() {
         logger.debug("test");
-        assertEquals(logger.getCurrentDateAndTime() + " DEBUG LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " DEBUG LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testDebugThrowable() {
         logger.debug("test", throwable);
-        assertEquals(logger.getCurrentDateAndTime() + " DEBUG LoggerComponent test " + throwable.toString(), outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " DEBUG LoggerComponent test " + throwable.toString(), outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testInfo() {
         logger.info("test");
-        assertEquals(logger.getCurrentDateAndTime() + " INFO LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " INFO LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testInfoThrowable() {
         logger.info("test", throwable);
-        assertEquals(logger.getCurrentDateAndTime() + " INFO LoggerComponent test " + throwable.toString(), outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " INFO LoggerComponent test " + throwable.toString(), outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testWarning() {
         logger.warning("test");
-        assertEquals(logger.getCurrentDateAndTime() + " WARNING LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " WARNING LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testWarningThrowable() {
         logger.warning("test", throwable);
-        assertEquals(logger.getCurrentDateAndTime() + " WARNING LoggerComponent test " + throwable.toString(), outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " WARNING LoggerComponent test " + throwable.toString(), outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testError() {
         logger.error("test");
-        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testErrorThrowable() {
         logger.error("test", throwable);
-        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test " + throwable.toString(), outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test " + throwable.toString(), outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testCritical() {
         logger.critical("test");
-        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testCriticalThrowable() {
         logger.critical("test", throwable);
-        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test " + throwable.toString(), outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test " + throwable.toString(), outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testLogError() {
         logger.log(LogLevel.ERROR, "test");
-        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testLogErrorThrowable() {
         logger.log(LogLevel.ERROR, "test", throwable);
-        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test " + throwable.toString(), outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test " + throwable.toString(), outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
@@ -140,14 +140,14 @@ class LoggerComponentLoggingTest {
     void testLogLevelHighEnough() {
         logger.setMinLogLevel(LogLevel.ERROR);
         logger.critical("test");
-        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
     void testLogLevelEqual() {
         logger.setMinLogLevel(LogLevel.ERROR);
         logger.error("test");
-        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test", outContent.toString());
+        assertEquals(logger.getCurrentDateAndTime() + " ERROR LoggerComponent test", outContent.toString().replaceAll("\n", ""));
     }
 
     @Test
