@@ -7,25 +7,36 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
- * BasicMessage.
+ * BasicMessage-Klasse. Eine Basic-Message besteht aus einem (optionalen) Identifier und einer
+ * Argumenten-Liste. Beide werden als Strings dargestellt.
  */
 public abstract class AbstractBasicMessage {
 
     private String messageId;
-    private final List<Object> argList = new ArrayList<>();
+    private Vector<String> argList;
 
     /**
      * Definiert das Ende der Argumentenliste
      */
-    protected static final String END_TOKEN = "END";
+    protected static final String END_TOKEN = ";END";
 
     /**
-     * Default-Konstruktor. Er definiert den Nachrichten Typ.
+     * Default-Konstruktor ohne initiale messageId
      */
     public AbstractBasicMessage() {
-        this.defineMessageType();
+        this.argList = new Vector<>();
+    }
+
+    /**
+     * Konstruktor mit initialer messageId
+     * @param id id of the message
+     */
+    public AbstractBasicMessage(String id){
+        this.messageId = id;
+        this.argList = new Vector<>();
     }
 
     /**
@@ -42,7 +53,7 @@ public abstract class AbstractBasicMessage {
      *
      * @param arg Argumentobjekt.
      */
-    public final void addArg(final Object arg) {
+    public final void addArg(final String arg) {
         this.argList.add(arg);
     }
 
@@ -60,51 +71,8 @@ public abstract class AbstractBasicMessage {
      *
      * @return Argumentliste.
      */
-    public final List<Object> getArgList() {
+    public final Vector<String> getArgList() {
         return this.argList;
-    }
-
-    /**
-     * Alle Argumente aus dem Datenstrom auslesen und in die Argumentenliste
-     * einfügen. Das Ende der Argumente definiert das END_TOKEN.
-     *
-     * @param ins InputStream.
-     * @return Argumente gelesen = true.
-     */
-    public boolean readArgs(final InputStream ins) {
-        final DataInputStream din = new DataInputStream(ins);
-        try {
-            String token = din.readUTF();
-            while (token.compareTo(END_TOKEN) != 0) {
-                addArg(token);
-                token = din.readUTF();
-            }
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Alle Argumente in den angegeben Datenstrom schreiben. Am Ende wird das
-     * definierte Symbol END_TOKEN geschrieben.
-     *
-     * @param outs OutputStream.
-     * @return Argumente fehlerfrei geschrieben = true.
-     */
-    public boolean writeArgs(final OutputStream outs) {
-        final int len = argList.size();
-        final DataOutputStream dout = new DataOutputStream(outs);
-        try {
-            for (int i = 0; i < len; i++) {
-                final String arg = (String) argList.get(i);
-                dout.writeUTF(arg);
-            }
-            dout.writeUTF(END_TOKEN);
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -118,10 +86,5 @@ public abstract class AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     public abstract boolean operate();
-
-    /**
-     * Definition des Nachrichten Typs.
-     */
-    protected abstract void defineMessageType();
 }
 

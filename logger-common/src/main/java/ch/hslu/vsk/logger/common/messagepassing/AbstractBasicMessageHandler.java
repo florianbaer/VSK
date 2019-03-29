@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,7 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
     private static AbstractBasicMessageHandler current;
     private final InputStream msgIn;
     private final OutputStream msgOut;
+    private static final String END_TOKEN = ";END";
 
     /**
      * Konstruktor.
@@ -58,24 +60,47 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
      */
     public final AbstractBasicMessage readMsg() throws IOException {
         final DataInputStream din = new DataInputStream(msgIn);
-        final String token = din.readUTF();
+        String token = din.readUTF();
         final AbstractBasicMessage msg = buildMessage(token);
-        if (msg != null && msg.readArgs(this.msgIn)) {
-            return msg;
+
+        if (msg != null) {
+            boolean endOfMessage = false;
+
+            while (!endOfMessage){
+                token = din.readUTF();
+
+                if(token.compareTo(END_TOKEN) == 0){
+                    endOfMessage = true;
+                } else {
+                    msg.addArg(token);
+                }
+            }
         }
-        return null;
+        return msg;
     }
 
     /**
-     * Sendet das Message Objekt an den Nachrichtenempfänger.
+     * TODO
      *
      * @param msg Message.
      * @throws IOException IO-Fehler.
      */
     public final void sendMsg(final AbstractBasicMessage msg) throws IOException {
         final DataOutputStream dataOutputStream = new DataOutputStream(msgOut);
+
         dataOutputStream.writeUTF(msg.getMessageId());
-        msg.writeArgs(msgOut);
+
+        // hole alle Argumente vom Message-Objekt
+        Vector<String> arguments = msg.getArgList();
+        int argSize = arguments.size();
+
+        // schreibe alle Argumente in den DataOutputStream
+        for (int i = 0; i < argSize; i ++){
+            dataOutputStream.writeUTF(arguments.elementAt(i));
+        }
+
+        // wenn alle Argumente durch, setze END_Token
+        dataOutputStream.writeUTF(END_TOKEN);
     }
 
     /**
