@@ -15,6 +15,6 @@
  */
 
 /**
- * VSK Logger Common.
+ * VSK logger Common.
  */
 package ch.hslu.vsk.logger.common;

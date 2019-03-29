@@ -1,14 +1,15 @@
-package ch.hslu.vsk.logger.component;
+package ch.hslu.vsk.logger.component.logger;
 
 
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
+import ch.hslu.vsk.logger.common.messagepassing.LoggerComHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Represents a Logger which can be used to log messages with different log-levels. To obtain a instance
+ * Represents a logger which can be used to log messages with different log-levels. To obtain a instance
  * of this class, the LoggerComponentSetup-class should be used.
  *
  * @author Matthias Egli, David Gut, Florian Bär, Dennis Dekker

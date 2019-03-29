@@ -15,6 +15,6 @@
  */
 
 /**
- * VSK Logger Component.
+ * VSK logger Component.
  */
 package ch.hslu.vsk.logger.component;

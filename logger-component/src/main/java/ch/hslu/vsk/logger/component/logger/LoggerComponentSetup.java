@@ -1,8 +1,9 @@
-package ch.hslu.vsk.logger.component;
+package ch.hslu.vsk.logger.component.logger;
 
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetup;
+import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 
 /**
  * Setup-Class for initializing a LoggerComponent. The builder pattern is applied.

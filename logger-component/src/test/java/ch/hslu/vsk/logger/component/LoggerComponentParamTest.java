@@ -1,6 +1,7 @@
 package ch.hslu.vsk.logger.component;
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.LoggerSetupFactory;
+import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
