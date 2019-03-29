@@ -177,7 +177,7 @@ public class LoggerComponent implements Logger {
      * @param messageToPrint
      */
     private void printInTerminal(final String messageToPrint) {
-        System.out.print(messageToPrint);
+        System.out.println(messageToPrint);
     }
 
     public String getCurrentDateAndTime() { //public because its used in tests
