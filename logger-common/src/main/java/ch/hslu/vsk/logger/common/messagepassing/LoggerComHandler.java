@@ -2,15 +2,11 @@ package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public final class LoggerComHandler extends AbstractBasicMessageHandler {
-
-    private static final Logger LOG = LogManager.getLogger(LoggerComHandler.class);
 
     /**
      * Konstruktor.
@@ -32,8 +28,6 @@ public final class LoggerComHandler extends AbstractBasicMessageHandler {
     @Override
     protected AbstractBasicMessage buildMessage(String msgId) {
         AbstractBasicMessage message = null;
-
-        LOG.info("Got message wiht Id: " + msgId);
 
         if (msgId.compareTo("log") == 0) {
             message = new LogMessage();

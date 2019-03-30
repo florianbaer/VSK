@@ -7,15 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * BasicMessageHandler.
  */
 public abstract class AbstractBasicMessageHandler implements Runnable {
-
-    private static final Logger LOG = LogManager.getLogger(AbstractBasicMessageHandler.class);
 
     /**
      * Statischer Message Handler für Anwendungen, bei denen nur ein Nachrichten
@@ -122,7 +118,7 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
         } catch (IOException e) {
             // Treat an IOException as a termination of the message
             // exchange, and let this message-processing thread die.
-            LOG.debug("termination of the message");
+
         }
     }
 

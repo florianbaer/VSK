@@ -2,8 +2,6 @@ package ch.hslu.vsk.logger.component.services;
 
 import ch.hslu.vsk.logger.common.messagepassing.LoggerComHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,7 +13,6 @@ import java.net.Socket;
  *
  */
 public class NetworkService {
-    private final static Logger LOG = LogManager.getLogger(NetworkService.class);
 
     private static NetworkService service;
     private LoggerComHandler loggerComHandler;
@@ -36,7 +33,7 @@ public class NetworkService {
             clientSocket = new Socket(this.host, this.port);
             loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
-            LOG.error("Exception while creating NetworkService: " + ioe.getMessage());
+
         }
     }
 
@@ -65,7 +62,7 @@ public class NetworkService {
             clientSocket = new Socket(host, port);
             loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
-            LOG.error("Exception while changing parameters NetworkService: " + ioe.getMessage());
+
         }
     }
 
@@ -82,7 +79,7 @@ public class NetworkService {
         try {
             loggerComHandler.sendMsg(message);
         } catch (IOException ioe) {
-            LOG.error("Failed to send LOG-Message to Server: " + ioe.getMessage());
+
         }
     }
 }
