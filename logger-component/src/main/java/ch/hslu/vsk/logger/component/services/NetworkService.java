@@ -39,15 +39,13 @@ public class NetworkService {
 
     /**
      * Returns Instance of the NetworkService class. By default,
-     * the host is '127.0.0.1' and port is '59090'. This must be changed later!!
+     * the host is '127.0.0.1' and port is '59090'. This is changed in the LoggerComponent-Setup.
      * @return newly created instance or existing instance
      */
     public static NetworkService getInstance(){
-        if (service == null){
-            synchronized (NetworkService.class){
-                if (service == null)
-                    service = new NetworkService("127.0.0.1", 59090);
-            }
+        synchronized (NetworkService.class){
+            if (service == null)
+                service = new NetworkService("127.0.0.1", 59090);
         }
         return service;
     }

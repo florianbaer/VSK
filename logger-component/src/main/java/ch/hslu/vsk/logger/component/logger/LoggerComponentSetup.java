@@ -6,7 +6,7 @@ import ch.hslu.vsk.logger.api.LoggerSetup;
 import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 
 /**
- * Setup-Class for initializing a LoggerComponent. The builder pattern is applied.
+ * Setup class for initializing a LoggerComponent. The builder pattern is applied.
  *
  * @author Matthias Egli, David Gut, Florian Bär, Dennis Dekker
  * @version 0.5.0

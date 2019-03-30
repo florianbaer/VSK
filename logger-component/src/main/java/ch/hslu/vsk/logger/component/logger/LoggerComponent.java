@@ -33,6 +33,7 @@ public class LoggerComponent implements Logger {
 
         // If the connection-String was obtained using the properties file
         // or by setting it while creating, we need to update the NetworkService accordingly
+        // so the connection-properties match those of the LoggerComponent
         if(connectionString.contains(":")){
             String[] connDetails = this.connectionString.split(":");
             if (!connDetails[0].equals("") && connDetails[1].equals("")){
