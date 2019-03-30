@@ -30,6 +30,15 @@ public class LoggerComponent implements Logger {
         this.identifier = identifier;
         this.loggerClass = clazz;
         this.service = NetworkService.getInstance();
+
+        // If the connection-String was obtained using the properties file
+        // or by setting it while creating, we need to update the NetworkService accordingly
+        if(connectionString.contains(":")){
+            String[] connDetails = this.connectionString.split(":");
+            if (!connDetails[0].equals("") && connDetails[1].equals("")){
+                service.changeConnectionDetails(connDetails[0], Integer.valueOf(connDetails[1]));
+            }
+        }
     }
 
     @Override

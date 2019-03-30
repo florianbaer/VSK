@@ -1,6 +1,5 @@
 package ch.hslu.vsk.logger.component.services;
 
-import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 import ch.hslu.vsk.logger.common.messagepassing.LoggerComHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import org.apache.logging.log4j.LogManager;
@@ -8,25 +7,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Properties;
 
 /**
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
  * implemented as Singleton, because multiple Log-Objects use it and whe don't want every Log-Object
- * to use a different Instance of this class. A connection String must be in the properties-file, otherwise
- * the initialization of this class fails.
+ * to use a different Instance of this class.
  *
  */
 public class NetworkService {
     private final static Logger LOG = LogManager.getLogger(NetworkService.class);
-    private static final String PROPERTY_FILE = "vsklogger.properties";
-    private static final String PROPERTY_CONNECTION_STRING = "ch.hslu.vsk.logger.connectionstring";
-
 
     private static NetworkService service;
     private LoggerComHandler loggerComHandler;
     private Socket clientSocket;
-    private Properties networkProperties;
     private String host;
     private int port;
 
@@ -35,28 +28,49 @@ public class NetworkService {
      * Private constructor. Creates a client socket with the
      * parameter specified in the properties file of the logger.
      */
-    private NetworkService() {
-        networkProperties = new Properties();
+    private NetworkService(String host, int port) {
+        this.host = host;
+        this.port = port;
 
         try {
-            networkProperties.load(NetworkService.class.getResourceAsStream(PROPERTY_FILE));
-            String[] hostAndPort = networkProperties.getProperty(PROPERTY_CONNECTION_STRING).split(":");
-
-            clientSocket = new Socket(hostAndPort[0], Integer.valueOf(hostAndPort[1]));
+            clientSocket = new Socket(this.host, this.port);
             loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
             LOG.error("Exception while creating NetworkService: " + ioe.getMessage());
         }
     }
 
+    /**
+     * Returns Instance of the NetworkService class. By default,
+     * the host is '127.0.0.1' and port is '59090'. This must be changed later!!
+     * @return newly created instance or existing instance
+     */
     public static NetworkService getInstance(){
-        if (service != null){
+        if (service == null){
             synchronized (NetworkService.class){
-                if (service != null)
-                    service = new NetworkService();
+                if (service == null)
+                    service = new NetworkService("127.0.0.1", 59090);
             }
         }
         return service;
+    }
+
+    /**
+     * This method is needed because the connection String of the LoggerComponent
+     * can be set outside of the properties file.
+     */
+    public void changeConnectionDetails(String host, int port){
+        try {
+            clientSocket.close();
+            clientSocket = new Socket(host, port);
+            loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+        } catch (IOException ioe) {
+            LOG.error("Exception while changing parameters NetworkService: " + ioe.getMessage());
+        }
+    }
+
+    public String getConnectionDetails(){
+        return "Host: " + this.host + ", Port: " + port;
     }
 
     /**

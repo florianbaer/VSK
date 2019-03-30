@@ -100,6 +100,7 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
 
         // wenn alle Argumente durch, setze END_Token
         dataOutputStream.writeUTF(END_TOKEN);
+        dataOutputStream.flush();
     }
 
     /**

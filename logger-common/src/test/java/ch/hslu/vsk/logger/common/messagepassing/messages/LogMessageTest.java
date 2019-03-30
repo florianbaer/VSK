@@ -7,10 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class LogMessageTest {
 
     @Test
-    void testOperate() {
+    void testCreation() {
+        LogMessage msg = new LogMessage();
+
+        assertTrue(msg.getMessageId().equals("log"));
     }
 
     @Test
-    void testDefineMessageType() {
+    void testCreationWithParams() {
+        LogMessage msg = new LogMessage("test");
+
+        assertTrue(msg.getMessageId().equals("log") && msg.getArgList().get(0).equals("test"));
     }
 }
