@@ -24,7 +24,7 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
     private static AbstractBasicMessageHandler current;
     private final InputStream msgIn;
     private final OutputStream msgOut;
-    private static final String END_TOKEN = ";END";
+    private static final String END_TOKEN = "END";
 
     /**
      * Konstruktor.
@@ -50,12 +50,10 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
     }
 
     /**
-     * Liest die ankommende Nachricht vom Sender und gibt das empfange Message
+     * Liest eine ankommende Nachricht und gibt das empfange Message
      * Objekt zurück.
      *
      * @return Message. Enthält die Nachricht und alle dazugehörigen Argumente.
-     * Falls im Datenstrom eine nicht existierende Nachrichten-Identifikation
-     * war, wird null zurück gegeben.
      * @throws IOException IO-Fehler.
      */
     public final AbstractBasicMessage readMsg() throws IOException {
@@ -80,7 +78,8 @@ public abstract class AbstractBasicMessageHandler implements Runnable {
     }
 
     /**
-     * TODO
+     * Schreibt die übergebene Nachricht in den Output-Stream und beendet sie mit dem
+     * END_TOKEN.
      *
      * @param msg Message.
      * @throws IOException IO-Fehler.

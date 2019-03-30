@@ -21,7 +21,7 @@ public abstract class AbstractBasicMessage {
     /**
      * Definiert das Ende der Argumentenliste
      */
-    protected static final String END_TOKEN = ";END";
+    protected static final String END_TOKEN = "END";
 
     /**
      * Default-Konstruktor ohne initiale messageId
