@@ -5,16 +5,18 @@ import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessageHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Klasse welche eine Log-Nachricht darstellt.
+ */
 public class LogMessage extends AbstractBasicMessage {
 
-    private static final Logger LOG = LogManager.getLogger(LogMessage.class);
-    private static final String LOG_TYPE = "log";
+    private static final String MESSAGE_ID = "log";
 
     /**
-     * Default-Konstruktor.
+     * Default Konstruktor
      */
-    public LogMessage() {
-        super();
+    public LogMessage(){
+        super(MESSAGE_ID);
     }
 
     /**
@@ -23,6 +25,7 @@ public class LogMessage extends AbstractBasicMessage {
      * @param logMessage Log der übertragen werden soll
      */
     public LogMessage(final String logMessage) {
+        super(MESSAGE_ID);
         this.addArg(logMessage);
     }
 
@@ -32,25 +35,17 @@ public class LogMessage extends AbstractBasicMessage {
      * Applikationsobjektes mit dem Protokoll des Message-Passing-Systems. Sie
      * bestimmt die Aktionen, welche laut dem Protokoll der Nachrichten
      * Kommunikation auszuführen sind. Der Rückgabewert bestimmt, ob der
-     * Nachrichten Austausch beendet wird oder weiterläuft.
+     * Nachrichten Austausch beendet wird oder weiterläuft. Wird nur für die Unterstützung
+     * des asynchronen Teils benötigt
      *
      * @return Boolscher Wert, wenn false war dies die letzte Nachricht der
      * Kommunikation mit dem CLient.
      */
     @Override
     public boolean operate() {
-        //TODO implement operate method
-        final AbstractBasicMessageHandler handler = AbstractBasicMessageHandler.getMessageHandler();
-        final String value = (String) this.getArgList().get(0);
+        //TODO Muss vom Server-Team implementiert werden, denn
+        // da wird dies verwendet
 
         return false;
-    }
-
-    /**
-     * Definition des Nachrichten Typs.
-     */
-    @Override
-    protected void defineMessageType() {
-        this.setMessageId(LOG_TYPE);
     }
 }

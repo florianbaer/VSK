@@ -4,16 +4,15 @@ import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Klasse welche momentan als Platzhalter fungiert. Für ein Nachrichten-Austausch mit Feedback gedacht.
+ */
 public class ResultMessage extends AbstractBasicMessage {
 
-    private static final Logger LOG = LogManager.getLogger(ResultMessage.class);
-    private static final String RESULT_TYPE = "result";
+    private static final String MESSAGE_ID = "result";
 
-    /**
-     * Default-Konstruktor.
-     */
-    public ResultMessage() {
-        super();
+    public ResultMessage(){
+        super(MESSAGE_ID);
     }
 
     /**
@@ -23,6 +22,7 @@ public class ResultMessage extends AbstractBasicMessage {
      * @param param Fibonacci Argument.
      */
     public ResultMessage(final String value, final String param) {
+        super(MESSAGE_ID);
         this.addArg(value);
         this.addArg(param);
     }
@@ -44,12 +44,4 @@ public class ResultMessage extends AbstractBasicMessage {
         return false;
     }
 
-    /**
-     * Definition des Nachrichten Typs.
-     */
-    @Override
-    protected void defineMessageType() {
-        this.setMessageId(RESULT_TYPE);
-
-    }
 }

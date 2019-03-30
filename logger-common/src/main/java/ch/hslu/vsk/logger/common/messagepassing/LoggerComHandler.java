@@ -23,7 +23,8 @@ public final class LoggerComHandler extends AbstractBasicMessageHandler {
     }
 
     /**
-     * Interpretiert Message ID und erzeugt ein entsprechendes Message-Objekt.
+     * Interpretiert Message ID und erzeugt ein entsprechendes Message-Objekt. Diese
+     * Methode wird in der Super-Klasse in der Methode readMsg() aufgerufen.
      *
      * @param msgId MessageID.
      * @return Message
@@ -31,7 +32,9 @@ public final class LoggerComHandler extends AbstractBasicMessageHandler {
     @Override
     protected AbstractBasicMessage buildMessage(String msgId) {
         AbstractBasicMessage message = null;
-        LOG.info("Got message type: " + msgId);
+
+        LOG.info("Got message wiht Id: " + msgId);
+
         if (msgId.compareTo("log") == 0) {
             message = new LogMessage();
         } else if (msgId.compareTo("result") == 0) {
