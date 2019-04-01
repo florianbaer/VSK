@@ -36,7 +36,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
 
         var message = this.getMessageTypes().stream().filter(x -> x.getMessageId().equals(msgId)).findFirst();
 
-        if(!message.isEmpty()){
+        if(!message.isEmpty() && message.isPresent()){
             return message.get();
         }
         return null;
@@ -59,7 +59,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
         } catch (IOException e) {
             // Treat an IOException as a termination of the message
             // exchange, and let this message-processing thread die.
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

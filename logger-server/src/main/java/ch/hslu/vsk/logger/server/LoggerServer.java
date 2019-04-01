@@ -90,8 +90,7 @@ public final class LoggerServer {
         try {
             serverProperties.load(LoggerServer.class.getClassLoader().getResourceAsStream("Server.properties"));
         } catch (IOException e) {
-            System.out.println("Server.properties file was unable to load.");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
 

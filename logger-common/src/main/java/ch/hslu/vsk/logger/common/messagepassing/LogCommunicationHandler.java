@@ -28,9 +28,9 @@ public final class LogCommunicationHandler extends AbstractBasicMessageHandler {
     @Override
     protected AbstractBasicMessage buildMessage(String msgId) {
 
-        Optional<AbstractBasicMessage> message = this.getMessageTypes().stream().filter(x -> x.getMessageId() == msgId).findFirst();
+        Optional<AbstractBasicMessage> message = this.getMessageTypes().stream().filter(x -> x.getMessageId().equals(msgId)).findFirst();
 
-        if (!message.isEmpty()) {
+        if (!message.isEmpty() && message.isPresent()) {
             return message.get();
         }
         return null;
