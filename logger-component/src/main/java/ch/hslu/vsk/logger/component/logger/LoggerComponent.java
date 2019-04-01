@@ -36,7 +36,7 @@ public class LoggerComponent implements Logger {
         // so the connection-properties match those of the LoggerComponent
         if(connectionString.contains(":")){
             String[] connDetails = this.connectionString.split(":");
-            if (!connDetails[0].equals("") && connDetails[1].equals("")){
+            if (!connDetails[0].equals("") && !connDetails[1].equals("")){
                 service.changeConnectionDetails(connDetails[0], Integer.valueOf(connDetails[1]));
             }
         }
