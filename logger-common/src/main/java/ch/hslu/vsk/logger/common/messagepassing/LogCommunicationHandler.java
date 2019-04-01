@@ -1,29 +1,26 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
-import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
-import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
-
-import java.awt.*;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
 
+/**
+ * Client communication handler that is responsible for the client-side communication
+ */
 public final class LogCommunicationHandler extends AbstractBasicMessageHandler {
 
     /**
-     * Konstruktor.
+     * Constructor
      *
-     * @param inputStream  Inputstream.
-     * @param outputStream Outputstream.
+     * @param inputStream  Inputstream
+     * @param outputStream Outputstream
      */
     public LogCommunicationHandler(InputStream inputStream, OutputStream outputStream) {
         super(inputStream, outputStream);
     }
 
     /**
-     * Interpretiert Message ID und erzeugt ein entsprechendes Message-Objekt. Diese
-     * Methode wird in der Super-Klasse in der Methode readMsg() aufgerufen.
+     * Interprets a message id and returns the matching message-type
      *
      * @param msgId MessageID.
      * @return Message

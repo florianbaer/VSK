@@ -7,15 +7,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
 
+/**
+ * Communication handler that is responsible for the server-side communication
+ */
 public final class LogServerCommunicationHandler extends AbstractBasicMessageHandler implements Runnable {
 
     private final LogPersistor persistor;
 
     /**
-     * Konstruktor.
+     * Constructor
      *
-     * @param inputStream  Inputstream.
-     * @param outputStream Outputstream.
+     * @param inputStream  Inputstream
+     * @param outputStream Outputstream
      */
     public LogServerCommunicationHandler(InputStream inputStream, OutputStream outputStream, LogPersistor persistor) {
         super(inputStream, outputStream);
@@ -23,8 +26,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
     }
 
     /**
-     * Interpretiert Message ID und erzeugt ein entsprechendes Message-Objekt. Diese
-     * Methode wird in der Super-Klasse in der Methode readMsg() aufgerufen.
+     * Builds a message matching the given message id
      *
      * @param msgId MessageID.
      * @return Message
@@ -42,10 +44,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
 
 
     /**
-     * Zur Unterstützun des aysnchronen Nachrichten Austausches. Die run
-     * Methode, und damit der Thread, wird beendet, wenn die Aktion einer
-     * Nachricht false zurück gibt. Dies ist dann der Fall, wenn die letzte
-     * Nachricht der Kommunikation abgearbeitet wurde.
+     * Used in asynchronous message handling. Currently used only on the server side
      */
     @Override
     public final void run() {

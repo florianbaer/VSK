@@ -11,14 +11,9 @@ import java.util.Vector;
 
 
 /**
- * BasicMessageHandler.
+ * BasicMessageHandler
  */
 public abstract class AbstractBasicMessageHandler {
-
-    /**
-     * Statischer Message Handler für Anwendungen, bei denen nur ein Nachrichten
-     * Handler verwendet wird. Er muss global zugänglich sein.
-     */
     private static AbstractBasicMessageHandler current;
     private final InputStream msgIn;
     private final OutputStream msgOut;
@@ -26,10 +21,10 @@ public abstract class AbstractBasicMessageHandler {
     private List<AbstractBasicMessage> messages = new ArrayList<>();
 
     /**
-     * Konstruktor.
+     * Constructor.
      *
-     * @param inputStream Inputstream.
-     * @param outputStream Outputstream.
+     * @param inputStream Inputstream
+     * @param outputStream Outputstream
      */
     public AbstractBasicMessageHandler(final InputStream inputStream, final OutputStream outputStream) {
         msgIn = inputStream;
@@ -54,10 +49,7 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Stellt den statischen Message Handler zur Verfügung für Anwendungen, bei
-     * denen nur ein Nachrichten Handler verwendet wird. Punkt-zu-Punkt
-     * Kommunikation.
-     *
+     * Returns the static message handler object
      * @return current.
      */
     public static AbstractBasicMessageHandler getMessageHandler() {
@@ -65,11 +57,10 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Liest eine ankommende Nachricht und gibt das empfange Message
-     * Objekt zurück.
+     * Reads an incoming message and returns it.
      *
-     * @return Message. Enthält die Nachricht und alle dazugehörigen Argumente.
-     * @throws IOException IO-Fehler.
+     * @return Message with arguments
+     * @throws IOException
      */
     public final AbstractBasicMessage readMsg() throws IOException {
         final DataInputStream din = new DataInputStream(msgIn);
@@ -93,8 +84,7 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Schreibt die übergebene Nachricht in den Output-Stream und beendet sie mit dem
-     * END_TOKEN.
+     * Writes the given message to the output-stream and marks it's end with the END_TOKEN
      *
      * @param msg Message.
      * @throws IOException IO-Fehler.
@@ -120,7 +110,7 @@ public abstract class AbstractBasicMessageHandler {
 
 
     /**
-     * Interpretiert Message ID und erzeugt ein entsprechendes Message-Objekt.
+     * Build a message with the given id
      *
      * @param msgId MessageID.
      * @return Message
