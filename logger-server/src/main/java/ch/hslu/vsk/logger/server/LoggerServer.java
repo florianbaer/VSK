@@ -24,52 +24,38 @@ import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.logging.Logger;
 
 /**
  * Logger-Server which handles the incoming request from the logger component.
  */
-public final class LoggerServer {
+public final class LoggerServer implements Runnable {
 
     private static String PROPERTIES_LOGFILE = "ch.hslu.vsk.server.logfile";
     private static String PROPERTIES_PORT = "ch.hslu.vsk.server.port";
 
     public static void main(String[]args) {
-        try {
-            Properties serverProperties = loadProperties();
+        LoggerServer server = new LoggerServer();
 
-            String loggerPort = serverProperties.getProperty(PROPERTIES_PORT);
-            File loggerFile = loadLoggerFileProperty(serverProperties);
+        Thread serverThread = new Thread(server);
 
-            System.out.println("Server listening on " + loggerPort);
-            try (ServerSocket listen = new ServerSocket(Integer.parseInt(loggerPort))) {
-                var filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
-
-                filePersistor.setFile(loggerFile);
-                var persistorAdapter = new StringPersistorAdapter(filePersistor);
-
-                while (true) {
-                    Socket client = listen.accept();
-                    LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
-                    handler.addMessageType(new LogMessage());
-                    handler.addMessageType(new ResultMessage());
-                    Thread t = new Thread(handler);
-                    t.start();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (Exception ex){
-            System.out.println("Error while initialization of the server...");
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
+        Scanner keyboard = new Scanner(System.in);
+        serverThread.start();
+        char input = ' ';
+        while(input != 'q' && input != 'Q') {
+            System.out.println("Press 'q' or 'Q' to quit the server");
+            input = keyboard.next().charAt(0);
         }
 
+        System.out.println("Server will close soon...");
+        serverThread.interrupt();
     }
-
     private static File loadLoggerFileProperty(Properties serverProperties) throws IOException {
         var logFilePath = serverProperties.getProperty(PROPERTIES_LOGFILE);
         File logFile = null;
@@ -95,5 +81,47 @@ public final class LoggerServer {
 
 
         return serverProperties;
+    }
+
+    @Override
+    public void run() {
+        try {
+            Properties serverProperties = loadProperties();
+
+            String loggerPort = serverProperties.getProperty(PROPERTIES_PORT);
+            File loggerFile = loadLoggerFileProperty(serverProperties);
+
+            System.out.println("Server listening on " + loggerPort);
+            try (ServerSocket listen = new ServerSocket(Integer.parseInt(loggerPort))) {
+                listen.setSoTimeout(2000);
+
+                var filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+
+                filePersistor.setFile(loggerFile);
+                var persistorAdapter = new StringPersistorAdapter(filePersistor);
+                Socket client = null;
+                while (!(Thread.currentThread().isInterrupted())) {
+                    try {
+                        client = listen.accept();
+
+                        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
+                        handler.addMessageType(new LogMessage());
+                        handler.addMessageType(new ResultMessage());
+                        Thread t = new Thread(handler);
+                        t.start();
+                    }
+                    catch (SocketTimeoutException ex){
+                        // do nothing, it seems to be the only way to check if the console application has to be
+                        // closed by input of the user...
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex){
+            System.out.println("Error while initialization of the server...");
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }
