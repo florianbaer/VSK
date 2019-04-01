@@ -53,10 +53,55 @@ public final class LoggerServer implements Runnable {
             input = keyboard.next().charAt(0);
         }
 
-        System.out.println("Server will close soon...");
+        System.out.println("Server will close within the next 5 Seconds.");
         serverThread.interrupt();
     }
-    private static File loadLoggerFileProperty(Properties serverProperties) throws IOException {
+
+    @Override
+    public void run() {
+        try {
+            Properties serverProperties = this.loadProperties();
+
+            String loggerPort = serverProperties.getProperty(PROPERTIES_PORT);
+            File loggerFile = this.loadLoggerFileProperty(serverProperties);
+
+            System.out.println("Server listening on port: " + loggerPort);
+            try (ServerSocket listen = new ServerSocket(Integer.parseInt(loggerPort))) {
+                // to check if the server was aborted from user input
+                listen.setSoTimeout(5000);
+
+                FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+
+                filePersistor.setFile(loggerFile);
+                StringPersistorAdapter persistorAdapter = new StringPersistorAdapter(filePersistor);
+                Socket client;
+                while (!(Thread.currentThread().isInterrupted())) {
+                    try {
+                        client = listen.accept();
+
+                        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
+                        handler.addMessageType(new LogMessage());
+                        handler.addMessageType(new ResultMessage());
+                        Thread t = new Thread(handler);
+                        t.start();
+                    }
+                    catch (SocketTimeoutException ex){
+                        // do nothing, it seems to be the only way to check if the console application has to be
+                        // closed by input of the user...
+                        // https://stackoverflow.com/questions/2983835/how-can-i-interrupt-a-serversocket-accept-method
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ex){
+            System.out.println("Error while initialization of the server...");
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private File loadLoggerFileProperty(Properties serverProperties) throws IOException {
         var logFilePath = serverProperties.getProperty(PROPERTIES_LOGFILE);
         File logFile = null;
         if(logFilePath == null || logFilePath.isEmpty()) {
@@ -71,7 +116,7 @@ public final class LoggerServer implements Runnable {
         return logFile;
     }
 
-    private static Properties loadProperties() {
+    private Properties loadProperties() {
         Properties serverProperties = new Properties();
         try {
             serverProperties.load(LoggerServer.class.getClassLoader().getResourceAsStream("Server.properties"));
@@ -81,47 +126,5 @@ public final class LoggerServer implements Runnable {
 
 
         return serverProperties;
-    }
-
-    @Override
-    public void run() {
-        try {
-            Properties serverProperties = loadProperties();
-
-            String loggerPort = serverProperties.getProperty(PROPERTIES_PORT);
-            File loggerFile = loadLoggerFileProperty(serverProperties);
-
-            System.out.println("Server listening on " + loggerPort);
-            try (ServerSocket listen = new ServerSocket(Integer.parseInt(loggerPort))) {
-                listen.setSoTimeout(2000);
-
-                var filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
-
-                filePersistor.setFile(loggerFile);
-                var persistorAdapter = new StringPersistorAdapter(filePersistor);
-                Socket client = null;
-                while (!(Thread.currentThread().isInterrupted())) {
-                    try {
-                        client = listen.accept();
-
-                        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
-                        handler.addMessageType(new LogMessage());
-                        handler.addMessageType(new ResultMessage());
-                        Thread t = new Thread(handler);
-                        t.start();
-                    }
-                    catch (SocketTimeoutException ex){
-                        // do nothing, it seems to be the only way to check if the console application has to be
-                        // closed by input of the user...
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception ex){
-            System.out.println("Error while initialization of the server...");
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-        }
     }
 }
