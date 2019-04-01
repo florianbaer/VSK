@@ -82,8 +82,6 @@ public abstract class AbstractBasicMessageHandler {
             while (!endOfMessage){
                 token = din.readUTF();
 
-                System.out.println("read utf" + token);
-
                 if(token.compareTo(END_TOKEN) == 0){
                     endOfMessage = true;
                 } else {
