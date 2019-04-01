@@ -173,7 +173,7 @@ public class LoggerComponentMock implements Logger {
      * @param messageToPrint
      */
     private void printInTerminal(final String messageToPrint) {
-        System.out.println(messageToPrint);
+        System.out.print(messageToPrint);
     }
 
     public String getCurrentDateAndTime() { //public because its used in tests

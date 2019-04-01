@@ -183,12 +183,11 @@ public class LoggerComponent implements Logger {
     public Class getLoggingClass(){return this.loggerClass;}
 
 
-    // All following Methods are just a workaround because the server side is missing at the moment
 
     /**
      * method which is used as long as the logger-server is not implemented
      *
-     * @param messageToPrint
+     * @param messageToPrint message to print
      */
     private void printInTerminal(final String messageToPrint) {
         System.out.println(messageToPrint);
