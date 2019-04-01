@@ -12,7 +12,7 @@ import java.net.Socket;
  * to use a different Instance of this class.
  *
  */
-public class NetworkService {
+public final class NetworkService {
 
     private static NetworkService service;
     private LoggerComHandler loggerComHandler;
