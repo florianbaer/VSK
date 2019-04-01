@@ -1,6 +1,6 @@
 package ch.hslu.vsk.logger.component.services;
 
-import ch.hslu.vsk.logger.common.messagepassing.LoggerComHandler;
+import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.net.Socket;
 public class NetworkService {
 
     private static NetworkService service;
-    private LoggerComHandler loggerComHandler;
+    private LogCommunicationHandler logCommunicationHandler;
     private Socket clientSocket;
     private String host;
     private int port;
@@ -31,7 +31,7 @@ public class NetworkService {
 
         try {
             clientSocket = new Socket(this.host, this.port);
-            loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
             // todo: handle exception!!!
         }
@@ -58,7 +58,7 @@ public class NetworkService {
         try {
             clientSocket.close();
             clientSocket = new Socket(host, port);
-            loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
             // todo: handle exception!!!
         }
@@ -75,7 +75,7 @@ public class NetworkService {
     public void sendLogMessageToServer(String messageToSend) {
         LogMessage message = new LogMessage(messageToSend);
         try {
-            loggerComHandler.sendMsg(message);
+            logCommunicationHandler.sendMsg(message);
         } catch (IOException ioe)  {
             // todo: handle exception!!!
         }

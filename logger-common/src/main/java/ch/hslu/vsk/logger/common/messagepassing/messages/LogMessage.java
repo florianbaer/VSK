@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
+import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessageHandler;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +31,7 @@ public class LogMessage extends AbstractBasicMessage {
     }
 
 
+
     /**
      * Die Implementierung der Methode operate verküpft die Methoden des
      * Applikationsobjektes mit dem Protokoll des Message-Passing-Systems. Sie
@@ -42,10 +44,12 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate() {
-        //TODO Muss vom Server-Team implementiert werden, denn
-        // da wird dies verwendet
+    public boolean operate(LogPersistor persistor) {
+        if(persistor != null){
 
-        return false;
+            persistor.save(this);
+        }
+
+        return true;
     }
 }

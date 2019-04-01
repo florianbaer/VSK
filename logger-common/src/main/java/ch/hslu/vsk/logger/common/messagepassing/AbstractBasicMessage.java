@@ -1,5 +1,7 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
+import ch.hslu.vsk.logger.common.adapter.LogPersistor;
+
 import java.util.Vector;
 
 /**
@@ -78,6 +80,6 @@ public abstract class AbstractBasicMessage {
      * @return Boolscher Wert, wenn false war dies die letzte Nachricht der
      * Kommunikation mit dem CLient.
      */
-    public abstract boolean operate();
+    public abstract boolean operate(LogPersistor persistor);
 }
 

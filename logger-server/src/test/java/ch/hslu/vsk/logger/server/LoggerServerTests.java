@@ -22,13 +22,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Testfälle für RemoveMeTest.
  */
-final class RemoveMeTest {
+final class LoggerServerTests {
 
-    /**
-     * Testfall für {@link ch.hslu.vsk.logger.server.RemoveMe#foo()}.
-     */
-    @Test
-    public void testFoo() {
-        assertThat(RemoveMe.foo()).contains("Hallo");
-    }
 }

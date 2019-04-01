@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.io.*;
 
 
-public class LoggerComHandlerTest {
+public class LogCommunicationHandlerTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;

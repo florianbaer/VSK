@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
+import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,18 +17,6 @@ public class ResultMessage extends AbstractBasicMessage {
     }
 
     /**
-     * Konstruktor.
-     *
-     * @param value Resultatwert der Fibonacci Berechnung.
-     * @param param Fibonacci Argument.
-     */
-    public ResultMessage(final String value, final String param) {
-        super(MESSAGE_ID);
-        this.addArg(value);
-        this.addArg(param);
-    }
-
-    /**
      * Die Implementierung der Methode operate verküpft die Methoden des
      * Applikationsobjektes mit dem Protokoll des Message-Passing-Systems. Sie
      * bestimmt die Aktionen, welche laut dem Protokoll der Nachrichten
@@ -38,10 +27,22 @@ public class ResultMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate() {
-
-        //TODO implement
+    public boolean operate(LogPersistor persistor) {
         return false;
     }
+
+    /**
+     * Konstruktor.
+     *
+     * @param value Resultatwert der LogMessage.
+     * @param param Argument.
+     */
+    public ResultMessage(final String value, final String param) {
+        super(MESSAGE_ID);
+        this.addArg(value);
+        this.addArg(param);
+    }
+
+
 
 }

@@ -3,7 +3,6 @@ package ch.hslu.vsk.logger.component.logger;
 
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
-import ch.hslu.vsk.logger.common.messagepassing.LoggerComHandler;
 import ch.hslu.vsk.logger.component.services.NetworkService;
 
 import java.text.SimpleDateFormat;
