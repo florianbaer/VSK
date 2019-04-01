@@ -33,7 +33,7 @@ public class NetworkService {
             clientSocket = new Socket(this.host, this.port);
             loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
-
+            // todo: handle exception!!!
         }
     }
 
@@ -60,7 +60,7 @@ public class NetworkService {
             clientSocket = new Socket(host, port);
             loggerComHandler = new LoggerComHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (IOException ioe) {
-
+            // todo: handle exception!!!
         }
     }
 
@@ -76,8 +76,8 @@ public class NetworkService {
         LogMessage message = new LogMessage(messageToSend);
         try {
             loggerComHandler.sendMsg(message);
-        } catch (IOException ioe) {
-
+        } catch (IOException ioe)  {
+            // todo: handle exception!!!
         }
     }
 }

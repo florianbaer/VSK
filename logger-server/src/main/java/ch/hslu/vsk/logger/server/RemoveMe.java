@@ -15,22 +15,49 @@
  */
 package ch.hslu.vsk.logger.server;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * Dummy-Klasse. Löschen, sobald eigene Quellen vorhanden sind.
  */
 public final class RemoveMe {
 
-    /**
-     * Privater Konstruktor.
-     */
-    private RemoveMe() {
-    }
+    public static void main(String[]args) throws IOException {
 
-    /**
-     * Dummy-Methode.
-     * @return Hallo.
-     */
-    public static String foo() {
-        return "Hallo";
+        try (ServerSocket listener = new ServerSocket(59090)){
+
+            System.out.println("The Server is running...");
+            System.out.println("Waiting for Connections");
+
+            while(true){
+                try (Socket socket = listener.accept()){
+                    InputStream inputStream = socket.getInputStream();
+
+                    DataInputStream in = new DataInputStream(inputStream);
+
+
+                    while(true){
+                        String token = in.readUTF();
+
+                        System.out.print("ID: " + token + " | ");
+
+                        String message = in.readUTF();
+
+                        System.out.print("Message: " + message  + " | ");
+
+                        String end = in.readUTF();
+
+                        System.out.print("End-Signal: " + end  + " | ");
+
+                        System.out.println("");
+                    }
+                }
+            }
+        }
+
     }
 }
