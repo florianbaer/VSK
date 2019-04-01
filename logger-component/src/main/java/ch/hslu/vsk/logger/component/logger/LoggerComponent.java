@@ -182,23 +182,11 @@ public class LoggerComponent implements Logger {
 
     public Class getLoggingClass(){return this.loggerClass;}
 
-
-
-    /**
-     * method which is used as long as the logger-server is not implemented
-     *
-     * @param messageToPrint message to print
-     */
-    private void printInTerminal(final String messageToPrint) {
-        System.out.println(messageToPrint);
-    }
-
     public String getCurrentDateAndTime() { //public because its used in tests
         SimpleDateFormat swissFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date currentDate = new Date();
         return swissFormat.format(currentDate);
     }
-
 
     private String getLogOutputPattern(final String loggertyp, final String message) {
         return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message;
