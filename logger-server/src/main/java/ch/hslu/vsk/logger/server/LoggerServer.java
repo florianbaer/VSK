@@ -26,33 +26,74 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
 /**
  * Logger-Server which handles the incoming request from the logger component.
  */
 public final class LoggerServer {
 
+    private static String PROPERTIES_LOGFILE = "ch.hslu.vsk.server.logfile";
+    private static String PROPERTIES_PORT = "ch.hslu.vsk.server.port";
+
     public static void main(String[]args) {
+        try {
+            Properties serverProperties = loadProperties();
 
-        System.out.println("Server listening on 59090");
-        try (ServerSocket listen = new ServerSocket(59090);){
-            var filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
-            var file = File.createTempFile("test", "tmp");
-            System.out.println(file.getAbsoluteFile());
-            filePersistor.setFile(file);
-            var persistorAdapter = new StringPersistorAdapter(filePersistor);
+            String loggerPort = serverProperties.getProperty(PROPERTIES_PORT);
+            File loggerFile = loadLoggerFileProperty(serverProperties);
 
-            while (listen.isBound()) {
-                Socket client = listen.accept();
-                LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
-                handler.addMessageType(new LogMessage());
-                handler.addMessageType(new ResultMessage());
-                Thread t = new Thread(handler);
-                t.start();
+            System.out.println("Server listening on " + loggerPort);
+            try (ServerSocket listen = new ServerSocket(Integer.parseInt(loggerPort))) {
+                var filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+
+                filePersistor.setFile(loggerFile);
+                var persistorAdapter = new StringPersistorAdapter(filePersistor);
+
+                while (true) {
+                    Socket client = listen.accept();
+                    LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
+                    handler.addMessageType(new LogMessage());
+                    handler.addMessageType(new ResultMessage());
+                    Thread t = new Thread(handler);
+                    t.start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+        catch (Exception ex){
+            System.out.println("Error while initialization of the server...");
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+
+    }
+
+    private static File loadLoggerFileProperty(Properties serverProperties) throws IOException {
+        var logFilePath = serverProperties.getProperty(PROPERTIES_LOGFILE);
+        File logFile = null;
+        if(logFilePath == null || logFilePath.isEmpty()) {
+            System.out.println("No valid LogFile defined, logging to tmp File...");
+            logFile = File.createTempFile("Server", ".log");
+        }
+        else{
+            logFile = new File(logFilePath);
+        }
+
+        System.out.println(String.format("Logging to file : '%s'", logFile.getAbsoluteFile()));
+        return logFile;
+    }
+
+    private static Properties loadProperties() {
+        Properties serverProperties = new Properties();
+        try {
+            serverProperties.load(LoggerServer.class.getClassLoader().getResourceAsStream("Server.properties"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
+
+        return serverProperties;
     }
 }
