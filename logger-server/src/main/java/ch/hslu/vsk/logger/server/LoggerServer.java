@@ -42,7 +42,7 @@ public final class LoggerServer {
             filePersistor.setFile(file);
             var persistorAdapter = new StringPersistorAdapter(filePersistor);
 
-            while (true) {
+            while (listen.isBound()) {
                 Socket client = listen.accept();
                 LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
                 handler.addMessageType(new LogMessage());
@@ -51,7 +51,7 @@ public final class LoggerServer {
                 t.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
     }
