@@ -3,10 +3,13 @@ package ch.hslu.vsk.logger.common.messagepassing;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 
+import java.awt.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Optional;
 
-public final class LoggerComHandler extends AbstractBasicMessageHandler {
+public final class LogCommunicationHandler extends AbstractBasicMessageHandler {
 
     /**
      * Konstruktor.
@@ -14,7 +17,7 @@ public final class LoggerComHandler extends AbstractBasicMessageHandler {
      * @param inputStream  Inputstream.
      * @param outputStream Outputstream.
      */
-    public LoggerComHandler(InputStream inputStream, OutputStream outputStream) {
+    public LogCommunicationHandler(InputStream inputStream, OutputStream outputStream) {
         super(inputStream, outputStream);
     }
 
@@ -27,15 +30,12 @@ public final class LoggerComHandler extends AbstractBasicMessageHandler {
      */
     @Override
     protected AbstractBasicMessage buildMessage(String msgId) {
-        AbstractBasicMessage message = null;
 
-        if (msgId.compareTo("log") == 0) {
-            message = new LogMessage();
-        } else if (msgId.compareTo("result") == 0) {
-            message = new ResultMessage();
+        Optional<AbstractBasicMessage> message = this.getMessageTypes().stream().filter(x -> x.getMessageId() == msgId).findFirst();
+
+        if (!message.isEmpty()) {
+            return message.get();
         }
-        return message;
+        return null;
     }
-
-
 }
