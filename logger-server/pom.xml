@@ -31,6 +31,9 @@
         VSK Logger Server
     </description>
 
+    <properties>
+        <jar.start.class>ch.hslu.vsk.logger.server.LoggerServer</jar.start.class>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>ch.hslu.vsk19fs.g06</groupId>
