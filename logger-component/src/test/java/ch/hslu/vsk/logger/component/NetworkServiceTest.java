@@ -14,7 +14,7 @@ public class NetworkServiceTest {
     public void testNormalSetup(){
         NetworkService service = NetworkService.getInstance();
 
-        assertTrue("Host: 127.0.0.1, Port: 59090".equals(service.getConnectionDetails()));
+        assertTrue("Host: 10.155.113.226, Port: 59090".equals(service.getConnectionDetails()));
     }
 
     @Test
