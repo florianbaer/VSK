@@ -5,8 +5,8 @@ import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import java.util.Vector;
 
 /**
- * BasicMessage-Klasse. Eine Basic-Message besteht aus einem (optionalen) Identifier und einer
- * Argumenten-Liste. Beide werden als Strings dargestellt.
+ * BaisMessage class. A basic message consists of an optional identifier and a list of arguments.
+ * Both in the String format.
  */
 public abstract class AbstractBasicMessage {
 
@@ -14,19 +14,14 @@ public abstract class AbstractBasicMessage {
     private Vector<String> argList;
 
     /**
-     * Definiert das Ende der Argumentenliste
-     */
-    protected static final String END_TOKEN = "END";
-
-    /**
-     * Default-Konstruktor ohne initiale messageId
+     * Default message constructor without message id
      */
     public AbstractBasicMessage() {
         this.argList = new Vector<>();
     }
 
     /**
-     * Konstruktor mit initialer messageId
+     * Construcotr with initial message id
      * @param id id of the message
      */
     public AbstractBasicMessage(String id){
@@ -35,7 +30,7 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Identifikation der Nachricht definieren.
+     * Set the message's identifier
      *
      * @param msgId MessageID.
      */
@@ -44,16 +39,16 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Ein Argument der Argumentenliste der Nachricht hinzufügen.
+     * Add a argument to the message's argument list
      *
-     * @param arg Argumentobjekt.
+     * @param arg argument to add
      */
     public final void addArg(final String arg) {
         this.argList.add(arg);
     }
 
     /**
-     * Identifikation der Nachricht.
+     * Message identifier
      *
      * @return id MessageID.
      */
@@ -62,7 +57,7 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Argumentenliste der Nachricht.
+     * Argument list of the message
      *
      * @return Argumentliste.
      */
@@ -71,14 +66,10 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Die Implementierung der Methode operate verküpft die Methoden des
-     * Applikationsobjektes mit dem Protokoll des Message-Passing-Systems. Sie
-     * bestimmt die Aktionen, welche laut dem Protokoll der Nachrichten
-     * Kommunikation auszuführen sind. Der Rückgabewert bestimmt, ob der
-     * Nachrichten Austausch beendet wird oder weiterläuft.
+     * This methods is responsible for determing actions after it was received.
+     * Add your logic here.
      *
-     * @return Boolscher Wert, wenn false war dies die letzte Nachricht der
-     * Kommunikation mit dem CLient.
+     * @return True if logic defined in operate() was successful
      */
     public abstract boolean operate(LogPersistor persistor);
 }

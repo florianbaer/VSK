@@ -15,7 +15,6 @@
  */
 package ch.hslu.vsk.logger.server;
 
-import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
