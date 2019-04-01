@@ -45,7 +45,7 @@ public final class NetworkService {
     public static NetworkService getInstance(){
         synchronized (NetworkService.class){
             if (service == null)
-                service = new NetworkService("127.0.0.1", 59090);
+                service = new NetworkService("10.155.113.226", 59090);
         }
         return service;
     }
