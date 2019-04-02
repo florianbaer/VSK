@@ -62,16 +62,9 @@ public final class LoggerServer implements Runnable {
                 this.threadPool = Executors.newCachedThreadPool();
 
                 while (!(Thread.currentThread().isInterrupted())) {
-                    try {
-                        client = listen.accept();
+                    client = listen.accept();
 
-                        this.handleMessage(client);
-                    }
-                    catch (SocketTimeoutException ex){
-                        // do nothing, it seems to be the only way to check if the console application has to be
-                        // closed by input of the user...
-                        // https://stackoverflow.com/questions/2983835/how-can-i-interrupt-a-serversocket-accept-method
-                    }
+                    this.handleMessage(client);
                 }
 
                 this.threadPool.shutdown();
