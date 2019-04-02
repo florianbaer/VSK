@@ -16,6 +16,10 @@ public class StringPersistorAdapter implements LogPersistor {
         this.stringPersistor = stringPersistor;
     }
 
+    public StringPersistor getStringPersistor(){
+        return this.stringPersistor;
+    }
+
 
     public void save(final LogMessage log) {
         //todo: dave magic code
