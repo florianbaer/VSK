@@ -1,7 +1,6 @@
 package ch.hslu.vsk.logger.server;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 public class ServerProperties {
@@ -30,15 +29,30 @@ public class ServerProperties {
         return Integer.parseInt(this.serverProperties.getProperty(PROPERTIES_PORT));
     }
 
-    public void loadProperties() {
-        Properties serverProperties = new Properties();
-        try {
-            serverProperties.load(LoggerServer.class.getClassLoader().getResourceAsStream("Server.properties"));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+    public void loadProperties() throws IOException {
+        File configFile = new File("Server.properties");
+
+        if(!configFile.isFile()){
+            createPropertiesFile(configFile);
         }
 
-        this.serverProperties = serverProperties;
+        FileReader reader = new FileReader(configFile);
+        Properties props = new Properties();
+        props.load(reader);
+
+        reader.close();
+
+        this.serverProperties = props;
+    }
+
+    private void createPropertiesFile(File configFile) throws IOException {
+        if(configFile.createNewFile()){
+            FileWriter writer = new FileWriter(configFile);
+            writer.append("ch.hslu.vsk.server.port=1337\n");
+            writer.append("ch.hslu.vsk.server.logfile=");
+            writer.flush();
+            writer.close();
+        }
     }
 
     public Properties getServerProperties(){

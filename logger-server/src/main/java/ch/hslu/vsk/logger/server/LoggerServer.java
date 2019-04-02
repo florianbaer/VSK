@@ -39,18 +39,20 @@ import java.util.logging.Logger;
  */
 public final class LoggerServer implements Runnable {
 
+    private final ServerProperties serverProperties;
     private ExecutorService threadPool = null;
     private StringPersistorAdapter persistorAdapter = null;
 
+    public LoggerServer(ServerProperties serverProperties) {
+        this.serverProperties = serverProperties;
+    }
 
 
     @Override
     public void run() {
         try {
-            ServerProperties serverProperties = new ServerProperties();
-            serverProperties.loadProperties();
-            int loggerPort = serverProperties.loadServerPortProperty();
-            File loggerFile = serverProperties.loadLoggerFileProperty();
+            int loggerPort = this.serverProperties.loadServerPortProperty();
+            File loggerFile = this.serverProperties.loadLoggerFileProperty();
 
             System.out.println("Server listening on port: " + loggerPort);
             try (ServerSocket listen = new ServerSocket(loggerPort)) {
@@ -62,9 +64,14 @@ public final class LoggerServer implements Runnable {
                 this.threadPool = Executors.newCachedThreadPool();
 
                 while (!(Thread.currentThread().isInterrupted())) {
-                    client = listen.accept();
-
-                    this.handleMessage(client);
+                    listen.setSoTimeout(5000);
+                    try{
+                        client = listen.accept();
+                        this.handleMessage(client);
+                    }
+                    catch(SocketTimeoutException ex){
+                        // ignore, because there is no other solution
+                    }
                 }
 
                 this.threadPool.shutdown();

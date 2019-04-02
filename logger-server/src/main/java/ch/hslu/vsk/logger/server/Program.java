@@ -4,19 +4,30 @@ import java.util.Scanner;
 
 public class Program {
     public static void main(String[]args) {
-        LoggerServer server = new LoggerServer();
+        Thread serverThread = null;
+        try{
+            ServerProperties serverProperties = new ServerProperties();
+            serverProperties.loadProperties();
+            LoggerServer server = new LoggerServer(serverProperties);
 
-        Thread serverThread = new Thread(server);
+            serverThread = new Thread(server);
+            Scanner keyboard = new Scanner(System.in);
+            serverThread.start();
 
-        Scanner keyboard = new Scanner(System.in);
-        serverThread.start();
-        char input = ' ';
-        while(input != 'q' && input != 'Q') {
-            System.out.println("Press 'q' or 'Q' to quit the server");
-            input = keyboard.next().charAt(0);
+            char input = ' ';
+            while(input != 'q' && input != 'Q') {
+                System.out.println("Press 'q' or 'Q' to quit the server");
+                input = keyboard.next().charAt(0);
+            }
+        }catch (Exception ex){
+            // generic exception handling on server
+            System.out.println("CRITICAL ERROR. SERVER GOT KILLED...");
         }
-
-        System.out.println("Server will close within the next 5 Seconds.");
-        serverThread.interrupt();
+        finally {
+            if(serverThread != null && serverThread.isAlive())
+            {
+                serverThread.interrupt();
+            }
+        }
     }
 }
