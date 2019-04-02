@@ -30,8 +30,6 @@ public class LogMessage extends AbstractBasicMessage {
         this.addArg(logMessage);
     }
 
-
-
     /**
      * Die Implementierung der Methode operate verküpft die Methoden des
      * Applikationsobjektes mit dem Protokoll des Message-Passing-Systems. Sie
@@ -46,7 +44,6 @@ public class LogMessage extends AbstractBasicMessage {
     @Override
     public boolean operate(LogPersistor persistor) {
         if(persistor != null){
-
             persistor.save(this);
         }
 

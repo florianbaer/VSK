@@ -30,6 +30,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -75,6 +77,7 @@ public final class LoggerServer implements Runnable {
                 filePersistor.setFile(loggerFile);
                 StringPersistorAdapter persistorAdapter = new StringPersistorAdapter(filePersistor);
                 Socket client;
+                ExecutorService threadPool = Executors.newCachedThreadPool();
                 while (!(Thread.currentThread().isInterrupted())) {
                     try {
                         client = listen.accept();
@@ -82,8 +85,7 @@ public final class LoggerServer implements Runnable {
                         LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
                         handler.addMessageType(new LogMessage());
                         handler.addMessageType(new ResultMessage());
-                        Thread t = new Thread(handler);
-                        t.start();
+                        threadPool.execute(handler);
                     }
                     catch (SocketTimeoutException ex){
                         // do nothing, it seems to be the only way to check if the console application has to be
@@ -91,6 +93,8 @@ public final class LoggerServer implements Runnable {
                         // https://stackoverflow.com/questions/2983835/how-can-i-interrupt-a-serversocket-accept-method
                     }
                 }
+
+                threadPool.shutdown();
             } catch (IOException e) {
                 e.printStackTrace();
             }
