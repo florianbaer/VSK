@@ -32,7 +32,7 @@
     </description>
 
     <properties>
-        <jar.start.class>ch.hslu.vsk.logger.server.LoggerServer</jar.start.class>
+        <jar.start.class>ch.hslu.vsk.logger.server.Program</jar.start.class>
     </properties>
     <dependencies>
         <dependency>

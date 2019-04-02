@@ -39,53 +39,33 @@ import java.util.logging.Logger;
  */
 public final class LoggerServer implements Runnable {
 
-    private static String PROPERTIES_LOGFILE = "ch.hslu.vsk.server.logfile";
-    private static String PROPERTIES_PORT = "ch.hslu.vsk.server.port";
+    private ExecutorService threadPool = null;
+    private StringPersistorAdapter persistorAdapter = null;
 
-    public static void main(String[]args) {
-        LoggerServer server = new LoggerServer();
 
-        Thread serverThread = new Thread(server);
-
-        Scanner keyboard = new Scanner(System.in);
-        serverThread.start();
-        char input = ' ';
-        while(input != 'q' && input != 'Q') {
-            System.out.println("Press 'q' or 'Q' to quit the server");
-            input = keyboard.next().charAt(0);
-        }
-
-        System.out.println("Server will close within the next 5 Seconds.");
-        serverThread.interrupt();
-    }
 
     @Override
     public void run() {
         try {
-            Properties serverProperties = this.loadProperties();
-
-            String loggerPort = serverProperties.getProperty(PROPERTIES_PORT);
-            File loggerFile = this.loadLoggerFileProperty(serverProperties);
+            ServerProperties serverProperties = new ServerProperties();
+            serverProperties.loadProperties();
+            int loggerPort = serverProperties.loadServerPortProperty();
+            File loggerFile = serverProperties.loadLoggerFileProperty();
 
             System.out.println("Server listening on port: " + loggerPort);
-            try (ServerSocket listen = new ServerSocket(Integer.parseInt(loggerPort))) {
-                // to check if the server was aborted from user input
-                listen.setSoTimeout(5000);
+            try (ServerSocket listen = new ServerSocket(loggerPort)) {
 
-                FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+                persistorAdapter = this.setupPersistorAdapter(loggerFile);
 
-                filePersistor.setFile(loggerFile);
-                StringPersistorAdapter persistorAdapter = new StringPersistorAdapter(filePersistor);
                 Socket client;
-                ExecutorService threadPool = Executors.newCachedThreadPool();
+
+                this.threadPool = Executors.newCachedThreadPool();
+
                 while (!(Thread.currentThread().isInterrupted())) {
                     try {
                         client = listen.accept();
 
-                        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), persistorAdapter);
-                        handler.addMessageType(new LogMessage());
-                        handler.addMessageType(new ResultMessage());
-                        threadPool.execute(handler);
+                        this.handleMessage(client);
                     }
                     catch (SocketTimeoutException ex){
                         // do nothing, it seems to be the only way to check if the console application has to be
@@ -94,7 +74,7 @@ public final class LoggerServer implements Runnable {
                     }
                 }
 
-                threadPool.shutdown();
+                this.threadPool.shutdown();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -105,30 +85,24 @@ public final class LoggerServer implements Runnable {
         }
     }
 
-    private File loadLoggerFileProperty(Properties serverProperties) throws IOException {
-        var logFilePath = serverProperties.getProperty(PROPERTIES_LOGFILE);
-        File logFile = null;
-        if(logFilePath == null || logFilePath.isEmpty()) {
-            System.out.println("No valid LogFile defined, logging to tmp File...");
-            logFile = File.createTempFile("Server", ".log");
-        }
-        else{
-            logFile = new File(logFilePath);
-        }
 
-        System.out.println(String.format("Logging to file : '%s'", logFile.getAbsoluteFile()));
-        return logFile;
+    private void handleMessage(Socket client) throws IOException {
+        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
+        this.setupMessageTypes(handler);
+        this.threadPool.execute(handler);
     }
 
-    private Properties loadProperties() {
-        Properties serverProperties = new Properties();
-        try {
-            serverProperties.load(LoggerServer.class.getClassLoader().getResourceAsStream("Server.properties"));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-
-        return serverProperties;
+    public void setupMessageTypes(LogServerCommunicationHandler handler) {
+        handler.addMessageType(new LogMessage());
+        handler.addMessageType(new ResultMessage());
     }
+
+    public StringPersistorAdapter setupPersistorAdapter(File loggerFile) {
+        FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+
+        filePersistor.setFile(loggerFile);
+        return new StringPersistorAdapter(filePersistor);
+    }
+
+
 }
