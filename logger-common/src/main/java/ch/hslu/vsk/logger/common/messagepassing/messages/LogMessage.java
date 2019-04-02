@@ -6,6 +6,8 @@ import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessageHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Vector;
+
 /**
  * Klasse welche eine Log-Nachricht darstellt.
  */
@@ -48,5 +50,15 @@ public class LogMessage extends AbstractBasicMessage {
         }
 
         return true;
+    }
+
+    /**
+     * Returns message Text. Currently message text is always the second element in the argument list
+     * @return
+     */
+    public String getMessageText(){
+        Vector<String> args = super.getArgList();
+
+        return String.valueOf(args.get(0));
     }
 }

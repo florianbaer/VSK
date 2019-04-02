@@ -3,6 +3,7 @@ package ch.hslu.vsk.logger.component.logger;
 
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
+import ch.hslu.vsk.logger.common.messagepassing.messages.PayloadCreator;
 import ch.hslu.vsk.logger.component.services.NetworkService;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +39,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void debug(String s) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.DEBUG.toString(), s));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.DEBUG, this.identifier, this.loggerClass, s));
         }
 
     }
@@ -46,14 +47,14 @@ public class LoggerComponent implements Logger {
     @Override
     public void debug(String s, Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.DEBUG.toString(), s, throwable));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.DEBUG, this.identifier, this.loggerClass, throwable.getMessage()));
         }
     }
 
     @Override
     public void info(String s) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.INFO.toString(), s));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.INFO, this.identifier, this.loggerClass, s));
         }
 
     }
@@ -61,7 +62,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void info(String s, Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.INFO.toString(), s, throwable));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.INFO, this.identifier, this.loggerClass, throwable.getMessage()));
         }
 
     }
@@ -69,7 +70,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void warning(String s) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.WARNING.toString(), s));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.WARNING, this.identifier, this.loggerClass, s));
         }
 
     }
@@ -77,14 +78,14 @@ public class LoggerComponent implements Logger {
     @Override
     public void warning(String s, Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.WARNING.toString(), s, throwable));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.WARNING, this.identifier, this.loggerClass, throwable.getMessage()));
         }
     }
 
     @Override
     public void error(String s) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.ERROR.toString(), s));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.ERROR, this.identifier, this.loggerClass, s));
         }
 
     }
@@ -92,7 +93,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void error(String s, Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.ERROR.toString(), s, throwable));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.ERROR, this.identifier, this.loggerClass, throwable.getMessage()));
         }
 
     }
@@ -100,7 +101,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void critical(String s) {
         if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.CRITICAL.toString(), s));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.CRITICAL, this.identifier, this.loggerClass, s));
         }
 
     }
@@ -108,7 +109,7 @@ public class LoggerComponent implements Logger {
     @Override
     public void critical(String s, Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
-            service.sendLogMessageToServer(getLogOutputPattern(LogLevel.CRITICAL.toString(), s, throwable));
+            service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.CRITICAL, this.identifier, this.loggerClass, throwable.getMessage()));
         }
     }
 
@@ -174,21 +175,6 @@ public class LoggerComponent implements Logger {
     public String getIdentifier(){return this.identifier;}
 
     public Class getLoggingClass(){return this.loggerClass;}
-
-    public String getCurrentDateAndTime() { //public because its used in tests
-        SimpleDateFormat swissFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Date currentDate = new Date();
-        return swissFormat.format(currentDate);
-    }
-
-    private String getLogOutputPattern(final String loggertyp, final String message) {
-        return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message;
-    }
-
-    //TODO Choose how to output the throwable object in the log message --> .toString() für den Moment.
-    private String getLogOutputPattern(final String loggertyp, final String message, final Throwable throwable) {
-        return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message + " " + throwable.toString();
-    }
 
     private boolean isLogLevelHighEnough(final LogLevel logLevelOfMethod) {
         return logLevelOfMethod.ordinal() >= (this.logLevel).ordinal();

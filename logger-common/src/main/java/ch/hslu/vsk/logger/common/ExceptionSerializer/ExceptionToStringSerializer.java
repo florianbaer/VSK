@@ -1,7 +1,6 @@
 package ch.hslu.vsk.logger.common.ExceptionSerializer;
 
 public class ExceptionToStringSerializer {
-    private static final String PARAMETER_SEPARATOR = " | ";
 
     private ExceptionToStringSerializer(){
     }
@@ -14,8 +13,18 @@ public class ExceptionToStringSerializer {
     public static String Execute(Exception ex){
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getMessage());
-        builder.append(PARAMETER_SEPARATOR);
-        builder.append(ex.getStackTrace());
+
+        int i = 0;
+        for(StackTraceElement element :  ex.getStackTrace()){
+            builder.append(System.getProperty("line.separator"));
+            builder.append(element.toString());
+            i++;
+
+            if(i > 5){
+                break;
+            }
+        }
+
         return builder.toString();
     }
 }

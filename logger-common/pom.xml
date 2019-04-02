@@ -65,6 +65,11 @@
             <groupId>ch.hslu.vsk</groupId>
             <artifactId>stringpersistor-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ch.hslu.vsk19fs</groupId>
+            <artifactId>loggerinterface</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
