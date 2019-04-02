@@ -22,9 +22,7 @@ public class StringPersistorAdapter implements LogPersistor {
 
 
     public void save(final LogMessage log) {
-        //todo: dave magic code
-
-        this.stringPersistor.save(Instant.now(), log.toString());
+        this.stringPersistor.save(Instant.now(), log.getMessageText());
     }
 
 }
