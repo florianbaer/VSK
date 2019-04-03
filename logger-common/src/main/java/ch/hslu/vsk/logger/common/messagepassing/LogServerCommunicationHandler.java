@@ -51,7 +51,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
         try {
             boolean busy = true;
             while (busy) {
-                final AbstractBasicMessage msg = readMsg();
+                AbstractBasicMessage msg = readMsg();
                 if (msg != null) {
                     busy = msg.operate(this.persistor);
                 }
