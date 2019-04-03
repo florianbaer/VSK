@@ -1,6 +1,8 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
+import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
+import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,13 +35,11 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
      */
     @Override
     protected AbstractBasicMessage buildMessage(String msgId) {
-
-        var message = this.getMessageTypes().stream().filter(x -> x.getMessageId().equals(msgId)).findFirst();
-
-        if(!message.isEmpty() && message.isPresent()){
-            return message.get();
+        if(msgId.equals("log")){
+            return new LogMessage();
+        } else{
+            return new ResultMessage();
         }
-        return null;
     }
 
 

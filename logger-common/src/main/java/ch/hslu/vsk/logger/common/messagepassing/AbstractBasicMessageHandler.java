@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 
@@ -18,7 +16,6 @@ public abstract class AbstractBasicMessageHandler {
     private final InputStream msgIn;
     private final OutputStream msgOut;
     private static final String END_TOKEN = "END";
-    private List<AbstractBasicMessage> messages = new ArrayList<>();
 
     /**
      * Constructor.
@@ -30,22 +27,6 @@ public abstract class AbstractBasicMessageHandler {
         msgIn = inputStream;
         msgOut = outputStream;
         current = this;
-    }
-
-    /**
-     * Gets the message types configured in the message handler.
-     * @return the messages in a list.
-     */
-    public List<AbstractBasicMessage> getMessageTypes(){
-        return this.messages;
-    }
-
-    /**
-     * Adds a message type to the list of messages
-     * @param messageType
-     */
-    public void addMessageType(AbstractBasicMessage messageType){
-        this.messages.add(messageType);
     }
 
     /**
@@ -65,7 +46,7 @@ public abstract class AbstractBasicMessageHandler {
     public final AbstractBasicMessage readMsg() throws IOException {
         final DataInputStream din = new DataInputStream(msgIn);
         String token = din.readUTF();
-        final AbstractBasicMessage msg = buildMessage(token);
+        AbstractBasicMessage msg = buildMessage(token);
 
         if (msg != null) {
             boolean endOfMessage = false;
