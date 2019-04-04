@@ -10,7 +10,7 @@ public class ServerProperties {
 
     Properties serverProperties = null;
 
-    public File loadLoggerFileProperty() throws IOException {
+    public File getLoggerFile() throws IOException {
         var logFilePath = this.serverProperties.getProperty(PROPERTIES_LOGFILE);
         File logFile = null;
         if(logFilePath == null || logFilePath.isEmpty()) {
@@ -25,7 +25,7 @@ public class ServerProperties {
         return logFile;
     }
 
-    public int loadServerPortProperty() {
+    public int getServerPort() {
         return Integer.parseInt(this.serverProperties.getProperty(PROPERTIES_PORT));
     }
 

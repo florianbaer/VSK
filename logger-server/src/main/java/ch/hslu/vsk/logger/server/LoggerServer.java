@@ -17,22 +17,15 @@ package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
-import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
-import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.Properties;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * Logger-Server which handles the incoming request from the logger component.
@@ -43,16 +36,17 @@ public final class LoggerServer implements Runnable {
     private ExecutorService threadPool = null;
     private StringPersistorAdapter persistorAdapter = null;
 
-    public LoggerServer(ServerProperties serverProperties) {
+    public LoggerServer(ServerProperties serverProperties, ExecutorService threadPool) {
         this.serverProperties = serverProperties;
+        this.threadPool = threadPool;
     }
 
 
     @Override
     public void run() {
         try {
-            int loggerPort = this.serverProperties.loadServerPortProperty();
-            File loggerFile = this.serverProperties.loadLoggerFileProperty();
+            int loggerPort = this.serverProperties.getServerPort();
+            File loggerFile = this.serverProperties.getLoggerFile();
 
             System.out.println("Server listening on port: " + loggerPort);
             try (ServerSocket listen = new ServerSocket(loggerPort)) {
@@ -61,7 +55,6 @@ public final class LoggerServer implements Runnable {
 
                 Socket client;
 
-                this.threadPool = Executors.newCachedThreadPool();
 
                 while (!(Thread.currentThread().isInterrupted())) {
                     listen.setSoTimeout(5000);

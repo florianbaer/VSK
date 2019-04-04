@@ -16,12 +16,6 @@
 package ch.hslu.vsk.logger.server;
 
 import org.junit.jupiter.api.Test;
-import ch.hslu.vsk.logger.api.LogLevel;
-import ch.hslu.vsk.logger.api.LoggerSetupFactory;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 
 import java.io.*;
@@ -48,8 +42,8 @@ final class ServerPropertiesTests {
 
         // Assert
         assertEquals(configFile.isFile(), true);
-        assertEquals(properties.loadServerPortProperty(), 1337);
-        assertThat(properties.loadLoggerFileProperty().getAbsolutePath()).contains("Server").contains(".log");
+        assertEquals(properties.getServerPort(), 1337);
+        assertThat(properties.getLoggerFile().getAbsolutePath()).contains("Server").contains(".log");
     }
 
     @Test
@@ -70,8 +64,8 @@ final class ServerPropertiesTests {
 
         // Assert
         assertEquals(true, configFile.isFile());
-        assertEquals(properties.loadServerPortProperty(), port);
-        assertThat(properties.loadLoggerFileProperty().getAbsolutePath()).isEqualTo(new File(filePath).getAbsolutePath());
+        assertEquals(properties.getServerPort(), port);
+        assertThat(properties.getLoggerFile().getAbsolutePath()).isEqualTo(new File(filePath).getAbsolutePath());
     }
 
     private void setUpConfigFile(String filePath, int port) throws IOException {

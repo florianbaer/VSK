@@ -16,12 +16,31 @@
 package ch.hslu.vsk.logger.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
+import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
+import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 /**
  * Testfälle für RemoveMeTest.
  */
 final class LoggerServerTests {
 
+    @Test
+    public void setupPersistorAdapterTest() throws IOException {
+        var properties = mock(ServerProperties.class);
+        var threadPool = mock(ExecutorService.class);
+        LoggerServer server = new LoggerServer(properties, threadPool);
+        File file = new File("File.tmp");
+        file.createNewFile();
+        file.deleteOnExit();
+        StringPersistorAdapter persistor = server.setupPersistorAdapter(file);
+        assertThat(persistor.getStringPersistor()).isInstanceOf(FileStringPersistor.class);
+    }
 }

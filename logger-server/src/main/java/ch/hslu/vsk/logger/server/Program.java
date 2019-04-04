@@ -1,6 +1,7 @@
 package ch.hslu.vsk.logger.server;
 
 import java.util.Scanner;
+import java.util.concurrent.Executors;
 
 public class Program {
     public static void main(String[]args) {
@@ -8,7 +9,7 @@ public class Program {
         try{
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
-            LoggerServer server = new LoggerServer(serverProperties);
+            LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool());
 
             serverThread = new Thread(server);
             Scanner keyboard = new Scanner(System.in);
