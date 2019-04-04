@@ -326,6 +326,11 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/LoggerComponent.*</exclude>
+                        </excludes>
+                    </configuration>
                     <version>${jacocoPlugin.version}</version>
                 </plugin>
                 <plugin>
