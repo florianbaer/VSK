@@ -19,7 +19,6 @@ import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
