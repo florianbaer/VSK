@@ -79,7 +79,7 @@ public final class LoggerServer implements Runnable {
     }
 
 
-    private void handleMessage(Socket client) throws IOException {
+    public void handleMessage(Socket client) throws IOException {
         LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
         this.threadPool.execute(handler);
     }

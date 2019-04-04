@@ -16,14 +16,18 @@
 package ch.hslu.vsk.logger.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
+import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import org.junit.jupiter.api.Test;
+import org.mockito.Matchers;
+import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
@@ -38,9 +42,20 @@ final class LoggerServerTests {
         var threadPool = mock(ExecutorService.class);
         LoggerServer server = new LoggerServer(properties, threadPool);
         File file = new File("File.tmp");
-        file.createNewFile();
+        assertThat(file.createNewFile()).isTrue();
         file.deleteOnExit();
         StringPersistorAdapter persistor = server.setupPersistorAdapter(file);
         assertThat(persistor.getStringPersistor()).isInstanceOf(FileStringPersistor.class);
+    }
+
+    @Test
+    public void loggerServerHandleTest() throws IOException {
+        var properties = mock(ServerProperties.class);
+        var threadPool = mock(ExecutorService.class);
+        var socket = mock(Socket.class);
+
+        LoggerServer server = new LoggerServer(properties, threadPool);
+        server.handleMessage(socket);
+        verify(threadPool, times(1)).execute(isA(LogServerCommunicationHandler.class));
     }
 }
