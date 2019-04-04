@@ -59,7 +59,8 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
         } catch (IOException e) {
             // Treat an IOException as a termination of the message
             // exchange, and let this message-processing thread die.
-            System.out.println(e.getMessage());
+
+            // CODE VON DOZENTEN...
         }
     }
 }
