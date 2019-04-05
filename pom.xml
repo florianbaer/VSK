@@ -20,7 +20,7 @@
 
     <groupId>ch.hslu.vsk19fs.g06</groupId>
     <artifactId>g06-logger</artifactId>
-    <version>0.5.0</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>g06-logger</name>
@@ -115,7 +115,7 @@
             <dependency>
                 <groupId>ch.hslu.vsk19fs.g06</groupId>
                 <artifactId>g06-stringpersistor</artifactId>
-                <version>0.5.0</version>
+                <version>1.0.0</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
