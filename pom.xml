@@ -20,7 +20,7 @@
 
     <groupId>ch.hslu.vsk19fs.g06</groupId>
     <artifactId>g06-logger</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>g06-logger</name>
@@ -77,6 +77,7 @@
     </ciManagement>
 
     <properties>
+
         <scm.group.name>vsk-19fs01</scm.group.name>
         <scm.developer.uid>${user.name}</scm.developer.uid>
 
@@ -114,13 +115,13 @@
             <dependency>
                 <groupId>ch.hslu.vsk19fs.g06</groupId>
                 <artifactId>g06-stringpersistor</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>ch.hslu.vsk19fs</groupId>
                 <artifactId>loggerinterface</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -325,6 +326,11 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/LoggerComponent.*</exclude>
+                        </excludes>
+                    </configuration>
                     <version>${jacocoPlugin.version}</version>
                 </plugin>
                 <plugin>
@@ -448,6 +454,11 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
             </plugin>
         </plugins>
     </reporting>
