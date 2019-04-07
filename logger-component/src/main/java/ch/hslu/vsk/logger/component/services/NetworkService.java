@@ -1,10 +1,8 @@
 package ch.hslu.vsk.logger.component.services;
 
-import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.Properties;
 
@@ -36,8 +34,8 @@ public final class NetworkService {
         try {
             clientSocket = new Socket(this.host, this.port);
             logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
-        } catch (IOException ioe) {
-            System.out.println(ioe.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -85,7 +83,7 @@ public final class NetworkService {
             this.port = port;
             clientSocket = new Socket(host, port);
             logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             System.out.println(ioe.getMessage());
         }
     }
@@ -102,8 +100,9 @@ public final class NetworkService {
         LogMessage message = new LogMessage(messageToSend);
         try {
             logCommunicationHandler.sendMsg(message);
-        } catch (IOException ioe)  {
-            System.out.println(ioe.getMessage());
+        } catch (Exception e)  {
+            System.out.println("Sending to the server not possible...");
+            System.out.println(e.getMessage());
         }
     }
 }
