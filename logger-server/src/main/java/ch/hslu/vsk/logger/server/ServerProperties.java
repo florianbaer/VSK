@@ -21,8 +21,18 @@ public class ServerProperties {
             logFile = new File(logFilePath);
         }
 
+        this.createFileIfNotExisting(logFile);
+
         System.out.println(String.format("Logging to file : '%s'", logFile.getAbsoluteFile()));
         return logFile;
+    }
+
+    private void createFileIfNotExisting(File file) throws IOException {
+        file.getParentFile().mkdirs();
+
+        if(!file.isFile()){
+            file.createNewFile();
+        }
     }
 
     public int getServerPort() {
