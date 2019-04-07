@@ -102,8 +102,9 @@ public final class NetworkService {
         LogMessage message = new LogMessage(messageToSend);
         try {
             logCommunicationHandler.sendMsg(message);
-        } catch (IOException ioe)  {
-            System.out.println(ioe.getMessage());
+        } catch (Exception e)  {
+            System.out.println("Sending to the server not possible...");
+            System.out.println(e.getMessage());
         }
     }
 }
