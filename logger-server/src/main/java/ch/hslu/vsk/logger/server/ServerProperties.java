@@ -43,7 +43,12 @@ public class ServerProperties {
      * @throws IOException The unhandled io exception.
      */
     private void createFileIfNotExisting(final File file) throws IOException {
-        file.getParentFile().mkdirs();
+        if (!file.isFile()) {
+            var parent = file.getParentFile();
+            if (parent != null) {
+                parent.mkdirs();
+            }
+        }
 
         if (!file.isFile()) {
             file.createNewFile();
