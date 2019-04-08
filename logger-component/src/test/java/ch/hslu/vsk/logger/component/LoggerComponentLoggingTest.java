@@ -13,9 +13,8 @@ import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * This test class focuses on Testing the logging-aspects of the LoggerComponent
+ * This test class focuses on Testing the logging-aspects of the LoggerComponent.
  */
-
 class LoggerComponentLoggingTest {
 
     private LoggerComponentMock logger;

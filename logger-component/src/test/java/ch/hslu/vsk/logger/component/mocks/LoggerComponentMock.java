@@ -17,7 +17,14 @@ public class LoggerComponentMock implements Logger {
     private String identifier;
     private Class loggerClass;
 
-    public LoggerComponentMock(LogLevel level, String connectionString, String identifier, Class clazz) {
+    /**
+     * Mock constructor
+     * @param level to log
+     * @param connectionString to connect
+     * @param identifier of component
+     * @param clazz that logs
+     */
+    public LoggerComponentMock(final LogLevel level, final String connectionString, final String identifier, final Class clazz) {
         this.logLevel = level;
         this.connectionString = connectionString;
         this.identifier = identifier;
@@ -25,7 +32,7 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void debug(String s) {
+    public void debug(final String s) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
             printInTerminal(getLogOutputPattern(LogLevel.DEBUG.toString(), s));
         }
@@ -33,14 +40,14 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void debug(String s, Throwable throwable) {
+    public void debug(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
             printInTerminal(getLogOutputPattern(LogLevel.DEBUG.toString(), s, throwable));
         }
     }
 
     @Override
-    public void info(String s) {
+    public void info(final String s) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
             printInTerminal(getLogOutputPattern(LogLevel.INFO.toString(), s));
         }
@@ -48,7 +55,7 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void info(String s, Throwable throwable) {
+    public void info(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
             printInTerminal(getLogOutputPattern(LogLevel.INFO.toString(), s, throwable));
         }
@@ -56,7 +63,7 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void warning(String s) {
+    public void warning(final String s) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
             printInTerminal(getLogOutputPattern(LogLevel.WARNING.toString(), s));
         }
@@ -64,14 +71,14 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void warning(String s, Throwable throwable) {
+    public void warning(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
             printInTerminal(getLogOutputPattern(LogLevel.WARNING.toString(), s, throwable));
         }
     }
 
     @Override
-    public void error(String s) {
+    public void error(final String s) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
             printInTerminal(getLogOutputPattern(LogLevel.ERROR.toString(), s));
         }
@@ -79,7 +86,7 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void error(String s, Throwable throwable) {
+    public void error(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
             printInTerminal(getLogOutputPattern(LogLevel.ERROR.toString(), s, throwable));
         }
@@ -95,14 +102,14 @@ public class LoggerComponentMock implements Logger {
     }
 
     @Override
-    public void critical(String s, Throwable throwable) {
+    public void critical(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
             printInTerminal(getLogOutputPattern(LogLevel.CRITICAL.toString(), s, throwable));
         }
     }
 
     @Override
-    public void log(LogLevel logLevel, String s) {
+    public void log(final LogLevel logLevel, final String s) {
         switch (logLevel) {
             case OFF:
                 break;
@@ -121,12 +128,14 @@ public class LoggerComponentMock implements Logger {
             case CRITICAL:
                 this.critical(s);
                 break;
+            default:
+                break;
         }
 
     }
 
     @Override
-    public void log(LogLevel logLevel, String s, Throwable throwable) {
+    public void log(final LogLevel logLevel, final String s, final Throwable throwable) {
         switch (logLevel) {
             case OFF:
                 break;
@@ -145,11 +154,13 @@ public class LoggerComponentMock implements Logger {
             case CRITICAL:
                 this.critical(s, throwable);
                 break;
+            default:
+                break;
         }
     }
 
     @Override
-    public void setMinLogLevel(LogLevel logLevel) {
+    public void setMinLogLevel(final LogLevel logLevel) {
         this.logLevel = logLevel;
     }
 
@@ -157,13 +168,6 @@ public class LoggerComponentMock implements Logger {
     public LogLevel getMinLogLevel() {
         return this.logLevel;
     }
-
-    public String getConnectionString(){return this.connectionString;}
-
-    public String getIdentifier(){return this.identifier;}
-
-    public Class getLoggingClass(){return this.loggerClass;}
-
 
     // All following Methods are just a workaround because the server side is missing at the moment
 
@@ -176,13 +180,22 @@ public class LoggerComponentMock implements Logger {
         System.out.print(messageToPrint);
     }
 
+    /**
+     * Construct current time in swiss format
+     * @return time in swiss format
+     */
     public String getCurrentDateAndTime() { //public because its used in tests
         SimpleDateFormat swissFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date currentDate = new Date();
         return swissFormat.format(currentDate);
     }
 
-
+    /**
+     * Get the pattern to log
+     * @param loggertyp type of logger
+     * @param message to log
+     * @return
+     */
     private String getLogOutputPattern(final String loggertyp, final String message) {
         return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message;
     }
@@ -192,6 +205,11 @@ public class LoggerComponentMock implements Logger {
         return getCurrentDateAndTime() + " " + loggertyp + " " + this.getClass().getSimpleName() + " " + message + " " + throwable.toString();
     }
 
+    /**
+     * Checks if the level to log is high enough
+     * @param logLevelOfMethod to log
+     * @return true if high enough, false if not
+     */
     private boolean isLogLevelHighEnough(final LogLevel logLevelOfMethod) {
         return logLevelOfMethod.ordinal() >= (this.logLevel).ordinal();
     }
