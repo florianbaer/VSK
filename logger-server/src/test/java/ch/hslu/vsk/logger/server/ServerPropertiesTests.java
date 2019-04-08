@@ -21,10 +21,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Testfälle für RemoveMeTest.
+ * Unit tests for the server properties.
  */
 final class ServerPropertiesTests {
 

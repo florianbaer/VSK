@@ -22,14 +22,11 @@ import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import org.junit.jupiter.api.Test;
-import org.mockito.Matchers;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Logger;
 
 /**
  * Testfälle für RemoveMeTest.

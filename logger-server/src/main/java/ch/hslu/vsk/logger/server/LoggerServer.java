@@ -36,9 +36,9 @@ public final class LoggerServer implements Runnable {
     private StringPersistorAdapter persistorAdapter = null;
 
     /**
-     * Public Constructor.
-     * @param serverProperties properties for the server
-     * @param threadPool threadpool to handle requests
+     * The loggerserver which handles the requests.
+     * @param serverProperties The properties to be used in the server.
+     * @param threadPool The executor service to be used.
      */
     public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool) {
         this.serverProperties = serverProperties;
@@ -81,11 +81,10 @@ public final class LoggerServer implements Runnable {
         }
     }
 
-
     /**
-     * Setup the LogServerCommunicationHandler.
-     * @param client socket for communicating
-     * @throws IOException raised if error occurs
+     * The method to handle the incoming messages.
+     * @param client The socket client which has the connections.
+     * @throws IOException unhandled io exception.
      */
     public void handleMessage(final Socket client) throws IOException {
         LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
@@ -93,9 +92,9 @@ public final class LoggerServer implements Runnable {
     }
 
     /**
-     * Setup the persistor with given file.
-     * @param loggerFile file to log to
-     * @return StringPersistorAdapter
+     * Creates the persistor adapter.
+     * @param loggerFile The loggerfile used to setup the persistor.
+     * @return StringPersistorAdapter using the given logger file.
      */
     public StringPersistorAdapter setupPersistorAdapter(final File loggerFile) {
         FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
