@@ -3,7 +3,6 @@ package ch.hslu.vsk.logger.component.logger;
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetup;
-import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 
 /**
  * Setup class for initializing a LoggerComponent. The builder pattern is applied.
@@ -11,32 +10,32 @@ import ch.hslu.vsk.logger.component.logger.LoggerComponent;
  * @author Matthias Egli, David Gut, Florian Bär, Dennis Dekker
  * @version 0.5.0
  */
-public class LoggerComponentSetup implements LoggerSetup {
+public final class LoggerComponentSetup implements LoggerSetup {
     private LogLevel level;
     private String identifier;
     private String connectionString;
     private Class clazz;
 
     @Override
-    public LoggerSetup withConnectionString(String connectionString) {
+    public LoggerSetup withConnectionString(final String connectionString) {
         this.connectionString = connectionString;
         return this;
     }
 
     @Override
-    public LoggerSetup withMinLogLevel(LogLevel logLevel) {
+    public LoggerSetup withMinLogLevel(final LogLevel logLevel) {
         this.level = logLevel;
         return this;
     }
 
     @Override
-    public LoggerSetup withIdentifier(String identifier) {
+    public LoggerSetup withIdentifier(final String identifier) {
         this.identifier = identifier;
         return this;
     }
 
     @Override
-    public LoggerSetup withClass(Class clazz) {
+    public LoggerSetup withClass(final Class clazz) {
         this.clazz = clazz;
         return this;
     }

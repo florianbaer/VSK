@@ -2,9 +2,7 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
-import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessageHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import java.util.Vector;
 
@@ -16,9 +14,9 @@ public class LogMessage extends AbstractBasicMessage {
     private static final String MESSAGE_ID = "log";
 
     /**
-     * Default Konstruktor
+     * Default Konstruktor.
      */
-    public LogMessage(){
+    public LogMessage() {
         super(MESSAGE_ID);
     }
 
@@ -44,8 +42,8 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(LogPersistor persistor) {
-        if(persistor != null){
+    public boolean operate(final LogPersistor persistor) {
+        if (persistor != null) {
             persistor.save(this);
         }
 
@@ -54,9 +52,9 @@ public class LogMessage extends AbstractBasicMessage {
 
     /**
      * Returns message Text. Currently message text is always the second element in the argument list
-     * @return
+     * @return first Argument of Arg-List
      */
-    public String getMessageText(){
+    public String getMessageText() {
         Vector<String> args = super.getArgList();
 
         return String.valueOf(args.get(0));

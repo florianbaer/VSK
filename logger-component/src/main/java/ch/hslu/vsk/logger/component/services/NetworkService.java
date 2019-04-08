@@ -26,8 +26,11 @@ public final class NetworkService {
     /**
      * Private constructor. Creates a client socket with the
      * parameter specified in the properties file of the logger.
+     *
+     * @param host host address
+     * @param port port
      */
-    private NetworkService(String host, int port) {
+    private NetworkService(final String host, final int port) {
         this.host = host;
         this.port = port;
 
@@ -47,18 +50,19 @@ public final class NetworkService {
     public static NetworkService getInstance() {
         Properties networkProperties = new Properties();
 
-        synchronized (NetworkService.class){
-            if (service == null)
+        synchronized (NetworkService.class) {
+            if (service == null) {
                 try {
                     networkProperties.load(NetworkService.class.getClassLoader().getResourceAsStream(LOGGER_PROPERTY_FILE));
-                    String propertyAsString =  networkProperties.getProperty(PROPERTY_CONNECTION_STRING);
+                    String propertyAsString = networkProperties.getProperty(PROPERTY_CONNECTION_STRING);
 
                     String[] connectionString = propertyAsString.split(":");
 
                     service = new NetworkService(connectionString[0], Integer.valueOf(connectionString[1]));
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
+            }
 
         }
         return service;
@@ -67,15 +71,17 @@ public final class NetworkService {
     /**
      * This method is needed because the connection String of the LoggerComponent
      * can be set outside of the properties file.
+     *
+     * @param connectionString connection string 'host:port'
      */
-    public void changeConnectionDetails(String connectionString){
+    public void changeConnectionDetails(final String connectionString) {
         String[] connection = connectionString.split(":");
 
         String host = connection[0];
         int port = Integer.valueOf(connection[1]);
 
         try {
-            if(clientSocket != null) {
+            if (clientSocket != null) {
                 clientSocket.close();
             }
 
@@ -88,15 +94,19 @@ public final class NetworkService {
         }
     }
 
-    public String getConnectionDetails(){
+    /**
+     * Return the connection string.
+     * @return host:port
+     */
+    public String getConnectionDetails() {
         return "Host: " + this.host + ", Port: " + port;
     }
 
     /**
-     * Sends a log message to the remote server application
-     * @param messageToSend
+     * Sends a log message to the remote server application.
+     * @param messageToSend message that should be added as payload to the message object
      */
-    public void sendLogMessageToServer(String messageToSend) {
+    public void sendLogMessageToServer(final String messageToSend) {
         LogMessage message = new LogMessage(messageToSend);
         try {
             logCommunicationHandler.sendMsg(message);

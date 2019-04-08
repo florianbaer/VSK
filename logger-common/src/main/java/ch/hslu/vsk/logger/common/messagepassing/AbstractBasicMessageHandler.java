@@ -9,7 +9,7 @@ import java.util.Vector;
 
 
 /**
- * BasicMessageHandler
+ * BasicMessageHandler.
  */
 public abstract class AbstractBasicMessageHandler {
     private static AbstractBasicMessageHandler current;
@@ -30,8 +30,8 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Returns the static message handler object
-     * @return current.
+     * Returns the static message handler object.
+     * @return current
      */
     public static AbstractBasicMessageHandler getMessageHandler() {
         return current;
@@ -41,7 +41,7 @@ public abstract class AbstractBasicMessageHandler {
      * Reads an incoming message and returns it.
      *
      * @return Message with arguments
-     * @throws IOException
+     * @throws IOException that can occur during reading
      */
     public final AbstractBasicMessage readMsg() throws IOException {
         final DataInputStream din = new DataInputStream(msgIn);
@@ -51,10 +51,10 @@ public abstract class AbstractBasicMessageHandler {
         if (msg != null) {
             boolean endOfMessage = false;
 
-            while (!endOfMessage){
+            while (!endOfMessage) {
                 token = din.readUTF();
 
-                if(token.compareTo(END_TOKEN) == 0){
+                if (token.compareTo(END_TOKEN) == 0) {
                     endOfMessage = true;
                 } else {
                     msg.addArg(token);
@@ -65,7 +65,7 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Writes the given message to the output-stream and marks it's end with the END_TOKEN
+     * Writes the given message to the output-stream and marks it's end with the END_TOKEN.
      *
      * @param msg Message.
      * @throws IOException IO-Fehler.
@@ -80,7 +80,7 @@ public abstract class AbstractBasicMessageHandler {
         int argSize = arguments.size();
 
         // schreibe alle Argumente in den DataOutputStream
-        for (int i = 0; i < argSize; i ++){
+        for (int i = 0; i < argSize; i++) {
             dataOutputStream.writeUTF(arguments.elementAt(i));
         }
 
@@ -91,7 +91,7 @@ public abstract class AbstractBasicMessageHandler {
 
 
     /**
-     * Build a message with the given id
+     * Build a message with the given id.
      *
      * @param msgId MessageID.
      * @return Message

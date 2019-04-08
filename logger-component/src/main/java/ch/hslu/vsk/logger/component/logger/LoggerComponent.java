@@ -6,8 +6,6 @@ import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.common.messagepassing.messages.PayloadCreator;
 import ch.hslu.vsk.logger.component.services.NetworkService;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Represents a logger which can be used to log messages with different log-levels. To obtain a instance
@@ -16,7 +14,7 @@ import java.util.Date;
  * @author Matthias Egli, David Gut, Florian Bär, Dennis Dekker
  * @version 0.5.0
  */
-public class LoggerComponent implements Logger {
+public final class LoggerComponent implements Logger {
 
     private LogLevel logLevel;
     private String connectionString;
@@ -24,20 +22,27 @@ public class LoggerComponent implements Logger {
     private Class loggerClass;
     private NetworkService service;
 
-    public LoggerComponent(LogLevel level, String connectionString, String identifier, Class clazz) {
+    /**
+     * Constructor used to initiate the LoggerComponent.
+     * @param level minLevel of the component
+     * @param connectionString host:port as string
+     * @param identifier id of the component
+     * @param clazz logging class
+     */
+    public LoggerComponent(final LogLevel level, final String connectionString, final String identifier, final Class clazz) {
         this.logLevel = level;
         this.connectionString = connectionString;
         this.identifier = identifier;
         this.loggerClass = clazz;
         this.service = NetworkService.getInstance();
 
-        if(connectionString != null && !connectionString.isEmpty()){
+        if (connectionString != null && !connectionString.isEmpty()) {
             this.service.changeConnectionDetails(connectionString);
         }
     }
 
     @Override
-    public void debug(String s) {
+    public void debug(final String s) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.DEBUG, this.identifier, this.loggerClass, s));
         }
@@ -45,14 +50,14 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void debug(String s, Throwable throwable) {
+    public void debug(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.DEBUG, this.identifier, this.loggerClass, throwable.getMessage()));
         }
     }
 
     @Override
-    public void info(String s) {
+    public void info(final String s) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.INFO, this.identifier, this.loggerClass, s));
         }
@@ -60,7 +65,7 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void info(String s, Throwable throwable) {
+    public void info(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.INFO, this.identifier, this.loggerClass, throwable.getMessage()));
         }
@@ -68,7 +73,7 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void warning(String s) {
+    public void warning(final String s) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.WARNING, this.identifier, this.loggerClass, s));
         }
@@ -76,14 +81,14 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void warning(String s, Throwable throwable) {
+    public void warning(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.WARNING, this.identifier, this.loggerClass, throwable.getMessage()));
         }
     }
 
     @Override
-    public void error(String s) {
+    public void error(final String s) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.ERROR, this.identifier, this.loggerClass, s));
         }
@@ -91,7 +96,7 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void error(String s, Throwable throwable) {
+    public void error(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.ERROR, this.identifier, this.loggerClass, throwable.getMessage()));
         }
@@ -99,7 +104,7 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void critical(String s) {
+    public void critical(final String s) {
         if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.CRITICAL, this.identifier, this.loggerClass, s));
         }
@@ -107,14 +112,14 @@ public class LoggerComponent implements Logger {
     }
 
     @Override
-    public void critical(String s, Throwable throwable) {
+    public void critical(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
             service.sendLogMessageToServer(PayloadCreator.generatePayload(LogLevel.CRITICAL, this.identifier, this.loggerClass, throwable.getMessage()));
         }
     }
 
     @Override
-    public void log(LogLevel logLevel, String s) {
+    public void log(final LogLevel logLevel, final String s) {
         switch (logLevel) {
             case OFF:
                 break;
@@ -133,12 +138,14 @@ public class LoggerComponent implements Logger {
             case CRITICAL:
                 this.critical(s);
                 break;
+            default:
+                break;
         }
 
     }
 
     @Override
-    public void log(LogLevel logLevel, String s, Throwable throwable) {
+    public void log(final LogLevel logLevel, final String s, final Throwable throwable) {
         switch (logLevel) {
             case OFF:
                 break;
@@ -157,11 +164,13 @@ public class LoggerComponent implements Logger {
             case CRITICAL:
                 this.critical(s, throwable);
                 break;
+            default:
+                break;
         }
     }
 
     @Override
-    public void setMinLogLevel(LogLevel logLevel) {
+    public void setMinLogLevel(final LogLevel logLevel) {
         this.logLevel = logLevel;
     }
 
@@ -170,12 +179,35 @@ public class LoggerComponent implements Logger {
         return this.logLevel;
     }
 
-    public String getConnectionString(){return this.connectionString;}
+    /**
+     * Getter for connection string used for logging.
+     * @return host:port as String
+     */
+    public String getConnectionString() {
+        return this.connectionString;
+    }
 
-    public String getIdentifier(){return this.identifier;}
+    /**
+     * Returns id of the logger component.
+     * @return id used to identify logger
+     */
+    public String getIdentifier() {
+        return this.identifier;
+    }
 
-    public Class getLoggingClass(){return this.loggerClass;}
+    /**
+     * Returns class that logs.
+     * @return logging class
+     */
+    public Class getLoggingClass() {
+        return this.loggerClass;
+    }
 
+    /**
+     * Checks if given log level is high enough compared to the minLogLevel.
+     * @param logLevelOfMethod log level to log
+     * @return true if high enough, false if not
+     */
     private boolean isLogLevelHighEnough(final LogLevel logLevelOfMethod) {
         return logLevelOfMethod.ordinal() >= (this.logLevel).ordinal();
     }

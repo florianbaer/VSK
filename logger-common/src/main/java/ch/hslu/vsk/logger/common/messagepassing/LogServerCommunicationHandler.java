@@ -7,47 +7,48 @@ import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Optional;
+
 
 /**
- * Communication handler that is responsible for the server-side communication
+ * Communication handler that is responsible for the server-side communication.
  */
 public final class LogServerCommunicationHandler extends AbstractBasicMessageHandler implements Runnable {
 
     private final LogPersistor persistor;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param inputStream  Inputstream
      * @param outputStream Outputstream
+     * @param persistor LogPersistor
      */
-    public LogServerCommunicationHandler(InputStream inputStream, OutputStream outputStream, LogPersistor persistor) {
+    public LogServerCommunicationHandler(final InputStream inputStream, final OutputStream outputStream, final LogPersistor persistor) {
         super(inputStream, outputStream);
         this.persistor = persistor;
     }
 
     /**
-     * Builds a message matching the given message id
+     * Builds a message matching the given message id.
      *
      * @param msgId MessageID.
      * @return Message
      */
     @Override
-    protected AbstractBasicMessage buildMessage(String msgId) {
-        if(msgId.equals("log")){
+    protected AbstractBasicMessage buildMessage(final String msgId) {
+        if (msgId.equals("log")) {
             return new LogMessage();
-        } else{
+        } else {
             return new ResultMessage();
         }
     }
 
 
     /**
-     * Used in asynchronous message handling. Currently used only on the server side
+     * Used in asynchronous message handling. Currently used only on the server side.
      */
     @Override
-    public final void run() {
+    public void run() {
         try {
             boolean busy = true;
             while (busy) {

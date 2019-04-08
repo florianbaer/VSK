@@ -35,7 +35,12 @@ public final class LoggerServer implements Runnable {
     private ExecutorService threadPool = null;
     private StringPersistorAdapter persistorAdapter = null;
 
-    public LoggerServer(ServerProperties serverProperties, ExecutorService threadPool) {
+    /**
+     * Public Constructor.
+     * @param serverProperties properties for the server
+     * @param threadPool threadpool to handle requests
+     */
+    public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool) {
         this.serverProperties = serverProperties;
         this.threadPool = threadPool;
     }
@@ -57,11 +62,10 @@ public final class LoggerServer implements Runnable {
 
                 while (!(Thread.currentThread().isInterrupted())) {
                     listen.setSoTimeout(5000);
-                    try{
+                    try {
                         client = listen.accept();
                         this.handleMessage(client);
-                    }
-                    catch(SocketTimeoutException ex){
+                    } catch (SocketTimeoutException ex) {
                         // ignore, because there is no other solution
                     }
                 }
@@ -70,7 +74,7 @@ public final class LoggerServer implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println("Error while initialization of the server...");
             System.out.println(ex.getMessage());
             ex.printStackTrace();
@@ -78,12 +82,22 @@ public final class LoggerServer implements Runnable {
     }
 
 
-    public void handleMessage(Socket client) throws IOException {
+    /**
+     * Setup the LogServerCommunicationHandler.
+     * @param client socket for communicating
+     * @throws IOException raised if error occurs
+     */
+    public void handleMessage(final Socket client) throws IOException {
         LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
         this.threadPool.execute(handler);
     }
 
-    public StringPersistorAdapter setupPersistorAdapter(File loggerFile) {
+    /**
+     * Setup the persistor with given file.
+     * @param loggerFile file to log to
+     * @return StringPersistorAdapter
+     */
+    public StringPersistorAdapter setupPersistorAdapter(final File loggerFile) {
         FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
 
         filePersistor.setFile(loggerFile);

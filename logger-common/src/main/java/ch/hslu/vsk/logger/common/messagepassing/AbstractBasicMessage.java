@@ -14,23 +14,16 @@ public abstract class AbstractBasicMessage {
     private Vector<String> argList;
 
     /**
-     * Default message constructor without message id
-     */
-    public AbstractBasicMessage() {
-        this.argList = new Vector<>();
-    }
-
-    /**
-     * Construcotr with initial message id
+     * Construcotr with initial message id.
      * @param id id of the message
      */
-    public AbstractBasicMessage(String id){
+    public AbstractBasicMessage(final String id) {
         this.messageId = id;
         this.argList = new Vector<>();
     }
 
     /**
-     * Set the message's identifier
+     * Set the message's identifier.
      *
      * @param msgId MessageID.
      */
@@ -39,7 +32,7 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Add a argument to the message's argument list
+     * Add a argument to the message's argument list.
      *
      * @param arg argument to add
      */
@@ -48,7 +41,7 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Message identifier
+     * Message identifier.
      *
      * @return id MessageID.
      */
@@ -57,7 +50,7 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Argument list of the message
+     * Argument list of the message.
      *
      * @return Argumentliste.
      */
@@ -68,8 +61,9 @@ public abstract class AbstractBasicMessage {
     /**
      * This methods is responsible for determing actions after it was received.
      * Add your logic here.
+     * @param persistor LogPersistor to use
      *
-     * @return True if logic defined in operate() was successful
+     * @return true if successfull
      */
     public abstract boolean operate(LogPersistor persistor);
 }

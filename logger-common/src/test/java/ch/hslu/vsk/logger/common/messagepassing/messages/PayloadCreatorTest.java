@@ -32,7 +32,7 @@ public class PayloadCreatorTest {
         IOException ex = new IOException("test");
         String payload = PayloadCreator.generatePayload(LogLevel.INFO, "TestClient", this.getClass(), "This is a test", ex);
         assertTrue(payload.contains("TestClient") && payload.contains("INFO") && payload.contains(this.getClass().getSimpleName())
-                && payload.contains("This is a test") && payload.contains(ExceptionToStringSerializer.Execute(ex)));
+                && payload.contains("This is a test") && payload.contains(ExceptionToStringSerializer.execute(ex)));
 
 
     }
