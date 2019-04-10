@@ -87,7 +87,8 @@ public final class LoggerServer implements Runnable {
      * @throws IOException unhandled io exception.
      */
     public void handleMessage(final Socket client) throws IOException {
-        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
+        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(
+                client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
         this.threadPool.execute(handler);
     }
 

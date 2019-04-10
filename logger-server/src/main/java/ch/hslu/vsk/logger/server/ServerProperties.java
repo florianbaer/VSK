@@ -11,8 +11,8 @@ import java.util.Properties;
  */
 public class ServerProperties {
 
-    private static String LOGFILE = "ch.hslu.vsk.server.logfile";
-    private static String PORT = "ch.hslu.vsk.server.port";
+    private static final String LOGFILE = "ch.hslu.vsk.server.logfile";
+    private static final String PORT = "ch.hslu.vsk.server.port";
 
     private Properties serverProperties = null;
 
