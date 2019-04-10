@@ -204,7 +204,7 @@ class LoggerComponentLoggingTest {
     void testCriticalInvoked() {
         this.setUpLogger(LogLevel.CRITICAL);
         this.logger.critical("test-critical");
-        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-error"));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-critical"));
     }
 
     @Test
