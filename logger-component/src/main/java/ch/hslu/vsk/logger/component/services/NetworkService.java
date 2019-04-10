@@ -12,7 +12,7 @@ import java.util.Properties;
  * to use a different Instance of this class.
  *
  */
-public final class NetworkService {
+public final class NetworkService implements NetworkCommunication {
     private static final String LOGGER_PROPERTY_FILE = "vsklogger.properties";
     private static final String PROPERTY_CONNECTION_STRING = "ch.hslu.vsk.logger.connectionstring";
 
@@ -36,16 +36,17 @@ public final class NetworkService {
 
         try {
             clientSocket = new Socket(this.host, this.port);
-            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
+                    clientSocket.getOutputStream());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     /**
-     * Returns Instance of the NetworkService class. The host and port are fetched from
-     * the LoggerComponents-Properties file, because they must match.
-     * @return newly created instance or existing instance
+     * Used to get an Instance of this class. It ensures that only one Instance
+     * exists at runtime, because there should only be one network-point to communicate
+     * @return Instance of NetworkService to be used
      */
     public static NetworkService getInstance() {
         Properties networkProperties = new Properties();
@@ -53,7 +54,8 @@ public final class NetworkService {
         synchronized (NetworkService.class) {
             if (service == null) {
                 try {
-                    networkProperties.load(NetworkService.class.getClassLoader().getResourceAsStream(LOGGER_PROPERTY_FILE));
+                    networkProperties.load(NetworkService.class.getClassLoader().getResourceAsStream(
+                            LOGGER_PROPERTY_FILE));
                     String propertyAsString = networkProperties.getProperty(PROPERTY_CONNECTION_STRING);
 
                     String[] connectionString = propertyAsString.split(":");
@@ -69,11 +71,26 @@ public final class NetworkService {
     }
 
     /**
-     * This method is needed because the connection String of the LoggerComponent
-     * can be set outside of the properties file.
-     *
-     * @param connectionString connection string 'host:port'
+     * Return the connection string.
+     * @return host:port
      */
+    public String getConnectionDetails() {
+        return "Host: " + this.host + ", Port: " + port;
+    }
+
+    @Override
+    public void sendMessageToServer(final String messageToSend) {
+        LogMessage message = new LogMessage(messageToSend);
+        try {
+            logCommunicationHandler.sendMsg(message);
+        } catch (Exception e)  {
+            // TODO hier muss das lokale pesistieren rein
+            System.out.println("Sending to the server not possible...");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
     public void changeConnectionDetails(final String connectionString) {
         String[] connection = connectionString.split(":");
 
@@ -88,31 +105,10 @@ public final class NetworkService {
             this.host = host;
             this.port = port;
             clientSocket = new Socket(host, port);
-            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
+                    clientSocket.getOutputStream());
         } catch (Exception ioe) {
             System.out.println(ioe.getMessage());
-        }
-    }
-
-    /**
-     * Return the connection string.
-     * @return host:port
-     */
-    public String getConnectionDetails() {
-        return "Host: " + this.host + ", Port: " + port;
-    }
-
-    /**
-     * Sends a log message to the remote server application.
-     * @param messageToSend message that should be added as payload to the message object
-     */
-    public void sendLogMessageToServer(final String messageToSend) {
-        LogMessage message = new LogMessage(messageToSend);
-        try {
-            logCommunicationHandler.sendMsg(message);
-        } catch (Exception e)  {
-            System.out.println("Sending to the server not possible...");
-            System.out.println(e.getMessage());
         }
     }
 }

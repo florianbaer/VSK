@@ -38,7 +38,7 @@ public class NetworkServiceTest {
 
         assertTrue("Host: 127.0.0.1, Port: 59091".equals(service.getConnectionDetails()));
 
-        service.sendLogMessageToServer("test");
+        service.sendMessageToServer("test");
 
         assertDoesNotThrow((Executable) IOException::new);
 
