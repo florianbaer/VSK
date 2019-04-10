@@ -95,7 +95,7 @@ public final class LoggerComponent implements Logger {
     public void info(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.INFO)) {
             service.sendMessageToServer(PayloadCreator.generatePayload(
-                    LogLevel.INFO, this.identifier, this.loggerClass, throwable.getMessage()));
+                    LogLevel.INFO, this.identifier, this.loggerClass, s, throwable));
         }
 
     }

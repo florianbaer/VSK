@@ -50,14 +50,14 @@ class LoggerComponentLoggingTest {
 
 
     @Test
-    void testDebugWorking() {
+    void testDebugInvoked() {
         this.setUpLogger(LogLevel.DEBUG);
         this.logger.debug("test-debug");
         verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-debug"));
     }
 
     @Test
-    void testDebugExceptionWorking() {
+    void testDebugExceptionInvoked() {
         this.setUpThrowable();
 
         String logMessage = "test-debug";
@@ -66,7 +66,20 @@ class LoggerComponentLoggingTest {
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.DEBUG);
         this.logger.debug(logMessage, this.throwable);
-        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", "test-debug", errorMessage)));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", logMessage, errorMessage)));
+    }
+
+    @Test
+    void testDebugExceptionNotInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-debug";
+        String errorMessage = "THROWABLE";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.INFO);
+        this.logger.debug(logMessage, this.throwable);
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
     @Test
@@ -77,22 +90,45 @@ class LoggerComponentLoggingTest {
     }
 
     @Test
-    void testDebugThrowable() {
-        //logger.debug("test", throwable);
-        //assertTrue( outContent.toString().contains(" DEBUG LoggerComponentMock test " + throwable.toString()));
+    void testInfoInvoked() {
+        this.setUpLogger(LogLevel.INFO);
+        this.logger.info("test-info");
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-info"));
     }
 
     @Test
-    void testInfo() {
-        //logger.info("test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " INFO LoggerComponentMock test"));
+    void testInfoExceptionInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-info";
+        String errorMessage = "THROWABLE";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.INFO);
+        this.logger.info(logMessage, this.throwable);
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", logMessage , errorMessage)));
     }
 
     @Test
-    void testInfoThrowable() {
-        //logger.info("test", throwable);
-        //assertTrue(outContent.toString().contains(" INFO LoggerComponentMock test " + throwable.toString()));
+    void testInfoExceptionNotInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-info";
+        String errorMessage = "THROWABLE";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.WARNING);
+        this.logger.info(logMessage, this.throwable);
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
+
+    @Test
+    void testInfoNotInvoked() {
+        this.setUpLogger(LogLevel.WARNING);
+        this.logger.info("test-info");
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
+    }
+
 
     @Test
     void testWarning() {
@@ -101,12 +137,6 @@ class LoggerComponentLoggingTest {
                // "test"));
     }
 
-    @Test
-    void testWarningThrowable() {
-        //logger.warning("test", throwable);
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " WARNING LoggerComponentMock " +
-                //"test " + throwable.toString()));
-    }
 
     @Test
     void testError() {
@@ -177,10 +207,5 @@ class LoggerComponentLoggingTest {
         //logger.error("test");
         //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " ERROR LoggerComponentMock
         // test"));
-    }
-
-    @Test
-    void testGetMinLogLevel() {
-        //assertEquals(LogLevel.DEBUG, logger.getMinLogLevel());
     }
 }
