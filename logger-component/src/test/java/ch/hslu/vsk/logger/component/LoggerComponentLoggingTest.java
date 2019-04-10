@@ -2,15 +2,18 @@ package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
 import ch.hslu.vsk.logger.component.logger.LoggerComponent;
+import ch.hslu.vsk.logger.component.services.NetworkCommunication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.*;
 
 /**
  * This test class focuses on Testing the logging-aspects of the LoggerComponent.
@@ -23,13 +26,12 @@ class LoggerComponentLoggingTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
+    private NetworkCommunication networkServiceMock = mock(NetworkCommunication.class);
 
-    @BeforeEach
-    void setUpLogger() {
-        //logger =   new LoggerComponent(LogLevel.INFO, "localhost:59090", "test", LoggerComponentLoggingTest.class);
+    void setUpLogger(LogLevel level) {
+        this.logger =   new LoggerComponent(level , "localhost:59090", "test", LoggerComponentLoggingTest.class, this.networkServiceMock);
     }
 
-    @BeforeEach
     void setUpThrowable(){
         this.throwable = new Throwable();
 
@@ -49,9 +51,17 @@ class LoggerComponentLoggingTest {
 
 
     @Test
-    void testDebug() {
-        //logger.debug("test");
-        //assertTrue(outContent.toString().contains("DEBUG LoggerComponentMock test"));
+    void testDebugWorking() {
+        this.setUpLogger(LogLevel.DEBUG);
+        this.logger.debug("test-debug");
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-debug"));
+    }
+
+    @Test
+    void testDebugNotInvoked() {
+        this.setUpLogger(LogLevel.INFO);
+        this.logger.debug("test-debug");
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
     @Test
