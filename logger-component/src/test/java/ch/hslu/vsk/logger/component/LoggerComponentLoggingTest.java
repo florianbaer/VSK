@@ -6,8 +6,6 @@ import ch.hslu.vsk.logger.component.services.NetworkCommunication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -27,6 +25,7 @@ class LoggerComponentLoggingTest {
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
     private NetworkCommunication networkServiceMock = mock(NetworkCommunication.class);
+    private final String errorMessage = "THROWABLE";
 
     void setUpLogger(LogLevel level) {
         this.logger =   new LoggerComponent(level , "localhost:59090", "test", LoggerComponentLoggingTest.class, this.networkServiceMock);
@@ -61,7 +60,6 @@ class LoggerComponentLoggingTest {
         this.setUpThrowable();
 
         String logMessage = "test-debug";
-        String errorMessage = "THROWABLE";
 
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.DEBUG);
@@ -74,7 +72,6 @@ class LoggerComponentLoggingTest {
         this.setUpThrowable();
 
         String logMessage = "test-debug";
-        String errorMessage = "THROWABLE";
 
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.INFO);
@@ -101,7 +98,6 @@ class LoggerComponentLoggingTest {
         this.setUpThrowable();
 
         String logMessage = "test-info";
-        String errorMessage = "THROWABLE";
 
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.INFO);
@@ -114,7 +110,6 @@ class LoggerComponentLoggingTest {
         this.setUpThrowable();
 
         String logMessage = "test-info";
-        String errorMessage = "THROWABLE";
 
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.WARNING);
@@ -129,83 +124,117 @@ class LoggerComponentLoggingTest {
         verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
-
     @Test
-    void testWarning() {
-        //logger.warning("test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " WARNING LoggerComponentMock " +
-               // "test"));
-    }
-
-
-    @Test
-    void testError() {
-        //logger.error("test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " ERROR LoggerComponentMock
-        // test"));
+    void testWarningInvoked() {
+        this.setUpLogger(LogLevel.WARNING);
+        this.logger.warning("test-warning");
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-warning"));
     }
 
     @Test
-    void testErrorThrowable() {
-        //logger.error("test", throwable);
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " ERROR LoggerComponentMock test
-        // " + throwable.toString()));
+    void testWarningExceptionInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-warning";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.WARNING);
+        this.logger.warning(logMessage, this.throwable);
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", logMessage , errorMessage)));
     }
 
     @Test
-    void testCritical() {
-        //logger.critical("test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponentMock " +
-                //"test"));
+    void testWarningExceptionNotInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-warning";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.ERROR);
+        this.logger.warning(logMessage, this.throwable);
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
     @Test
-    void testCriticalThrowable() {
-        //logger.critical("test", throwable);
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponentMock " +
-                //"test " + throwable.toString()));
+    void testWarningNotInvoked() {
+        this.setUpLogger(LogLevel.ERROR);
+        this.logger.warning("test-warning");
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
     @Test
-    void testLogError() {
-        //logger.log(LogLevel.ERROR, "test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " ERROR LoggerComponentMock
-        // test"));
+    void testErrorInvoked() {
+        this.setUpLogger(LogLevel.ERROR);
+        this.logger.error("test-error");
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-error"));
     }
 
     @Test
-    void testLogErrorThrowable() {
-        //logger.log(LogLevel.ERROR, "test", throwable);
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " ERROR LoggerComponentMock test
-        // " + throwable.toString()));
+    void testErrorExceptionInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-error";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.ERROR);
+        this.logger.error(logMessage, this.throwable);
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", logMessage , errorMessage)));
     }
 
     @Test
-    void testSetMinLogLevel() {
-        //logger.setMinLogLevel(LogLevel.CRITICAL);
-        //assertEquals(LogLevel.CRITICAL, logger.getMinLogLevel());
+    void testErrorExceptionNotInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-error";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.CRITICAL);
+        this.logger.error(logMessage, this.throwable);
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
     @Test
-    void testLogLevelToLow() {
-        //logger.setMinLogLevel(LogLevel.CRITICAL);
-        //logger.info("test");
-        //assertEquals("", outContent.toString());
+    void testErrorNotInvoked() {
+        this.setUpLogger(LogLevel.CRITICAL);
+        this.logger.error("test-error");
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 
     @Test
-    void testLogLevelHighEnough() {
-        //logger.setMinLogLevel(LogLevel.ERROR);
-        //logger.critical("test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " CRITICAL LoggerComponentMock " +
-                //"test"));
+    void testCriticalInvoked() {
+        this.setUpLogger(LogLevel.CRITICAL);
+        this.logger.critical("test-critical");
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-error"));
     }
 
     @Test
-    void testLogLevelEqual() {
-        //logger.setMinLogLevel(LogLevel.ERROR);
-        //logger.error("test");
-        //assertTrue(outContent.toString().contains(logger.getCurrentDateAndTime() + " ERROR LoggerComponentMock
-        // test"));
+    void testCriticalExceptionInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-critical";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.CRITICAL);
+        this.logger.critical(logMessage, this.throwable);
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", logMessage , errorMessage)));
+    }
+
+    @Test
+    void testCriticalExceptionNotInvoked() {
+        this.setUpThrowable();
+
+        String logMessage = "test-critical";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.OFF);
+        this.logger.critical(logMessage, this.throwable);
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
+    }
+
+    @Test
+    void testCriticalNotInvoked() {
+        this.setUpLogger(LogLevel.OFF);
+        this.logger.critical("test-critical");
+        verify(this.networkServiceMock, never()).sendMessageToServer(isA(String.class));
     }
 }
