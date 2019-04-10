@@ -10,8 +10,13 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
 
 /**
  * This test class focuses on Testing the logging-aspects of the LoggerComponent.
@@ -47,6 +52,19 @@ class LoggerComponentLoggingTest {
         System.setErr(originalErr);
     }
 
+    @Test
+    void createComponentWithoutNetworkServiceTest() {
+        String connectionString = "localhost:59090";
+        String identifier = "test";
+        LogLevel minLogLevel = LogLevel.DEBUG;
+        LogLevel newMinLogLevel = LogLevel.DEBUG;
+        var component = new LoggerComponent(minLogLevel , connectionString, identifier, LoggerComponentLoggingTest.class);
+        assertEquals(connectionString, component.getConnectionString());
+        assertEquals(identifier, component.getIdentifier());
+        assertEquals(minLogLevel, component.getMinLogLevel());
+        component.setMinLogLevel(newMinLogLevel);
+        assertEquals(newMinLogLevel, component.getMinLogLevel());
+    }
 
     @Test
     void testDebugInvoked() {
