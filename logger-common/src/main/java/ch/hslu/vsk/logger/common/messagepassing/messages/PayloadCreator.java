@@ -44,7 +44,7 @@ final public class PayloadCreator {
      * @param e that needs to be transferred
      * @return payload of message object as string
      */
-    public static String generatePayload(final LogLevel logLevel, final String identifier, final Class loggingClass, final String message, final Exception e) {
+    public static String generatePayload(final LogLevel logLevel, final String identifier, final Class loggingClass, final String message, final Throwable e) {
         String messageWithoutException = generatePayload(logLevel, identifier, loggingClass, message);
 
         StringBuilder builder = new StringBuilder();

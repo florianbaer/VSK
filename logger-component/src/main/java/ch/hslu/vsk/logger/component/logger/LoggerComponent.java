@@ -78,7 +78,7 @@ public final class LoggerComponent implements Logger {
     public void debug(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.DEBUG)) {
             service.sendMessageToServer(PayloadCreator.generatePayload(
-                    LogLevel.DEBUG, this.identifier, this.loggerClass, throwable.getMessage()));
+                    LogLevel.DEBUG, this.identifier, this.loggerClass, s, throwable));
         }
     }
 
@@ -113,7 +113,7 @@ public final class LoggerComponent implements Logger {
     public void warning(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.WARNING)) {
             service.sendMessageToServer(PayloadCreator.generatePayload(
-                    LogLevel.WARNING, this.identifier, this.loggerClass, throwable.getMessage()));
+                    LogLevel.WARNING, this.identifier, this.loggerClass, s, throwable));
         }
     }
 
@@ -130,7 +130,7 @@ public final class LoggerComponent implements Logger {
     public void error(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.ERROR)) {
             service.sendMessageToServer(PayloadCreator.generatePayload(
-                    LogLevel.ERROR, this.identifier, this.loggerClass, throwable.getMessage()));
+                    LogLevel.ERROR, this.identifier, this.loggerClass, s, throwable));
         }
 
     }
@@ -148,13 +148,13 @@ public final class LoggerComponent implements Logger {
     public void critical(final String s, final Throwable throwable) {
         if (isLogLevelHighEnough(LogLevel.CRITICAL)) {
             service.sendMessageToServer(PayloadCreator.generatePayload(
-                    LogLevel.CRITICAL, this.identifier, this.loggerClass, throwable.getMessage()));
+                    LogLevel.CRITICAL, this.identifier, this.loggerClass, s, throwable));
         }
     }
 
     @Override
-    public void log(final LogLevel logLevel, final String s) {
-        switch (logLevel) {
+    public void log(final LogLevel level, final String s) {
+        switch (level) {
             case OFF:
                 break;
             case INFO:
@@ -175,12 +175,11 @@ public final class LoggerComponent implements Logger {
             default:
                 break;
         }
-
     }
 
     @Override
-    public void log(final LogLevel logLevel, final String s, final Throwable throwable) {
-        switch (logLevel) {
+    public void log(final LogLevel level, final String s, final Throwable throwable) {
+        switch (level) {
             case OFF:
                 break;
             case INFO:
@@ -204,8 +203,8 @@ public final class LoggerComponent implements Logger {
     }
 
     @Override
-    public void setMinLogLevel(final LogLevel logLevel) {
-        this.logLevel = logLevel;
+    public void setMinLogLevel(final LogLevel level) {
+        this.logLevel = level;
     }
 
     @Override

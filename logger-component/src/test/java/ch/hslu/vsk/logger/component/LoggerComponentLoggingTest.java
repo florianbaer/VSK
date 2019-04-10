@@ -33,8 +33,7 @@ class LoggerComponentLoggingTest {
     }
 
     void setUpThrowable(){
-        this.throwable = new Throwable();
-
+        this.throwable = mock(Throwable.class);
     }
 
     @BeforeEach
@@ -55,6 +54,19 @@ class LoggerComponentLoggingTest {
         this.setUpLogger(LogLevel.DEBUG);
         this.logger.debug("test-debug");
         verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-debug"));
+    }
+
+    @Test
+    void testDebugExceptionWorking() {
+        this.setUpThrowable();
+
+        String logMessage = "test-debug";
+        String errorMessage = "THROWABLE";
+
+        when(this.throwable.getMessage()).thenReturn(errorMessage);
+        this.setUpLogger(LogLevel.DEBUG);
+        this.logger.debug(logMessage, this.throwable);
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)", "test-debug", errorMessage)));
     }
 
     @Test
