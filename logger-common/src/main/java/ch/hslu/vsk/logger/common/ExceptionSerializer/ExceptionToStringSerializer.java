@@ -1,5 +1,8 @@
 package ch.hslu.vsk.logger.common.ExceptionSerializer;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Class that generates readable String from an Exception.
  */
@@ -15,20 +18,8 @@ public final class ExceptionToStringSerializer {
      * @return The passed exception as readable string;
      */
     public static String execute(final Exception ex) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(ex.getMessage());
-
-        int i = 0;
-        for (StackTraceElement element :  ex.getStackTrace()) {
-            builder.append(System.getProperty("line.separator"));
-            builder.append(element.toString());
-            i++;
-
-            if (i > 5) {
-                break;
-            }
-        }
-
-        return builder.toString();
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
     }
 }
