@@ -82,8 +82,8 @@ class LoggerComponentLoggingTest {
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.DEBUG);
         this.logger.debug(logMessage, this.throwable);
-        //verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                //logMessage, errorMessage)));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
+                logMessage, errorMessage)));
     }
 
     @Test
@@ -109,7 +109,7 @@ class LoggerComponentLoggingTest {
     void testInfoInvoked() {
         this.setUpLogger(LogLevel.INFO);
         this.logger.info("test-info");
-        //verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-info"));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(contains("test-info"));
     }
 
     @Test
@@ -121,8 +121,8 @@ class LoggerComponentLoggingTest {
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.INFO);
         this.logger.info(logMessage, this.throwable);
-        //verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                //logMessage , errorMessage)));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
+                logMessage , errorMessage)));
     }
 
     @Test
@@ -160,8 +160,8 @@ class LoggerComponentLoggingTest {
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.WARNING);
         this.logger.warning(logMessage, this.throwable);
-        //verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                //logMessage , errorMessage)));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
+                logMessage , errorMessage)));
     }
 
     @Test
@@ -199,8 +199,8 @@ class LoggerComponentLoggingTest {
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.ERROR);
         this.logger.error(logMessage, this.throwable);
-        //verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                //logMessage , errorMessage)));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
+                logMessage , errorMessage)));
     }
 
     @Test
@@ -238,8 +238,8 @@ class LoggerComponentLoggingTest {
         when(this.throwable.getMessage()).thenReturn(errorMessage);
         this.setUpLogger(LogLevel.CRITICAL);
         this.logger.critical(logMessage, this.throwable);
-        //verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                //logMessage , errorMessage)));
+        verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
+                logMessage , errorMessage)));
     }
 
     @Test

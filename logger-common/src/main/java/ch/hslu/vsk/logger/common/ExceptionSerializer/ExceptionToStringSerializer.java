@@ -20,7 +20,7 @@ public final class ExceptionToStringSerializer {
         stringBuilder.append(ex.getMessage());
         stringBuilder.append("|");
         StackTraceElement[] stackTrace = (ex.getStackTrace());
-        stringBuilder.append(stackTrace[0].toString());
+        stringBuilder.append(stackTrace == null ? "null" : stackTrace[0].toString());
         return stringBuilder.toString();
     }
 }
