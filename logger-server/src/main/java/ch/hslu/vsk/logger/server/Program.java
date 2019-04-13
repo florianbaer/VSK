@@ -1,5 +1,11 @@
 package ch.hslu.vsk.logger.server;
 
+import ch.hslu.vsk.logger.common.rmi.server.LogPushServer;
+import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
@@ -16,10 +22,14 @@ public final class Program {
 
     /**
      * The main method.
+     *
      * @param args The main method arguments.
      */
     public static void main(final String[] args) {
         Thread serverThread = null;
+
+        setupRegistrationServer();
+
         try {
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
@@ -41,6 +51,18 @@ public final class Program {
             if (serverThread != null && serverThread.isAlive()) {
                 serverThread.interrupt();
             }
+        }
+    }
+
+    private static void setupRegistrationServer() {
+        try {
+            System.setProperty("java.rmi.server.hostname","localhost");
+            PushServer pushServer = new LogPushServer();
+            PushServer stub = (PushServer) UnicastRemoteObject.exportObject(pushServer, 0);
+            Registry registry = LocateRegistry.createRegistry(3455);
+            registry.bind("logpushserver", stub);
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 }
