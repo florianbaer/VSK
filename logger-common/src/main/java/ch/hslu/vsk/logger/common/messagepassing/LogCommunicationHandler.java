@@ -6,10 +6,12 @@ import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+
+
 /**
  * Client communication handler that is responsible for the client-side communication.
  */
-public final class LogCommunicationHandler extends AbstractBasicMessageHandler {
+public class LogCommunicationHandler extends AbstractBasicMessageHandler {
 
     /**
      * Constructor.

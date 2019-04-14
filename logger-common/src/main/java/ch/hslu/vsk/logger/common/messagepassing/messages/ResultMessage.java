@@ -5,6 +5,8 @@ import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Vector;
+
 /**
  * Klasse welche momentan als Platzhalter fungiert. Für ein Nachrichten-Austausch mit Feedback gedacht.
  */
@@ -41,6 +43,16 @@ public class ResultMessage extends AbstractBasicMessage {
         super(MESSAGE_ID);
         this.addArg(value);
         this.addArg(param);
+    }
+
+    /**
+     * Returns message Text. Currently message text is always the second element in the argument list
+     * @return first Argument of Arg-List
+     */
+    public String getMessageText() {
+        Vector<String> args = super.getArgList();
+
+        return String.valueOf(args.get(0));
     }
 
 
