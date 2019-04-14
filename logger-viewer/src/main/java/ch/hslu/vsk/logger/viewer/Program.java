@@ -1,41 +1,64 @@
 package ch.hslu.vsk.logger.viewer;
 
-import ch.hslu.vsk.logger.common.rmi.server.LogPushServer;
 import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 
-import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Scanner;
-import java.util.concurrent.Executors;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * The Class which starts the program.
  */
 public final class Program {
 
+    private Remote handler;
+    private PushServer registration;
+
     /**
      * The private constructor for the program.
      */
-    private Program() {
+    public Program() {
     }
 
     /**
      * The main method.
      * @param args The main method arguments.
      */
-    public static void main(final String[] args)throws MalformedURLException, RemoteException, NotBoundException {
+    public static void main(final String[] args) {
+        Program program = new Program();
+        program.run();
+    }
 
-        Registry registry = LocateRegistry.getRegistry("localhost", 3455);
-        var server = (PushServer) registry.lookup("logpushserver");
+    private void run() {
+        try{
+            Viewer viewer = new LogViewer();
+            this.registerViewer(viewer);
+            Thread.sleep(20000);
+            this.unregisterViewer(viewer);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
 
-        server.register(null);
+    private void registerViewer(final Viewer model) throws Exception {
+        String host = "localhost";
 
+        System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
 
+        final Registry reg = LocateRegistry.getRegistry(host, Registry.REGISTRY_PORT);
+        this.registration = (PushServer) reg.lookup("logpushserver");
+        this.handler = UnicastRemoteObject.exportObject(model, 0);
+        registration.register((Viewer) this.handler);
+    }
+
+    private void unregisterViewer(final Viewer model) throws Exception{
+        registration.unregister(model);
     }
 }
+
+

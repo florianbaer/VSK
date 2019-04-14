@@ -1,6 +1,7 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
+import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 
 import java.util.Vector;
 
@@ -65,6 +66,6 @@ public abstract class AbstractBasicMessage {
      *
      * @return true if successfull
      */
-    public abstract boolean operate(LogPersistor persistor);
+    public abstract boolean operate(LogPersistor persistor, PushServer server);
 }
 
