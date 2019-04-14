@@ -2,8 +2,10 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
+import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 
 
+import java.rmi.RemoteException;
 import java.util.Vector;
 
 /**
@@ -42,9 +44,22 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(final LogPersistor persistor) {
+    public boolean operate(final LogPersistor persistor, PushServer server) {
         if (persistor != null) {
             persistor.save(this);
+        }
+        if(server != null) {
+            try {
+                server.getAllViewers().stream().forEach(x -> {
+                    try {
+                        x.sendLogMessage(this);
+                    } catch (RemoteException ex) {
+                        System.out.println("Send message to viewer failed...");
+                    }
+                });
+            } catch (RemoteException ex) {
+                System.out.println("Send message to viewer failed...");
+            }
         }
 
         return true;

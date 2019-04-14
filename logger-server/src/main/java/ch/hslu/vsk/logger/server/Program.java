@@ -1,11 +1,5 @@
 package ch.hslu.vsk.logger.server;
 
-import ch.hslu.vsk.logger.common.rmi.server.LogPushServer;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
-
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
@@ -27,13 +21,16 @@ public final class Program {
      */
     public static void main(final String[] args) {
         Thread serverThread = null;
-
-        setupRegistrationServer();
+        var pushServer = new RemotePushServer();
+        Thread pushServerThread = new Thread(pushServer);
+        Thread registryBootstrapper = new Thread(new RmiRegistryBootstrapper());
 
         try {
+            registryBootstrapper.start();
+            pushServerThread.start();
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
-            LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool());
+            LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool(), pushServer);
 
             serverThread = new Thread(server);
             Scanner keyboard = new Scanner(System.in);
@@ -51,18 +48,12 @@ public final class Program {
             if (serverThread != null && serverThread.isAlive()) {
                 serverThread.interrupt();
             }
-        }
-    }
-
-    private static void setupRegistrationServer() {
-        try {
-            System.setProperty("java.rmi.server.hostname","localhost");
-            PushServer pushServer = new LogPushServer();
-            PushServer stub = (PushServer) UnicastRemoteObject.exportObject(pushServer, 0);
-            Registry registry = LocateRegistry.createRegistry(3455);
-            registry.bind("logpushserver", stub);
-        } catch (Exception e) {
-            System.out.println(e);
+            if (pushServerThread != null && pushServerThread.isAlive()) {
+                pushServerThread.interrupt();
+            }
+            if (registryBootstrapper != null && registryBootstrapper.isAlive()) {
+                registryBootstrapper.interrupt();
+            }
         }
     }
 }

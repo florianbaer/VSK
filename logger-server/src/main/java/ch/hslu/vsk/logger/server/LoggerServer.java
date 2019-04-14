@@ -16,7 +16,8 @@
 package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
-import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
+import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
+import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
 import java.io.File;
@@ -33,6 +34,7 @@ public final class LoggerServer implements Runnable {
 
     private final ServerProperties serverProperties;
     private ExecutorService threadPool = null;
+    private PushServer pushServer;
     private StringPersistorAdapter persistorAdapter = null;
 
     /**
@@ -40,9 +42,11 @@ public final class LoggerServer implements Runnable {
      * @param serverProperties The properties to be used in the server.
      * @param threadPool The executor service to be used.
      */
-    public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool) {
+    public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool,
+                        final PushServer server) {
         this.serverProperties = serverProperties;
         this.threadPool = threadPool;
+        this.pushServer = server;
     }
 
 
@@ -87,8 +91,8 @@ public final class LoggerServer implements Runnable {
      * @throws IOException unhandled io exception.
      */
     public void handleMessage(final Socket client) throws IOException {
-        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(
-                client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
+        LogCommunicationHandler.LogServerCommunicationHandler handler = new LogCommunicationHandler.LogServerCommunicationHandler(
+                client.getInputStream(), client.getOutputStream(), this.persistorAdapter, this.pushServer);
         this.threadPool.execute(handler);
     }
 
