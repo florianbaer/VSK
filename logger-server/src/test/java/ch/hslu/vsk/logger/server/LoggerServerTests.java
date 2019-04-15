@@ -29,7 +29,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Testfälle für RemoveMeTest.
+ * Logger server test cases
  */
 final class LoggerServerTests {
 
@@ -40,10 +40,12 @@ final class LoggerServerTests {
         var pushServer = mock(RemotePushServer.class);
         LoggerServer server = new LoggerServer(properties, threadPool, pushServer);
         File file = new File("File.tmp");
-        assertThat(file.createNewFile()).isTrue();
+        file.delete(); //for windows only
         file.deleteOnExit();
+        assertThat(file.createNewFile()).isTrue();
         StringPersistorAdapter persistor = server.setupPersistorAdapter(file);
         assertThat(persistor.getStringPersistor()).isInstanceOf(FileStringPersistor.class);
+
     }
 
     @Test
