@@ -2,6 +2,7 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
+import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +27,7 @@ public class LogServerCommunicationHandlerTest {
         PipedOutputStream out = new PipedOutputStream();
         PipedInputStream in = new PipedInputStream(out);
 
-        LogCommunicationHandler.LogServerCommunicationHandler handler =
-                new LogCommunicationHandler.LogServerCommunicationHandler(in, out, persMock, serverMock);
+        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(in, out, persMock, serverMock);
 
         LogMessage msg = new LogMessage();
         msg.addArg("Test");

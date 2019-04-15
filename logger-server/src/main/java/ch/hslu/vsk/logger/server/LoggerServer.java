@@ -17,6 +17,7 @@ package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
+import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
@@ -91,7 +92,7 @@ public final class LoggerServer implements Runnable {
      * @throws IOException unhandled io exception.
      */
     public void handleMessage(final Socket client) throws IOException {
-        LogCommunicationHandler.LogServerCommunicationHandler handler = new LogCommunicationHandler.LogServerCommunicationHandler(
+        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(
                 client.getInputStream(), client.getOutputStream(), this.persistorAdapter, this.pushServer);
         this.threadPool.execute(handler);
     }
