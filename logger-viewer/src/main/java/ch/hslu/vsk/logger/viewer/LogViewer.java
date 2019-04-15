@@ -5,7 +5,7 @@ import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 
 public class LogViewer implements Viewer {
     @Override
-    public void sendLogMessage(LogMessage logMessage) {
+    public void sendLogMessage(final LogMessage logMessage) {
         System.out.println("LogMessage was received in the viewer" + logMessage);
     }
 }

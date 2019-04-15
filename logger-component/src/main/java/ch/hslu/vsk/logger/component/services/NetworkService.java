@@ -10,7 +10,6 @@ import java.util.Properties;
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
  * implemented as Singleton, because multiple Log-Objects use it and whe don't want every Log-Object
  * to use a different Instance of this class.
- *
  */
 public final class NetworkService implements NetworkCommunication {
     private static final String LOGGER_PROPERTY_FILE = "vsklogger.properties";
@@ -46,6 +45,7 @@ public final class NetworkService implements NetworkCommunication {
     /**
      * Used to get an Instance of this class. It ensures that only one Instance
      * exists at runtime, because there should only be one network-point to communicate
+     *
      * @return Instance of NetworkService to be used
      */
     public static NetworkService getInstance() {
@@ -72,6 +72,7 @@ public final class NetworkService implements NetworkCommunication {
 
     /**
      * Return the connection string.
+     *
      * @return host:port
      */
     public String getConnectionDetails() {
@@ -83,7 +84,7 @@ public final class NetworkService implements NetworkCommunication {
         LogMessage message = new LogMessage(messageToSend);
         try {
             logCommunicationHandler.sendMsg(message);
-        } catch (Exception e)  {
+        } catch (Exception e) {
             // TODO hier muss das lokale pesistieren rein
             System.out.println("Sending to the server not possible...");
             System.out.println(e.getMessage());
@@ -94,17 +95,17 @@ public final class NetworkService implements NetworkCommunication {
     public void changeConnectionDetails(final String connectionString) {
         String[] connection = connectionString.split(":");
 
-        String host = connection[0];
-        int port = Integer.valueOf(connection[1]);
+        String newHost = connection[0];
+        int newPort = Integer.valueOf(connection[1]);
 
         try {
             if (clientSocket != null) {
                 clientSocket.close();
             }
 
-            this.host = host;
-            this.port = port;
-            clientSocket = new Socket(host, port);
+            this.host = newHost;
+            this.port = newPort;
+            clientSocket = new Socket(newHost, newPort);
             logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
                     clientSocket.getOutputStream());
         } catch (Exception ioe) {

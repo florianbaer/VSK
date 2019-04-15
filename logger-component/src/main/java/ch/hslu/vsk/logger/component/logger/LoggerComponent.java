@@ -27,10 +27,11 @@ public final class LoggerComponent implements Logger {
 
     /**
      * Constructor used to initiate the LoggerComponent.
-     * @param level minLevel of the component
+     *
+     * @param level            minLevel of the component
      * @param connectionString host:port as string
-     * @param identifier id of the component
-     * @param clazz logging class
+     * @param identifier       id of the component
+     * @param clazz            logging class
      */
     public LoggerComponent(final LogLevel level, final String connectionString,
                            final String identifier, final Class clazz) {
@@ -48,11 +49,12 @@ public final class LoggerComponent implements Logger {
     /**
      * Constructor used to initiate the LoggerComponent and injecting a dependency for the
      * NetworkService.
-     * @param level minLevel of the component
+     *
+     * @param level            minLevel of the component
      * @param connectionString host:port as string
-     * @param identifier id of the component
-     * @param clazz logging class
-     * @param networkService used network service
+     * @param identifier       id of the component
+     * @param clazz            logging class
+     * @param networkService   used network service
      */
     public LoggerComponent(final LogLevel level, final String connectionString, final String identifier,
                            final Class clazz, final NetworkCommunication networkService) {
@@ -216,6 +218,7 @@ public final class LoggerComponent implements Logger {
 
     /**
      * Getter for connection string used for logging.
+     *
      * @return host:port as String
      */
     public String getConnectionString() {
@@ -224,6 +227,7 @@ public final class LoggerComponent implements Logger {
 
     /**
      * Returns id of the logger component.
+     *
      * @return id used to identify logger
      */
     public String getIdentifier() {
@@ -232,6 +236,7 @@ public final class LoggerComponent implements Logger {
 
     /**
      * Returns class that logs.
+     *
      * @return logging class
      */
     public Class getLoggingClass() {
@@ -240,6 +245,7 @@ public final class LoggerComponent implements Logger {
 
     /**
      * Checks if given log level is high enough compared to the minLogLevel.
+     *
      * @param logLevelOfMethod log level to log
      * @return true if high enough, false if not
      */
