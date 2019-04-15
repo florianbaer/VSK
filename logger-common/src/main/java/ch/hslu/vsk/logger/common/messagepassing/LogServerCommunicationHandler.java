@@ -3,7 +3,7 @@ package ch.hslu.vsk.logger.common.messagepassing;
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import java.io.OutputStream;
 public final class LogServerCommunicationHandler extends AbstractBasicMessageHandler implements Runnable {
 
     private final LogPersistor persistor;
-    private PushServer pushServer;
+    private RegistrationServer pushServer;
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
      * @param pushServer
      */
     public LogServerCommunicationHandler(final InputStream inputStream, final OutputStream outputStream,
-                                         final LogPersistor persistor, PushServer pushServer) {
+                                         final LogPersistor persistor, RegistrationServer pushServer) {
         super(inputStream, outputStream);
         this.persistor = persistor;
         this.pushServer = pushServer;

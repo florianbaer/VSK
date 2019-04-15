@@ -1,6 +1,7 @@
 package ch.hslu.vsk.logger.server;
 
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 
 import java.rmi.RemoteException;
@@ -10,27 +11,31 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemotePushServer implements Runnable, PushServer {
+public class RemotePushServer implements RegistrationServer {
 
     private List<Viewer> viewers = new ArrayList<>();
+
+    private static RegistrationServer instance;
 
     public RemotePushServer(){
         super();
     }
 
-    @Override
-    public void run() {
+    public static RegistrationServer getInstance() {
 
-        try {
-            System.setProperty("java.rmi.server.hostname","localhost");
-            PushServer pushServer = new RemotePushServer();
-            Registry registry = LocateRegistry.getRegistry(Registry.REGISTRY_PORT);
-            PushServer stub = (PushServer) UnicastRemoteObject.exportObject(pushServer, 0);
-            registry.bind("logpushserver", stub);
+        if (instance == null) {
+            try {
+                System.setProperty("java.rmi.server.hostname","localhost");
+                RegistrationServer pushServer = new RemotePushServer();
+                Registry registry = LocateRegistry.getRegistry(Registry.REGISTRY_PORT);
+                instance = (RegistrationServer) UnicastRemoteObject.exportObject(pushServer, 0);
+                registry.bind("logpushserver", instance);
 
-        } catch (Exception e) {
-            System.out.println(e);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
+        return instance;
     }
 
     @Override
@@ -46,7 +51,15 @@ public class RemotePushServer implements Runnable, PushServer {
     }
 
     @Override
-    public List<Viewer> getAllViewers() {
-        return this.viewers;
+    public void notifyViewers(LogMessage message) {
+        synchronized (this) {
+            this.viewers.stream().forEach(x -> {
+                try {
+                    x.sendLogMessage(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 }

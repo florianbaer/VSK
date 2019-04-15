@@ -1,15 +1,16 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 /**
  * BaisMessage class. A basic message consists of an optional identifier and a list of arguments.
  * Both in the String format.
  */
-public abstract class AbstractBasicMessage {
+public abstract class AbstractBasicMessage implements Serializable {
 
     private String messageId;
     private Vector<String> argList;
@@ -66,6 +67,6 @@ public abstract class AbstractBasicMessage {
      *
      * @return true if successfull
      */
-    public abstract boolean operate(LogPersistor persistor, PushServer server);
+    public abstract boolean operate(LogPersistor persistor, RegistrationServer notifier);
 }
 

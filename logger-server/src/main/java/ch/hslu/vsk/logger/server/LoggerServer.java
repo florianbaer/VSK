@@ -16,9 +16,8 @@
 package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
-import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
 import java.io.File;
@@ -35,7 +34,7 @@ public final class LoggerServer implements Runnable {
 
     private final ServerProperties serverProperties;
     private ExecutorService threadPool = null;
-    private PushServer pushServer;
+    private RegistrationServer pushServer;
     private StringPersistorAdapter persistorAdapter = null;
 
     /**
@@ -44,7 +43,7 @@ public final class LoggerServer implements Runnable {
      * @param threadPool The executor service to be used.
      */
     public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool,
-                        final PushServer server) {
+                        final RegistrationServer server) {
         this.serverProperties = serverProperties;
         this.threadPool = threadPool;
         this.pushServer = server;

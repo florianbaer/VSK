@@ -2,9 +2,10 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Vector;
 
@@ -44,26 +45,21 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(final LogPersistor persistor, PushServer server) {
+    public boolean operate(final LogPersistor persistor, RegistrationServer notifier) {
         if (persistor != null) {
             persistor.save(this);
         }
-        if(server != null) {
+        if(notifier != null) {
             try {
-                server.getAllViewers().stream().forEach(x -> {
-                    try {
-                        x.sendLogMessage(this);
-                    } catch (RemoteException ex) {
-                        System.out.println("Send message to viewer failed...");
-                    }
-                });
-            } catch (RemoteException ex) {
-                System.out.println("Send message to viewer failed...");
+                notifier.notifyViewers(this);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
 
         return true;
     }
+
 
     /**
      * Returns message Text. Currently message text is always the second element in the argument list
