@@ -1,11 +1,7 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
-import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 

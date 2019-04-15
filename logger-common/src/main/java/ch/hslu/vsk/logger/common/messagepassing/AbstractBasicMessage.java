@@ -24,15 +24,6 @@ public abstract class AbstractBasicMessage {
     }
 
     /**
-     * Set the message's identifier.
-     *
-     * @param msgId MessageID.
-     */
-    protected final void setMessageId(final String msgId) {
-        this.messageId = msgId;
-    }
-
-    /**
      * Add a argument to the message's argument list.
      *
      * @param arg argument to add
