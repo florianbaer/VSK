@@ -1,7 +1,8 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
-import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
+import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
+import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,13 +19,15 @@ import static org.mockito.Mockito.mock;
  */
 public class LogServerCommunicationHandlerTest {
     private final LogPersistor persMock = mock(LogPersistor.class);
+    private final PushServer serverMock = mock(PushServer.class);
 
     @Test
     public void sendAndReadLogMessage() throws IOException {
         PipedOutputStream out = new PipedOutputStream();
         PipedInputStream in = new PipedInputStream(out);
 
-        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(in, out, persMock);
+        LogCommunicationHandler.LogServerCommunicationHandler handler =
+                new LogCommunicationHandler.LogServerCommunicationHandler(in, out, persMock, serverMock);
 
         LogMessage msg = new LogMessage();
         msg.addArg("Test");
