@@ -2,9 +2,7 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
 import java.util.Vector;
 
@@ -30,7 +28,7 @@ public class ResultMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(LogPersistor persistor, PushServer server) {
+    public boolean operate(LogPersistor persistor, RegistrationServer notifier) {
         return false;
     }
 

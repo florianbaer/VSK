@@ -1,11 +1,9 @@
 package ch.hslu.vsk.logger.viewer;
 
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 
-import java.rmi.NotBoundException;
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,7 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
 public final class Program {
 
     private Remote handler;
-    private PushServer registration;
+    private RegistrationServer registration;
 
     /**
      * The private constructor for the program.
@@ -37,8 +35,8 @@ public final class Program {
         try{
             Viewer viewer = new LogViewer();
             this.registerViewer(viewer);
-            Thread.sleep(20000);
-            this.unregisterViewer(viewer);
+            //Thread.sleep(20000);
+            //this.unregisterViewer(viewer);
         }
         catch (Exception ex){
             ex.printStackTrace();
@@ -48,10 +46,10 @@ public final class Program {
     private void registerViewer(final Viewer model) throws Exception {
         String host = "localhost";
 
-        System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
+        //System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
 
         final Registry reg = LocateRegistry.getRegistry(host, Registry.REGISTRY_PORT);
-        this.registration = (PushServer) reg.lookup("logpushserver");
+        this.registration = (RegistrationServer) reg.lookup("logpushserver");
         this.handler = UnicastRemoteObject.exportObject(model, 0);
         registration.register((Viewer) this.handler);
     }

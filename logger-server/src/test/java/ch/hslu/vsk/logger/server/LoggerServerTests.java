@@ -19,9 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
-import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
-import ch.hslu.vsk.logger.common.rmi.server.PushServer;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +37,7 @@ final class LoggerServerTests {
     public void setupPersistorAdapterTest() throws IOException {
         var properties = mock(ServerProperties.class);
         var threadPool = mock(ExecutorService.class);
-        var pushServer = mock(PushServer.class);
+        var pushServer = mock(RemotePushServer.class);
         LoggerServer server = new LoggerServer(properties, threadPool, pushServer);
         File file = new File("File.tmp");
         file.delete(); //for windows only
@@ -54,7 +52,7 @@ final class LoggerServerTests {
     public void loggerServerHandleTest() throws IOException {
         var properties = mock(ServerProperties.class);
         var threadPool = mock(ExecutorService.class);
-        var pushServer = mock(PushServer.class);
+        var pushServer = mock(RemotePushServer.class);
         var socket = mock(Socket.class);
 
         LoggerServer server = new LoggerServer(properties, threadPool, pushServer);

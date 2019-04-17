@@ -1,5 +1,8 @@
 package ch.hslu.vsk.logger.server;
 
+import ch.hslu.vsk.logger.common.ExceptionSerializer.ExceptionToStringSerializer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
@@ -21,13 +24,13 @@ public final class Program {
      */
     public static void main(final String[] args) {
         Thread serverThread = null;
-        var pushServer = new RemotePushServer();
-        Thread pushServerThread = new Thread(pushServer);
+        RegistrationServer pushServer = null;
+
         Thread registryBootstrapper = new Thread(new RmiRegistryBootstrapper());
 
         try {
             registryBootstrapper.start();
-            pushServerThread.start();
+            pushServer = (RegistrationServer) RemotePushServer.getInstance();
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
             LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool(), pushServer);
@@ -44,12 +47,13 @@ public final class Program {
         } catch (Exception ex) {
             // generic exception handling on server
             System.out.println("CRITICAL ERROR. SERVER GOT KILLED...");
+            System.out.println(ExceptionToStringSerializer.execute(ex));
         } finally {
             if (serverThread != null && serverThread.isAlive()) {
                 serverThread.interrupt();
             }
-            if (pushServerThread != null && pushServerThread.isAlive()) {
-                pushServerThread.interrupt();
+            if (pushServer != null) {
+                // todo shutdown
             }
             if (registryBootstrapper != null && registryBootstrapper.isAlive()) {
                 registryBootstrapper.interrupt();

@@ -2,6 +2,7 @@ package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
