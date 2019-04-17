@@ -1,5 +1,7 @@
 package ch.hslu.vsk.logger.server;
 
+import ch.hslu.vsk.logger.common.helpers.Property;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,7 +11,7 @@ import java.util.Properties;
 /**
  * The Serverproperties used to configure the server.
  */
-public class ServerProperties {
+public class ServerProperties extends Property {
 
     private static final String LOGFILE = "ch.hslu.vsk.server.logfile";
     private static final String PORT = "ch.hslu.vsk.server.port";
@@ -18,6 +20,7 @@ public class ServerProperties {
 
     /**
      * Gets the loggerfile which is used to save the log content.
+     *
      * @return The loggerfile.
      * @throws IOException an exception which can be caused because by the filesystem.
      */
@@ -37,26 +40,10 @@ public class ServerProperties {
         return logFile;
     }
 
-    /**
-     * Creates a file if it does not exist.
-     * @param file The file to be created if it does not exist.
-     * @throws IOException The unhandled io exception.
-     */
-    private void createFileIfNotExisting(final File file) throws IOException {
-        if (!file.isFile()) {
-            var parent = file.getParentFile();
-            if (parent != null) {
-                parent.mkdirs();
-            }
-        }
-
-        if (!file.isFile()) {
-            file.createNewFile();
-        }
-    }
 
     /**
      * Gets the server port.
+     *
      * @return The configured server port.
      */
     public int getServerPort() {
@@ -65,6 +52,7 @@ public class ServerProperties {
 
     /**
      * Loads the properties.
+     *
      * @throws IOException The unhandled io exception.
      */
     public void loadProperties() throws IOException {
@@ -85,6 +73,7 @@ public class ServerProperties {
 
     /**
      * Creates a default properties file if not existing.
+     *
      * @param configFile the config file to be created.
      * @throws IOException The unhandled io exception.
      */
@@ -100,9 +89,10 @@ public class ServerProperties {
 
     /**
      * Gets the server properties.
+     *
      * @return The loaded server properties.
      */
-    public Properties getServerProperties() {
+    public Properties getProperties() {
         return this.serverProperties;
     }
 }

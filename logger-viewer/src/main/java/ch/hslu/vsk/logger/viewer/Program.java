@@ -24,6 +24,7 @@ public final class Program {
 
     /**
      * The main method.
+     *
      * @param args The main method arguments.
      */
     public static void main(final String[] args) {
@@ -32,13 +33,12 @@ public final class Program {
     }
 
     private void run() {
-        try{
+        try {
             Viewer viewer = new LogViewer();
             this.registerViewer(viewer);
             //Thread.sleep(20000);
             //this.unregisterViewer(viewer);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -54,7 +54,7 @@ public final class Program {
         registration.register((Viewer) this.handler);
     }
 
-    private void unregisterViewer(final Viewer model) throws Exception{
+    private void unregisterViewer(final Viewer model) throws Exception {
         registration.unregister(model);
     }
 }

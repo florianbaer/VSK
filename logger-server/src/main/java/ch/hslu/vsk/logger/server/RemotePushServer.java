@@ -45,13 +45,13 @@ public class RemotePushServer implements RegistrationServer {
     }
 
     @Override
-    public void unregister(Viewer server) throws RemoteException {
+    public void unregister(final Viewer server) throws RemoteException {
         System.out.println("unregister viewer...");
         this.viewers.remove(server);
     }
 
     @Override
-    public void notifyViewers(LogMessage message) {
+    public void notifyViewers(final LogMessage message) {
         synchronized (this) {
             this.viewers.stream().forEach(x -> {
                 try {

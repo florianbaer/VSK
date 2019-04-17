@@ -4,6 +4,7 @@ import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.stringpersistor.api.*;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Implements the {@link LogPersistor} using the Adapter pattern (GoF 139).
@@ -14,6 +15,7 @@ public class StringPersistorAdapter implements LogPersistor {
 
     /**
      * Creates a new instance of the {@link StringPersistorAdapter}.
+     *
      * @param stringPersistor the stringpersistor to inject.
      */
     public StringPersistorAdapter(final StringPersistor stringPersistor) {
@@ -22,6 +24,7 @@ public class StringPersistorAdapter implements LogPersistor {
 
     /**
      * Gets the string persistor.
+     *
      * @return the {@link StringPersistor}.
      */
     public StringPersistor getStringPersistor() {
@@ -30,10 +33,16 @@ public class StringPersistorAdapter implements LogPersistor {
 
     /**
      * Saves the a passed {@link LogMessage}.
+     *
      * @param log The logmessage to save.
      */
     public void save(final LogMessage log) {
         this.stringPersistor.save(Instant.now(), log.getMessageText());
+    }
+
+
+    public List<PersistedString> getAllPersistedStrings() {
+        return this.stringPersistor.get(Integer.MAX_VALUE);
     }
 
 }

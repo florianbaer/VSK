@@ -33,21 +33,21 @@ class LoggerComponentLoggingTest {
     private final String errorMessage = "THROWABLE";
 
     void setUpLogger(LogLevel level) {
-        this.logger =   new LoggerComponent(level , "localhost:59090", "test", LoggerComponentLoggingTest.class, this.networkServiceMock);
+        this.logger = new LoggerComponent(level, "localhost:59090", "test", LoggerComponentLoggingTest.class, this.networkServiceMock);
     }
 
-    void setUpThrowable(){
+    void setUpThrowable() {
         this.throwable = mock(Throwable.class);
     }
 
     @BeforeEach
-    public void setUpStreams() {
+    void setUpStreams() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
     @AfterEach
-    public void restoreStreams() {
+    void restoreStreams() {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
@@ -58,7 +58,7 @@ class LoggerComponentLoggingTest {
         String identifier = "test";
         LogLevel minLogLevel = LogLevel.DEBUG;
         LogLevel newMinLogLevel = LogLevel.DEBUG;
-        var component = new LoggerComponent(minLogLevel , connectionString, identifier, LoggerComponentLoggingTest.class);
+        var component = new LoggerComponent(minLogLevel, connectionString, identifier, LoggerComponentLoggingTest.class);
         assertEquals(connectionString, component.getConnectionString());
         assertEquals(identifier, component.getIdentifier());
         assertEquals(minLogLevel, component.getMinLogLevel());
@@ -122,7 +122,7 @@ class LoggerComponentLoggingTest {
         this.setUpLogger(LogLevel.INFO);
         this.logger.info(logMessage, this.throwable);
         verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                logMessage , errorMessage)));
+                logMessage, errorMessage)));
     }
 
     @Test
@@ -161,7 +161,7 @@ class LoggerComponentLoggingTest {
         this.setUpLogger(LogLevel.WARNING);
         this.logger.warning(logMessage, this.throwable);
         verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                logMessage , errorMessage)));
+                logMessage, errorMessage)));
     }
 
     @Test
@@ -200,7 +200,7 @@ class LoggerComponentLoggingTest {
         this.setUpLogger(LogLevel.ERROR);
         this.logger.error(logMessage, this.throwable);
         verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                logMessage , errorMessage)));
+                logMessage, errorMessage)));
     }
 
     @Test
@@ -239,7 +239,7 @@ class LoggerComponentLoggingTest {
         this.setUpLogger(LogLevel.CRITICAL);
         this.logger.critical(logMessage, this.throwable);
         verify(this.networkServiceMock, times(1)).sendMessageToServer(matches(String.format("(.*%s.*%s.*)",
-                logMessage , errorMessage)));
+                logMessage, errorMessage)));
     }
 
     @Test
