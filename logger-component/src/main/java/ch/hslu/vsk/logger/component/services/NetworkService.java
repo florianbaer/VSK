@@ -118,6 +118,7 @@ public final class NetworkService implements NetworkCommunication {
                 clientLogPersister.getAllLocalLogs()) {
             logCommunicationHandler.sendMsg(logMessage);
         }
+        clientLogPersister.clearLocalLogFile();
     }
 
 

@@ -55,11 +55,10 @@ class ClientLogPersister extends Property {
                 stringPersistorAdapter.getAllPersistedStrings()) {
             logMessages.add(new LogMessage(persistedString.getPayload()));
         }
-        clearLocalLogFile();
         return logMessages;
     }
 
-    private void clearLocalLogFile() {
+    public void clearLocalLogFile() {
         try (PrintWriter writer = new PrintWriter(this.logFile)) {
             writer.write("");
         } catch (FileNotFoundException e) {
@@ -80,7 +79,7 @@ class ClientLogPersister extends Property {
         File logFile = null;
         if (logFilePath == null || logFilePath.isEmpty()) {
             System.out.println("No valid LogFile defined, logging to tmp File...");
-            logFile = File.createTempFile("MessageLoggerClient", ".csv");
+            logFile = File.createTempFile("MessageLoggerClient", ".csv"); //creates File in %localappdata%
         } else {
             logFile = new File(logFilePath);
         }

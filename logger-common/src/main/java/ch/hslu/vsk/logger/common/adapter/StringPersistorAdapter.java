@@ -41,6 +41,10 @@ public class StringPersistorAdapter implements LogPersistor {
     }
 
 
+    /**
+     * Returns the whole content of the logFile that was given to the FileStringPersistor
+     * @return List of PersistedString's
+     */
     public List<PersistedString> getAllPersistedStrings() {
         return this.stringPersistor.get(Integer.MAX_VALUE);
     }

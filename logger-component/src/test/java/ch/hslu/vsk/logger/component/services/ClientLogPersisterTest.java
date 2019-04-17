@@ -1,10 +1,15 @@
 package ch.hslu.vsk.logger.component.services;
 
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
+import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.FileAssert;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,21 +21,38 @@ class ClientLogPersisterTest {
     @Test
     void testPersistLocally() throws IOException {
 
-        clientLogPersister.getLoggerFile();
-        clientLogPersister.persistLocally(new LogMessage("testMessage"));
-        clientLogPersister.persistLocally(new LogMessage("testMessage2"));
-        clientLogPersister.persistLocally(new LogMessage("testMessage3"));
+        clientLogPersister.persistLocally(new LogMessage("test1"));
+        clientLogPersister.persistLocally(new LogMessage("test2"));
+        clientLogPersister.persistLocally(new LogMessage("test3"));
+        clientLogPersister.persistLocally(new LogMessage("blu"));
+        clientLogPersister.persistLocally(new LogMessage("blu"));
 
-
+        assertTrue(clientLogPersister.getAllLocalLogs().size() == 5);
     }
 
 
     @Test
-    void testGetAllLocalLogs() {
-        System.out.println(clientLogPersister.getAllLocalLogs().size());
+    void testGetAllLocalLogs() throws IOException {
+
+        LogMessage message1 = new LogMessage("test1");
+        LogMessage message2 = new LogMessage("test2");
+        LogMessage message3 = new LogMessage("test3");
+
+        clientLogPersister.persistLocally(message1);
+        clientLogPersister.persistLocally(message2);
+        clientLogPersister.persistLocally(message3);
+
+        List<String> expectedList = new ArrayList<>();
+        expectedList.add("test1");
+        expectedList.add("test2");
+        expectedList.add("test3");
+
+        List<String> actualList = new ArrayList<>();
+
         for (LogMessage logMessage : clientLogPersister.getAllLocalLogs()) {
-            System.out.println("test");
-            System.out.println(logMessage.getMessageText());
+            actualList.add(logMessage.getMessageText());
         }
+
+        assertEquals(expectedList,actualList);
     }
 }
