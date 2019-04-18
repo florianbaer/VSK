@@ -43,6 +43,7 @@ public final class LoggerComponent implements Logger {
         this.loggerClass = clazz;
 
         try {
+            this.properties.loadProperties();
             // logger can be initialized without any values, so the
             // properties values have to be read.
             if (connectionString == null || connectionString.isEmpty()) {
