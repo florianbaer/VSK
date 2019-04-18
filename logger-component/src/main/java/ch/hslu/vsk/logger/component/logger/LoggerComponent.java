@@ -8,6 +8,7 @@ import ch.hslu.vsk.logger.component.services.NetworkCommunication;
 import ch.hslu.vsk.logger.component.services.NetworkService;
 
 import java.time.Instant;
+import java.util.Properties;
 
 
 /**
@@ -24,6 +25,7 @@ public final class LoggerComponent implements Logger {
     private String identifier;
     private Class loggerClass;
     private NetworkCommunication service;
+    private LoggerProperties properties = new LoggerProperties();
 
     /**
      * Constructor used to initiate the LoggerComponent.
@@ -39,10 +41,30 @@ public final class LoggerComponent implements Logger {
         this.connectionString = connectionString;
         this.identifier = identifier;
         this.loggerClass = clazz;
-        this.service = NetworkService.getInstance();
 
-        if (connectionString != null && !connectionString.isEmpty()) {
-            this.service.changeConnectionDetails(connectionString);
+        try {
+            // logger can be initialized without any values, so the
+            // properties values have to be read.
+            if (connectionString == null || connectionString.isEmpty()) {
+                this.connectionString = properties.getPropertyConnectionString();
+                this.service = NetworkService.getInstance(this.connectionString);
+            } else {
+                this.service = NetworkService.getInstance(connectionString);
+            }
+
+            if (identifier == null || identifier.isEmpty()) {
+                this.identifier = properties.getPropertyIdentifier();
+            }
+
+            if (logLevel == null) {
+                this.logLevel = properties.getPropertyMinLogLevel();
+            }
+
+            if (clazz == null) {
+                this.loggerClass = Class.forName(properties.getPropertyLoggingClass());
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to initialize LoggerComponent, " + e.getMessage());
         }
     }
 
@@ -62,10 +84,30 @@ public final class LoggerComponent implements Logger {
         this.connectionString = connectionString;
         this.identifier = identifier;
         this.loggerClass = clazz;
-        this.service = networkService;
 
-        if (connectionString != null && !connectionString.isEmpty()) {
-            this.service.changeConnectionDetails(connectionString);
+        try {
+            // logger can be initialized without any values, so the
+            // properties values have to be read.
+            if (connectionString == null || connectionString.isEmpty()) {
+                this.connectionString = properties.getPropertyConnectionString();
+                this.service = NetworkService.getInstance(this.connectionString);
+            } else {
+                this.service = networkService;
+            }
+
+            if (identifier == null || identifier.isEmpty()) {
+                this.identifier = properties.getPropertyIdentifier();
+            }
+
+            if (logLevel == null) {
+                this.logLevel = properties.getPropertyMinLogLevel();
+            }
+
+            if (clazz == null) {
+                this.loggerClass = Class.forName(properties.getPropertyLoggingClass());
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to initialize LoggerComponent, " + e.getMessage());
         }
     }
 

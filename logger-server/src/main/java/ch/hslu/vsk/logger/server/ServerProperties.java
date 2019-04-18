@@ -56,7 +56,7 @@ public class ServerProperties extends Property {
      * @throws IOException The unhandled io exception.
      */
     public void loadProperties() throws IOException {
-        File configFile = new File("Server.properties");
+        File configFile = new File("server.properties");
 
         if (!configFile.isFile()) {
             createPropertiesFile(configFile);

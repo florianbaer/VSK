@@ -5,7 +5,6 @@ import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Properties;
 
 /**
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
@@ -13,10 +12,6 @@ import java.util.Properties;
  * to use a different Instance of this class.
  */
 public final class NetworkService implements NetworkCommunication {
-
-
-    private static final String LOGGER_PROPERTY_FILE = "vsklogger.properties";
-    private static final String PROPERTY_CONNECTION_STRING = "ch.hslu.vsk.logger.connectionstring";
 
     private static NetworkService networkService;
     private LogCommunicationHandler logCommunicationHandler;
@@ -50,25 +45,21 @@ public final class NetworkService implements NetworkCommunication {
 
     }
 
-
     /**
      * Used to get an Instance of this class. It ensures that only one Instance
-     * exists at runtime, because there should only be one network-point to communicate
+     * exists at runtime, because there should only be one network-point to communicate.
      *
+     * @param connectionString for the service
      * @return Instance of NetworkService to be used
      */
-    public static NetworkService getInstance() {
-        Properties clientProperties = new Properties();
+    public static NetworkService getInstance(String connectionString) {
 
         synchronized (NetworkService.class) {
             if (networkService == null) {
                 try {
+                    String[] connection = connectionString.split(":");
 
-                    clientProperties.load(NetworkService.class.getClassLoader().getResourceAsStream(LOGGER_PROPERTY_FILE));
-                    String propertyAsString = clientProperties.getProperty(PROPERTY_CONNECTION_STRING);
-                    String[] connectionString = propertyAsString.split(":");
-
-                    networkService = new NetworkService(connectionString[0], Integer.valueOf(connectionString[1]));
+                    networkService = new NetworkService(connection[0], Integer.valueOf(connection[1]));
                     return networkService;
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -119,30 +110,6 @@ public final class NetworkService implements NetworkCommunication {
             logCommunicationHandler.sendMsg(logMessage);
         }
         clientLogPersister.clearLocalLogFile();
-    }
-
-
-
-    @Override
-    public void changeConnectionDetails(final String connectionString) {
-        String[] connection = connectionString.split(":");
-
-        String newHost = connection[0];
-        int newPort = Integer.valueOf(connection[1]);
-
-        try {
-            if (clientSocket != null) {
-                clientSocket.close();
-            }
-
-            this.host = newHost;
-            this.port = newPort;
-            clientSocket = new Socket(newHost, newPort);
-            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
-                    clientSocket.getOutputStream());
-        } catch (Exception ioe) {
-            System.out.println(ioe.getMessage());
-        }
     }
 
     /**
