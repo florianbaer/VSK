@@ -46,7 +46,7 @@ public final class LoggerComponentSetup implements LoggerSetup {
         properties.loadProperties();
 
         // this workaround is needed because of bad design decisions
-        if(!properties.getConfigStatus() && this.level != null && this.connectionString != null && this.identifier == null) {
+        if(!properties.getConfigStatus() &&this.level != null && this.connectionString != null && this.identifier == null) {
 
             this.connectionString = properties.getPropertyConnectionString();
 

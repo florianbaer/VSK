@@ -21,7 +21,7 @@ public class LoggerProperties {
     private static final String PROPERTY_CONNECTION_STRING = "ch.hslu.vsk.logger.connectionstring";
     private static final String PROPERTY_IDENTIFIER = "ch.hslu.vsk.logger.identifier";
     private static final String PROPERTY_LOCAL_FILE = "ch.hslu.vsk.logger.logFile";
-    private boolean configFileFreshlyInstalled = true;
+    private boolean configFileFreshlyInstalled;
 
     private Properties loggerProperties = null;
 
@@ -34,6 +34,9 @@ public class LoggerProperties {
 
             if (!configFile.isFile()) {
                 createLoggerPropertiesFile(configFile);
+                configFileFreshlyInstalled = true;
+            } else {
+                configFileFreshlyInstalled = false;
             }
 
             FileReader loggerPropsReader = new FileReader(configFile);
@@ -106,6 +109,16 @@ public class LoggerProperties {
      */
     public String getPropertyLocalFile() {
         return  loggerProperties.getProperty(PROPERTY_LOCAL_FILE);
+    }
+
+    /**
+     * If the config file was created the first time, this method returns true. This means, that the
+     * configurations from the vsklogger.properties-File are taken for the LoggerComponent. If the config-File
+     * already exists, this method returns false and the configurations form the config file are taken.
+     * @return true if file exists long enough
+     */
+    public boolean getConfigStatus() {
+        return this.configFileFreshlyInstalled;
     }
 
 }
