@@ -296,8 +296,8 @@ public final class LoggerComponent implements Logger {
     }
 
     /**
-     * Returns the configuration of this logger instance
-     * @return
+     * Returns the configuration of this logger instance.
+     * @return configuration for the logger
      */
     public LoggerProperties getProperties() {
         return this.properties;

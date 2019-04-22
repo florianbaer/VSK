@@ -68,7 +68,7 @@ class ClientLogPersister extends Property {
 
     /**
      * @return The logFile that will contain the local logs.
-     * @throws IOException
+     * @throws IOException that my be thrown
      */
     File getLoggerFile() throws IOException {
         LoggerProperties clientProperties = new LoggerProperties();
