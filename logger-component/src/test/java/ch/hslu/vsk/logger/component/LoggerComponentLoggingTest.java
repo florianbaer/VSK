@@ -1,6 +1,7 @@
 package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
+import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 import ch.hslu.vsk.logger.component.logger.LoggerProperties;
@@ -9,9 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -70,7 +69,7 @@ class LoggerComponentLoggingTest {
     }
 
     @Test
-    public void createComponentWithDefaultConfig() throws IOException {
+    public void createComponentDefaultConfig() throws IOException {
         LoggerProperties properties = new LoggerProperties();
         properties.loadProperties();
 

@@ -294,4 +294,12 @@ public final class LoggerComponent implements Logger {
     private boolean isLogLevelHighEnough(final LogLevel logLevelOfMethod) {
         return logLevelOfMethod.ordinal() >= (this.logLevel).ordinal();
     }
+
+    /**
+     * Returns the configuration of this logger instance
+     * @return
+     */
+    public LoggerProperties getProperties() {
+        return this.properties;
+    }
 }

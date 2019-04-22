@@ -32,7 +32,7 @@ public class LoggerPropertiesTest {
         properties.loadProperties();
 
         assertEquals(properties.getPropertyConnectionString(), "localhost:59090");
-        assertEquals(properties.getPropertyIdentifier(), "test");
+        assertEquals(properties.getPropertyIdentifier(), "NoIdentifierSpecified");
         assertEquals(properties.getPropertyMinLogLevel().name(), "DEBUG");
         assertEquals(properties.getPropertyLocalFile(), "");
     }
