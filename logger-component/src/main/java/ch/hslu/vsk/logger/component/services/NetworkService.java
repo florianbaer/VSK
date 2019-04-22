@@ -82,7 +82,7 @@ public final class NetworkService implements NetworkCommunication {
     public void sendMessageToServer(final String messageToSend) {
         LogMessage message = new LogMessage(messageToSend);
 
-        if (isLoggingLocally) {
+        if (!isLoggingLocally) {
             //LoggerComponent was logging locally at this point.
             if (isServerReachable()) {
                 //Looks like server defined by LoggerComponent is available again. Trying to reach server now.
