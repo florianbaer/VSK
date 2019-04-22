@@ -295,11 +295,4 @@ public final class LoggerComponent implements Logger {
         return logLevelOfMethod.ordinal() >= (this.logLevel).ordinal();
     }
 
-    /**
-     * Returns the configuration of this logger instance.
-     * @return configuration for the logger
-     */
-    public LoggerProperties getProperties() {
-        return this.properties;
-    }
 }

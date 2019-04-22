@@ -42,9 +42,8 @@ public final class LoggerComponentSetup implements LoggerSetup {
 
     @Override
     public Logger build() {
-        LoggerComponent component =  new LoggerComponent(this.level, this.connectionString, this.identifier,
-                this.clazz);
-        LoggerProperties properties = component.getProperties();
+        LoggerProperties properties = new LoggerProperties();
+        properties.loadProperties();
 
         // this workaround is needed because of bad design decisions
         if(!properties.getConfigStatus() && this.level != null && this.connectionString != null && this.identifier == null) {
@@ -56,6 +55,7 @@ public final class LoggerComponentSetup implements LoggerSetup {
             this.identifier = properties.getPropertyIdentifier();
         }
 
-        return component;
+        return new LoggerComponent(this.level, this.connectionString, this.identifier,
+                this.clazz);
     }
 }

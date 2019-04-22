@@ -108,14 +108,4 @@ public class LoggerProperties {
         return  loggerProperties.getProperty(PROPERTY_LOCAL_FILE);
     }
 
-    /**
-     * If the config file was created the first time, this method returns true. This means, that the
-     * configurations from the vsklogger.properties-File are taken for the LoggerComponent. If the config-File
-     * already exists, this method returns false and the configurations form the config file are taken.
-     * @return true if file exists long enough
-     */
-    public boolean getConfigStatus() {
-        return this.configFileFreshlyInstalled;
-    }
-
 }
