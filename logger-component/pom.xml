@@ -72,10 +72,6 @@
             <artifactId>g06-stringpersistor</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.hslu.vsk19fs.g06</groupId>
-            <artifactId>g06-stringpersistor</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>

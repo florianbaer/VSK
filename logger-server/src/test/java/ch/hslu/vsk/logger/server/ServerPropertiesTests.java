@@ -32,7 +32,7 @@ final class ServerPropertiesTests {
     public void loadServerProperitesCreatesDefaultFileTest() throws IOException {
         // Arrange
         ServerProperties properties = new ServerProperties();
-        File configFile = new File("Server.properties");
+        File configFile = new File("server.properties");
         configFile.delete();
         configFile.deleteOnExit();
 
@@ -43,7 +43,7 @@ final class ServerPropertiesTests {
         // Assert
         assertEquals(configFile.isFile(), true);
         assertEquals(properties.getServerPort(), 1337);
-        assertThat(properties.getLoggerFile().getAbsolutePath()).contains("Server").contains(".log");
+        assertThat(properties.getLoggerFile().getAbsolutePath()).contains("server").contains(".log");
     }
 
     @Test
@@ -56,7 +56,7 @@ final class ServerPropertiesTests {
         this.setUpConfigFile(filePath, port);
 
         ServerProperties properties = new ServerProperties();
-        File configFile = new File("Server.properties");
+        File configFile = new File("server.properties");
         configFile.deleteOnExit();
 
         // Act
@@ -69,7 +69,7 @@ final class ServerPropertiesTests {
     }
 
     private void setUpConfigFile(String filePath, int port) throws IOException {
-        File configFile = new File("Server.properties");
+        File configFile = new File("server.properties");
 
         if(configFile.createNewFile()){
             FileWriter writer = new FileWriter(configFile);

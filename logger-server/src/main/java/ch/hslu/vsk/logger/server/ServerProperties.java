@@ -29,7 +29,7 @@ public class ServerProperties extends Property {
         File logFile = null;
         if (logFilePath == null || logFilePath.isEmpty()) {
             System.out.println("No valid LogFile defined, logging to tmp File...");
-            logFile = File.createTempFile("Server", ".log");
+            logFile = File.createTempFile("server", ".log");
         } else {
             logFile = new File(logFilePath);
         }

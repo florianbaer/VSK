@@ -8,7 +8,6 @@ import ch.hslu.vsk.logger.component.services.NetworkCommunication;
 import ch.hslu.vsk.logger.component.services.NetworkService;
 
 import java.time.Instant;
-import java.util.Properties;
 
 
 /**
@@ -62,7 +61,7 @@ public final class LoggerComponent implements Logger {
             }
 
             if (clazz == null) {
-                this.loggerClass = Class.forName(properties.getPropertyLoggingClass());
+               this.loggerClass = this.getClass();
             }
         } catch (Exception e) {
             System.out.println("Failed to initialize LoggerComponent, " + e.getMessage());
@@ -105,7 +104,7 @@ public final class LoggerComponent implements Logger {
             }
 
             if (clazz == null) {
-                this.loggerClass = Class.forName(properties.getPropertyLoggingClass());
+                this.loggerClass = this.getClass();
             }
         } catch (Exception e) {
             System.out.println("Failed to initialize LoggerComponent, " + e.getMessage());

@@ -3,6 +3,7 @@ package ch.hslu.vsk.logger.component.services;
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.helpers.Property;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
+import ch.hslu.vsk.logger.component.logger.LoggerProperties;
 import ch.hslu.vsk.stringpersistor.api.PersistedString;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * This class is used to log messages into a local logFile during the time the server is not reachable.
@@ -22,12 +22,11 @@ class ClientLogPersister extends Property {
 
     private StringPersistorAdapter stringPersistorAdapter = null;
     private File logFile = null;
-    private static final String LOGGER_PROPERTY_FILE = "vsklogger.properties";
     private static final String PROPERTY_LOGFILE = "ch.hslu.vsk.logger.logFile";
 
 
     /**
-     *
+     * Constructor
      */
     ClientLogPersister() {
 
@@ -72,10 +71,10 @@ class ClientLogPersister extends Property {
      * @throws IOException
      */
     File getLoggerFile() throws IOException {
-        Properties clientProperties = new Properties();
+        LoggerProperties clientProperties = new LoggerProperties();
 
-        clientProperties.load(NetworkService.class.getClassLoader().getResourceAsStream(LOGGER_PROPERTY_FILE));
-        var logFilePath = clientProperties.getProperty(PROPERTY_LOGFILE);
+       clientProperties.loadProperties();
+        var logFilePath = clientProperties.getPropertyLocalFile();
         File logFile = null;
         if (logFilePath == null || logFilePath.isEmpty()) {
             System.out.println("No valid LogFile defined, logging to tmp File...");

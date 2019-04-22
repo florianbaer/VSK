@@ -65,7 +65,6 @@ public final class NetworkService implements NetworkCommunication {
                     System.out.println(e.getMessage());
                 }
             }
-
         }
         return networkService;
     }
@@ -105,15 +104,15 @@ public final class NetworkService implements NetworkCommunication {
     }
 
     private void sendAllLocalLogs() throws IOException {
-        for (LogMessage logMessage :
-                clientLogPersister.getAllLocalLogs()) {
+        for (LogMessage logMessage
+                : clientLogPersister.getAllLocalLogs()) {
             logCommunicationHandler.sendMsg(logMessage);
         }
         clientLogPersister.clearLocalLogFile();
     }
 
     /**
-     * Switches the logCommunicationHandler to the server connection
+     * Switches the logCommunicationHandler to the server connection.
      */
     private void establishServerConnection() {
         this.isLoggingLocally = false;
@@ -143,7 +142,7 @@ public final class NetworkService implements NetworkCommunication {
     /**
      * Checks if the server, which is specified in the LoggerComponent, is reachable or not.
      *
-     * @return true if server is reachable; false if server is unreachable
+     * @return true if server is reachable; false if server is unreachable.
      */
     private boolean isServerReachable() {
         try {
@@ -157,9 +156,9 @@ public final class NetworkService implements NetworkCommunication {
     }
 
     /**
-     * Sends the logmessage to the ClientPersistor in order to store the log locally
+     * Sends the logmessage to the ClientPersistor in order to store the log locally.
      *
-     * @param messageToPersistLocally Message that will be persisted in the local logfile
+     * @param messageToPersistLocally Message that will be persisted in the local logfile.
      */
     private void storeLogsLocally(final LogMessage messageToPersistLocally) {
         clientLogPersister.persistLocally(messageToPersistLocally);

@@ -1,16 +1,19 @@
 package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
+import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 import ch.hslu.vsk.logger.component.logger.LoggerComponent;
+import ch.hslu.vsk.logger.component.logger.LoggerProperties;
 import ch.hslu.vsk.logger.component.services.NetworkCommunication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -64,6 +67,16 @@ class LoggerComponentLoggingTest {
         assertEquals(minLogLevel, component.getMinLogLevel());
         component.setMinLogLevel(newMinLogLevel);
         assertEquals(newMinLogLevel, component.getMinLogLevel());
+    }
+
+    @Test
+    public void createComponentWithDefaultConfig() throws IOException {
+        LoggerProperties properties = new LoggerProperties();
+        properties.loadProperties();
+
+        LoggerComponent logger = (LoggerComponent) LoggerSetupFactory.createSetup().build();
+        assertTrue(logger.getConnectionString().equals(properties.getPropertyConnectionString()) && logger.getIdentifier().equals(properties.getPropertyIdentifier())
+                && logger.getMinLogLevel().equals(properties.getPropertyMinLogLevel()) && logger.getLoggingClass().equals(LoggerComponent.class));
     }
 
     @Test
