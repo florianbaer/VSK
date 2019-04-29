@@ -35,15 +35,16 @@ public final class NetworkService implements NetworkCommunication {
         this.port = port;
 
         this.clientLogPersister = new ClientLogPersister();
+
         try {
             clientSocket = new Socket(this.host, this.port);
             logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
                     clientSocket.getOutputStream());
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        } finally {
+            this.isLoggingLocally = !isServerReachable();
         }
-
-        this.isLoggingLocally = !isServerReachable();
 
 
     }
@@ -93,6 +94,7 @@ public final class NetworkService implements NetworkCommunication {
                 try {
                     this.sendAllLocalLogs();
                     logCommunicationHandler.sendMsg(message);
+                    System.out.println("Message sent successfully");
                 } catch (IOException e) {
                     this.isLoggingLocally = true;
                     System.out.println(e.getMessage());
@@ -125,7 +127,6 @@ public final class NetworkService implements NetworkCommunication {
     }
 
     private void sendAllLocalLogs() {
-
         try {
             for (LogMessage logMessage
                     : clientLogPersister.getAllLocalLogs()) {
