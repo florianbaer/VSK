@@ -5,6 +5,8 @@ import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.rmi.RemoteException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +32,11 @@ public class LogViewerModel implements Viewer {
      * @param logMessage that is pushed
      */
     @Override
-    public void sendLogMessage(LogMessage logMessage) {
+    public void sendLogMessage(final Instant instant, final LogMessage logMessage) throws RemoteException {
         String[] msgText = logMessage.getArgList().toArray(new String[0]);
 
         String[] args = msgText[0].split("\\|");
-        this.observableList.add(new TableEntryOfLogMessages(args[0], args[0],args[1], args[2], args[3], args[4]));
+        this.observableList.add(new TableEntryOfLogMessages(instant.toString(), args[0], args[1], args[2],
+                args[3], args[4]));
     }
 }

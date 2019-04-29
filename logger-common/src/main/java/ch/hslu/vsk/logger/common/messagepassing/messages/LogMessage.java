@@ -7,6 +7,7 @@ import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.time.Instant;
 import java.util.Vector;
 
 /**
@@ -46,12 +47,14 @@ public class LogMessage extends AbstractBasicMessage {
      */
     @Override
     public boolean operate(final LogPersistor persistor, RegistrationServer notifier) {
+        final Instant now = Instant.now();
+
         if (persistor != null) {
-            persistor.save(this);
+            persistor.save(now, this);
         }
         if(notifier != null) {
             try {
-                notifier.notifyViewers(this);
+                notifier.notifyViewers(now, this);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

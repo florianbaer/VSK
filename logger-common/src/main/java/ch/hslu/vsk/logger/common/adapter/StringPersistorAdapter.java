@@ -36,8 +36,8 @@ public class StringPersistorAdapter implements LogPersistor {
      *
      * @param log The logmessage to save.
      */
-    public void save(final LogMessage log) {
-        this.stringPersistor.save(Instant.now(), log.getMessageText());
+    public void save(Instant timeStamp, final LogMessage log) {
+        this.stringPersistor.save(timeStamp, log.getMessageText());
     }
 
 

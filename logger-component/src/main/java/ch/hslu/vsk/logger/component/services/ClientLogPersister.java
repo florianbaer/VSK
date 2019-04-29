@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +44,10 @@ class ClientLogPersister extends FileHandler {
      * Method to persist a message locally using the StringPersister
      *
      * @param messageToPersist Message that will be persistet locally
+     * @param timeStamp timestamp to use
      */
-    public void persistLocally(final LogMessage messageToPersist) {
-        this.stringPersistorAdapter.save(messageToPersist);
+    public void persistLocally(Instant timeStamp, final LogMessage messageToPersist) {
+        this.stringPersistorAdapter.save(timeStamp, messageToPersist);
     }
 
     public List<LogMessage> getAllLocalLogs() {

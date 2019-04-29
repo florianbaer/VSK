@@ -4,6 +4,7 @@ import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Vector;
 
 /**

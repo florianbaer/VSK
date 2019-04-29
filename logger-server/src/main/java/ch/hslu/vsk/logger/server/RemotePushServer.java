@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +52,11 @@ public class RemotePushServer implements RegistrationServer {
     }
 
     @Override
-    public void notifyViewers(final LogMessage message) {
+    public void notifyViewers(final Instant instant, final LogMessage message) {
         synchronized (this) {
             this.viewers.stream().forEach(x -> {
                 try {
-                    x.sendLogMessage(message);
+                    x.sendLogMessage(instant, message);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

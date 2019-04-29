@@ -4,7 +4,10 @@ import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.time.Instant;
 
 /**
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
@@ -103,7 +106,7 @@ public final class NetworkService implements NetworkCommunication {
             } else {
                 System.out.println("Server is still not reachable");
                 System.out.println("Storing logs locally until connection to server can be established again.");
-                this.storeLogsLocally(message);
+                this.storeLogsLocally(Instant.now(), message);
             }
         } else {
             //LoggerComponent was logging on the server at this point.
@@ -119,7 +122,7 @@ public final class NetworkService implements NetworkCommunication {
             } else {
                 System.out.println("Server not reachable anymore, switching to local logging.");
                 this.isLoggingLocally = true;
-                storeLogsLocally(message);
+                storeLogsLocally(Instant.now(), message);
             }
 
 
@@ -147,12 +150,10 @@ public final class NetworkService implements NetworkCommunication {
      */
     private boolean isServerReachable() {
         try {
-            clientSocket.getOutputStream().write(2);
-            return true;
+            return InetAddress.getByName(clientSocket.getInetAddress().getHostAddress()).isReachable(50);
         } catch (IOException e) {
             return false;
         }
-
     }
 
     /**
@@ -160,7 +161,7 @@ public final class NetworkService implements NetworkCommunication {
      *
      * @param messageToPersistLocally Message that will be persisted in the local logfile.
      */
-    private void storeLogsLocally(final LogMessage messageToPersistLocally) {
-        clientLogPersister.persistLocally(messageToPersistLocally);
+    private void storeLogsLocally(final Instant instant, final LogMessage messageToPersistLocally) {
+        clientLogPersister.persistLocally(instant, messageToPersistLocally);
     }
 }

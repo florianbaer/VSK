@@ -33,8 +33,8 @@ public class LogViewerController {
      * Used to initialize the model.
      * @param model to initialize.
      */
-    public void initModel (final LogViewerModel model) {
-        if(this.model != null) {
+    public void initModel(final LogViewerModel model) {
+        if (this.model != null) {
             throw new IllegalArgumentException("Model was already initialized");
         }
         this.model = model;

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -21,11 +22,11 @@ class ClientLogPersisterTest {
     @Test
     void testPersistLocally() throws IOException {
 
-        clientLogPersister.persistLocally(new LogMessage("test1"));
-        clientLogPersister.persistLocally(new LogMessage("test2"));
-        clientLogPersister.persistLocally(new LogMessage("test3"));
-        clientLogPersister.persistLocally(new LogMessage("blu"));
-        clientLogPersister.persistLocally(new LogMessage("blu"));
+        clientLogPersister.persistLocally(Instant.now(), new LogMessage("test1"));
+        clientLogPersister.persistLocally(Instant.now(), new LogMessage("test2"));
+        clientLogPersister.persistLocally(Instant.now(),new LogMessage("test3"));
+        clientLogPersister.persistLocally(Instant.now(), new LogMessage("blu"));
+        clientLogPersister.persistLocally(Instant.now(), new LogMessage("blu"));
 
         assertTrue(clientLogPersister.getAllLocalLogs().size() == 5);
     }
@@ -38,9 +39,9 @@ class ClientLogPersisterTest {
         LogMessage message2 = new LogMessage("test2");
         LogMessage message3 = new LogMessage("test3");
 
-        clientLogPersister.persistLocally(message1);
-        clientLogPersister.persistLocally(message2);
-        clientLogPersister.persistLocally(message3);
+        clientLogPersister.persistLocally(Instant.now(), message1);
+        clientLogPersister.persistLocally(Instant.now(), message2);
+        clientLogPersister.persistLocally(Instant.now(), message3);
 
         List<String> expectedList = new ArrayList<>();
         expectedList.add("test1");

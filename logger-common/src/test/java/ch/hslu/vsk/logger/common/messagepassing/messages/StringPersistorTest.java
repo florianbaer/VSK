@@ -28,7 +28,7 @@ class StringPersistorTest {
         StringPersistor mock = mock(StringPersistor.class);
         LogPersistor persistor = new StringPersistorAdapter(mock);
 
-        persistor.save(new LogMessage("PAYLOAD"));
+        persistor.save(Instant.now(), new LogMessage("PAYLOAD"));
         verify(mock).save(isA(Instant.class), isA(String.class));
     }
 }
