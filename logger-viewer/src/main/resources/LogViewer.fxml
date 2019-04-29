@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.hslu.vsk.logger.viewer.LogViewerController">
+
+    <TableView fx:id="logTable" GridPane.columnIndex="5" GridPane.columnSpan="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+        <columns>
+            <TableColumn id="serverTimestamp" fx:id="serverTimestamp" text="Server Timestamp" />
+            <TableColumn id="logTimestamp" fx:id="logTimestamp" text="Logger Timestamp" />
+            <TableColumn id="identifier" fx:id="identifier" text="Identifier" />
+            <TableColumn id="logLevel" fx:id="logLevel" text="Loglevel" />
+            <TableColumn id="loggingClass" fx:id="loggingClass" text="Logging Class" />
+         <TableColumn id="logMessage" fx:id="logMessage" prefWidth="75.0" text="Log Message" />
+        </columns>
+    </TableView>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>
