@@ -158,8 +158,9 @@ public final class NetworkService implements NetworkCommunication {
      * @return true if server is reachable; false if server is unreachable.
      */
     private boolean isServerReachable() {
-        try {
-            return InetAddress.getByName(clientSocket.getInetAddress().getHostAddress()).isReachable(50);
+        try (Socket testSocket = new Socket(this.host, this.port)) {
+            testSocket.getOutputStream().write(2);
+            return true;
         } catch (IOException e) {
             return false;
         }
