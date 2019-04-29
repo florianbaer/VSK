@@ -1,7 +1,7 @@
 package ch.hslu.vsk.logger.component.services;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
-import ch.hslu.vsk.logger.common.helpers.Property;
+import ch.hslu.vsk.logger.common.helpers.FileHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.component.logger.LoggerProperties;
 import ch.hslu.vsk.stringpersistor.api.PersistedString;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * This class is used to log messages into a local logFile during the time the server is not reachable.
  */
-class ClientLogPersister extends Property {
+class ClientLogPersister extends FileHandler {
 
     private StringPersistorAdapter stringPersistorAdapter = null;
     private File logFile = null;

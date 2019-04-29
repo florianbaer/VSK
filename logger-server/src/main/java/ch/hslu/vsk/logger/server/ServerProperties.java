@@ -1,6 +1,6 @@
 package ch.hslu.vsk.logger.server;
 
-import ch.hslu.vsk.logger.common.helpers.Property;
+import ch.hslu.vsk.logger.common.helpers.FileHandler;
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * The Serverproperties used to configure the server.
  */
-public class ServerProperties extends Property {
+public class ServerProperties extends FileHandler {
 
     private static final String LOGFILE = "ch.hslu.vsk.server.logfile";
     private static final String PORT = "ch.hslu.vsk.server.port";
