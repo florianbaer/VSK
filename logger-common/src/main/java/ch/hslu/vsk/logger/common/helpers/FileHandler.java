@@ -3,7 +3,7 @@ package ch.hslu.vsk.logger.common.helpers;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class Property {
+public abstract class FileHandler {
 
     /**
      * Creates a file if it does not exist.
