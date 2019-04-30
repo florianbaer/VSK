@@ -44,10 +44,11 @@ class ClientLogPersister extends FileHandler {
      * Method to persist a message locally using the StringPersister
      *
      * @param messageToPersist Message that will be persistet locally
-     * @param timeStamp timestamp to use
+     * @param timeStamp        timestamp to use
      */
     public void persistLocally(Instant timeStamp, final LogMessage messageToPersist) {
         this.stringPersistorAdapter.save(timeStamp, messageToPersist);
+        System.out.println("Message persisted locally");
     }
 
     public List<LogMessage> getAllLocalLogs() {
@@ -62,6 +63,7 @@ class ClientLogPersister extends FileHandler {
     public void clearLocalLogFile() {
         try (PrintWriter writer = new PrintWriter(this.logFile)) {
             writer.write("");
+            System.out.println("Local LogFile cleared");
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -75,12 +77,12 @@ class ClientLogPersister extends FileHandler {
     File getLoggerFile() throws IOException {
         LoggerProperties clientProperties = new LoggerProperties();
 
-       clientProperties.loadProperties();
+        clientProperties.loadProperties();
         var logFilePath = clientProperties.getPropertyLocalFile();
         File logFile = null;
         if (logFilePath == null || logFilePath.isEmpty()) {
             System.out.println("No valid LogFile defined, logging to tmp File...");
-            logFile = File.createTempFile("MessageLoggerClient", ".csv"); //creates File in %localappdata%
+            logFile = File.createTempFile("MessageLoggerClient", ".log"); //creates File in %localappdata%
         } else {
             logFile = new File(logFilePath);
         }

@@ -4,10 +4,12 @@ import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.Instant;
+import java.util.Arrays;
 
 /**
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
@@ -19,6 +21,7 @@ public final class NetworkService implements NetworkCommunication {
     private static NetworkService networkService;
     private LogCommunicationHandler logCommunicationHandler;
     private Socket clientSocket;
+    private Socket testSocket;
     private String host;
     private int port;
 
@@ -36,27 +39,19 @@ public final class NetworkService implements NetworkCommunication {
     private NetworkService(final String host, final int port) {
         this.host = host;
         this.port = port;
+        this.isLoggingLocally = true;
 
         this.clientLogPersister = new ClientLogPersister();
 
-        if(isServerReachable()){
+        if (isServerReachable()) {
             setupServerSocketAndStream();
             isLoggingLocally = false;
-        } else{
+        } else {
             isLoggingLocally = true;
         }
 
     }
 
-    private void setupServerSocketAndStream() {
-        try {
-            clientSocket = new Socket(this.host, this.port);
-            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
-                    clientSocket.getOutputStream());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
     /**
      * Used to get an Instance of this class. It ensures that only one Instance
@@ -99,22 +94,20 @@ public final class NetworkService implements NetworkCommunication {
             //LoggerComponent was logging locally at this point.
             if (isServerReachable()) {
                 //Looks like server defined by LoggerComponent is available again. Trying to reach server now.
-                if(clientSocket == null){
-                    setupServerSocketAndStream();
-                }
-                this.isLoggingLocally = false;
+                setupServerSocketAndStream();
+                setupTestSocket();
                 try {
                     this.sendAllLocalLogs();
                     logCommunicationHandler.sendMsg(message);
                     System.out.println("Message sent successfully");
+                    this.isLoggingLocally = false;
                 } catch (IOException e) {
                     this.isLoggingLocally = true;
                     System.out.println(e.getMessage());
                     System.out.println("Server seems to be available, but the message could not be sent!");
                 }
             } else {
-                System.out.println("Server is still not reachable");
-                System.out.println("Storing logs locally until connection to server can be established again.");
+                System.out.println("Server is still not reachable. Storing logs locally until server is reachable again");
                 this.storeLogsLocally(Instant.now(), message);
             }
         } else {
@@ -123,10 +116,10 @@ public final class NetworkService implements NetworkCommunication {
                 //server is reachable, trying to send message
                 try {
                     logCommunicationHandler.sendMsg(message);
+                    System.out.println("Server online. Sent message directly");
                 } catch (IOException e) {
-                    //exception while sending message to server, even though server was reachable shortly before
                     System.out.println(e.getMessage());
-                    System.out.println("");
+                    System.out.println("Exception while sending message to server, even though server was reachable shortly before");
                 }
             } else {
                 System.out.println("Server not reachable anymore, switching to local logging.");
@@ -144,11 +137,32 @@ public final class NetworkService implements NetworkCommunication {
                     : clientLogPersister.getAllLocalLogs()) {
                 logCommunicationHandler.sendMsg(logMessage);
             }
+            System.out.println("All local logs sent successfully.");
             clientLogPersister.clearLocalLogFile();
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
 
+    }
+
+    private void setupServerSocketAndStream() {
+        try {
+            clientSocket = new Socket(this.host, this.port);
+            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
+                    clientSocket.getOutputStream());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private boolean setupTestSocket() {
+
+        try {
+            this.testSocket = new Socket(this.host, this.port);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
 
@@ -158,13 +172,26 @@ public final class NetworkService implements NetworkCommunication {
      * @return true if server is reachable; false if server is unreachable.
      */
     private boolean isServerReachable() {
-        try (Socket testSocket = new Socket(this.host, this.port)) {
-            testSocket.getOutputStream().write(2);
-            return true;
-        } catch (IOException e) {
+
+        try {
+            if (testSocket == null && !setupTestSocket()) {
+                return false;
+            } else if (!setupTestSocket()) {
+                return false;
+            } else if (testSocket == null) {
+                setupTestSocket();
+            }
+
+            return !(new PrintWriter(testSocket.getOutputStream()).checkError());
+        } catch (
+                IOException ioe) {
+            System.out.println(ioe.getMessage());
             return false;
         }
+
+
     }
+
 
     /**
      * Sends the logmessage to the ClientPersistor in order to store the log locally.

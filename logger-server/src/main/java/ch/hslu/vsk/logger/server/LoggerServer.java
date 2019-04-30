@@ -20,6 +20,7 @@ import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -39,8 +40,9 @@ public final class LoggerServer implements Runnable {
 
     /**
      * The loggerserver which handles the requests.
+     *
      * @param serverProperties The properties to be used in the server.
-     * @param threadPool The executor service to be used.
+     * @param threadPool       The executor service to be used.
      */
     public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool,
                         final RegistrationServer server) {
@@ -61,13 +63,10 @@ public final class LoggerServer implements Runnable {
 
                 persistorAdapter = this.setupPersistorAdapter(loggerFile);
 
-                Socket client;
-
-
                 while (!(Thread.currentThread().isInterrupted())) {
                     listen.setSoTimeout(5000);
                     try {
-                        client = listen.accept();
+                        Socket client = listen.accept();
                         this.handleMessage(client);
                     } catch (SocketTimeoutException ex) {
                         // ignore, because there is no other solution
@@ -87,6 +86,7 @@ public final class LoggerServer implements Runnable {
 
     /**
      * The method to handle the incoming messages.
+     *
      * @param client The socket client which has the connections.
      * @throws IOException unhandled io exception.
      */
@@ -98,6 +98,7 @@ public final class LoggerServer implements Runnable {
 
     /**
      * Creates the persistor adapter.
+     *
      * @param loggerFile The loggerfile used to setup the persistor.
      * @return StringPersistorAdapter using the given logger file.
      */

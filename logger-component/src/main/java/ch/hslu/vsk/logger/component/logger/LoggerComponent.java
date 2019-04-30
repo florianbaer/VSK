@@ -61,7 +61,7 @@ public final class LoggerComponent implements Logger {
             }
 
             if (clazz == null) {
-               this.loggerClass = this.getClass();
+                this.loggerClass = this.getClass();
             }
         } catch (Exception e) {
             System.out.println("Failed to initialize LoggerComponent, " + e.getMessage());
