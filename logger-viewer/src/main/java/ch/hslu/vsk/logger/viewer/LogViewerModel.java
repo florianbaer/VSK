@@ -32,7 +32,7 @@ public class LogViewerModel implements Viewer {
      * @param logMessage that is pushed
      */
     @Override
-    public void sendLogMessage(final Instant instant, final LogMessage logMessage) throws RemoteException {
+    public void sendLogMessage(final Instant instant, final LogMessage logMessage) {
         String[] msgText = logMessage.getArgList().toArray(new String[0]);
 
         String[] args = msgText[0].split("\\|");
