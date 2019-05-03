@@ -1,6 +1,7 @@
 package ch.hslu.vsk.logger.viewer;
 
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -54,5 +55,6 @@ public class LogViewerController {
     public void updateTable() {
         ObservableList<TableEntryOfLogMessages> observableList = this.model.getListOfLogMessages();
         this.logTable.setItems(observableList);
+        Platform.runLater( () -> logTable.scrollTo(observableList.size()-1) );
     }
 }

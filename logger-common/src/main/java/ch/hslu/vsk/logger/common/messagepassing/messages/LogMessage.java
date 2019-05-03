@@ -58,6 +58,8 @@ public class LogMessage extends AbstractBasicMessage {
                 notifier.notifyViewers(LogMessageDTO.fromLogMessage(now, this));
             } catch (RemoteException e) {
                 e.printStackTrace();
+            } catch (ArrayIndexOutOfBoundsException ex){
+                System.out.println("MessagePassing did not pass all the used data to the server. Skipping this message.");
             }
         }
 
