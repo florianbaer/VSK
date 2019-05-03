@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.viewer;
 
+import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 import javafx.collections.FXCollections;
@@ -32,11 +33,9 @@ public class LogViewerModel implements Viewer {
      * @param logMessage that is pushed
      */
     @Override
-    public void sendLogMessage(final Instant instant, final LogMessage logMessage) {
-        String[] msgText = logMessage.getArgList().toArray(new String[0]);
-
-        String[] args = msgText[0].split("\\|");
-        this.observableList.add(new TableEntryOfLogMessages(instant.toString(), args[0], args[1], args[2],
-                args[3], args[4]));
+    public void sendLogMessage(final LogMessageDTO logMessage) {
+        this.observableList.add(new TableEntryOfLogMessages(logMessage.getServerTimestamp(),
+                logMessage.getLogTimestamp(), logMessage.getIdentifier(),
+                logMessage.getLogLevel(), logMessage.getLoggingClass(), logMessage.getLogMessage()));
     }
 }

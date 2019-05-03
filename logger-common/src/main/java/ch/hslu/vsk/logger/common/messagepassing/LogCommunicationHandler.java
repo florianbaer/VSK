@@ -1,8 +1,8 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
-import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -30,11 +30,10 @@ public class LogCommunicationHandler extends AbstractBasicMessageHandler {
      * @return Message
      */
     @Override
-    protected AbstractBasicMessage buildMessage(final String msgId) {
+    protected AbstractBasicMessage buildMessage(final String msgId) throws OperationNotSupportedException {
         if (msgId.equals("log")) {
             return new LogMessage();
-        } else {
-            return new ResultMessage();
         }
+        throw new OperationNotSupportedException("Only the log message is implemented");
     }
 }

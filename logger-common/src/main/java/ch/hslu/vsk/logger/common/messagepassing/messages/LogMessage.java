@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
+import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
@@ -54,7 +55,7 @@ public class LogMessage extends AbstractBasicMessage {
         }
         if(notifier != null) {
             try {
-                notifier.notifyViewers(now, this);
+                notifier.notifyViewers(LogMessageDTO.fromLogMessage(now, this));
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

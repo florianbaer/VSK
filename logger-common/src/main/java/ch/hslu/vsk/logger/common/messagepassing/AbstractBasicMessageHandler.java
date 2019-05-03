@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,10 +44,12 @@ public abstract class AbstractBasicMessageHandler {
      * @return Message with arguments
      * @throws IOException that can occur during reading
      */
-    public final AbstractBasicMessage readMsg() throws IOException {
+    public final AbstractBasicMessage readMsg() throws IOException, OperationNotSupportedException {
         final DataInputStream din = new DataInputStream(msgIn);
         String token = din.readUTF();
-        AbstractBasicMessage msg = buildMessage(token);
+        AbstractBasicMessage msg = null;
+
+        msg = buildMessage(token);
 
         if (msg != null) {
             boolean endOfMessage = false;
@@ -96,6 +99,6 @@ public abstract class AbstractBasicMessageHandler {
      * @param msgId MessageID.
      * @return Message
      */
-    protected abstract AbstractBasicMessage buildMessage(String msgId);
+    protected abstract AbstractBasicMessage buildMessage(String msgId) throws OperationNotSupportedException;
 }
 

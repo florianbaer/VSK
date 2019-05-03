@@ -5,6 +5,7 @@ import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import org.junit.jupiter.api.Test;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -22,7 +23,7 @@ public class LogServerCommunicationHandlerTest {
     private final RegistrationServer serverMock = mock(RegistrationServer.class);
 
     @Test
-    public void sendAndReadLogMessage() throws IOException {
+    public void sendAndReadLogMessage() throws IOException, OperationNotSupportedException {
         PipedOutputStream out = new PipedOutputStream();
         PipedInputStream in = new PipedInputStream(out);
 

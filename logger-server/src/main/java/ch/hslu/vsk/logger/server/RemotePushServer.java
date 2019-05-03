@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.server;
 
+import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
@@ -15,8 +16,10 @@ import java.util.List;
 public class RemotePushServer implements RegistrationServer {
 
     private List<Viewer> viewers = new ArrayList<>();
+    private static Registry registry;
 
     private static RegistrationServer instance;
+    private static RegistrationServer pushServer;
 
     public RemotePushServer(){
         super();
@@ -27,8 +30,8 @@ public class RemotePushServer implements RegistrationServer {
         if (instance == null) {
             try {
                 System.setProperty("java.rmi.server.hostname","localhost");
-                RegistrationServer pushServer = new RemotePushServer();
-                Registry registry = LocateRegistry.getRegistry(Registry.REGISTRY_PORT);
+                pushServer = new RemotePushServer();
+                registry = LocateRegistry.getRegistry(Registry.REGISTRY_PORT);
                 instance = (RegistrationServer) UnicastRemoteObject.exportObject(pushServer, 0);
                 registry.bind("logpushserver", instance);
 
@@ -45,22 +48,35 @@ public class RemotePushServer implements RegistrationServer {
         this.viewers.add(server);
     }
 
-    @Override
-    public void unregister(final Viewer server) throws RemoteException {
-        System.out.println("unregister viewer...");
-        this.viewers.remove(server);
-    }
+
 
     @Override
-    public void notifyViewers(final Instant instant, final LogMessage message) {
+    public void notifyViewers(final LogMessageDTO message) {
         synchronized (this) {
             this.viewers.stream().forEach(x -> {
                 try {
-                    x.sendLogMessage(instant, message);
+                    x.sendLogMessage(message);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             });
+        }
+    }
+
+    @Override
+    public void stop() throws RemoteException
+    {
+        try{
+            // Unregister ourself
+            registry.unbind("logpushserver");
+
+            // Unexport; this will also remove us from the RMI runtime
+            UnicastRemoteObject.unexportObject(pushServer, true);
+
+            System.out.println("Stopping LogPushServer exiting.");
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
 }

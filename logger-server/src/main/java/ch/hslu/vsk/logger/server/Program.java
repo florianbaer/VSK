@@ -30,7 +30,7 @@ public final class Program {
 
         try {
             registryBootstrapper.start();
-            pushServer = (RegistrationServer) RemotePushServer.getInstance();
+            pushServer = RemotePushServer.getInstance();
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
             LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool(), pushServer);
@@ -44,6 +44,11 @@ public final class Program {
                 System.out.println("Press 'q' or 'Q' to quit the server");
                 input = keyboard.next().charAt(0);
             }
+
+            if (pushServer != null) {
+                pushServer.stop();
+            }
+
         } catch (Exception ex) {
             // generic exception handling on server
             System.out.println("CRITICAL ERROR. SERVER GOT KILLED...");
@@ -51,9 +56,6 @@ public final class Program {
         } finally {
             if (serverThread != null && serverThread.isAlive()) {
                 serverThread.interrupt();
-            }
-            if (pushServer != null) {
-                // todo shutdown
             }
             if (registryBootstrapper != null && registryBootstrapper.isAlive()) {
                 registryBootstrapper.interrupt();

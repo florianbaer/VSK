@@ -2,11 +2,13 @@ package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
-import ch.hslu.vsk.logger.common.messagepassing.messages.ResultMessage;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import jdk.jshell.spi.ExecutionControl;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InvalidObjectException;
 import java.io.OutputStream;
 
 /**
@@ -38,12 +40,11 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
      * @return Message
      */
     @Override
-    protected AbstractBasicMessage buildMessage(final String msgId) {
+    protected AbstractBasicMessage buildMessage(final String msgId) throws OperationNotSupportedException {
         if (msgId.equals("log")) {
             return new LogMessage();
-        } else {
-            return new ResultMessage();
         }
+        throw new OperationNotSupportedException("Only the log message is implemented");
     }
 
 
@@ -65,6 +66,10 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
             // exchange, and let this message-processing thread die.
 
             // CODE VON DOZENTEN...
+        }
+        catch (OperationNotSupportedException ex){
+            System.out.println("Error while reading incoming message");
+            ex.printStackTrace();
         }
     }
 }
