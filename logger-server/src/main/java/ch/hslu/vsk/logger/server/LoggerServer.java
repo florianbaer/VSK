@@ -18,6 +18,7 @@ package ch.hslu.vsk.logger.server;
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.stringpersistor.impl.FileContext;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
 
@@ -103,7 +104,7 @@ public final class LoggerServer implements Runnable {
      * @return StringPersistorAdapter using the given logger file.
      */
     public StringPersistorAdapter setupPersistorAdapter(final File loggerFile) {
-        FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+        FileStringPersistor filePersistor = new FileStringPersistor(new FileContext(new PersistedStringCsvConverter()));
 
         filePersistor.setFile(loggerFile);
         return new StringPersistorAdapter(filePersistor);

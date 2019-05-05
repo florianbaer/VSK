@@ -59,6 +59,11 @@ public class LogViewer extends Application {
     private void registerViewer() {
         try {
             String host = "localhost";
+             System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
+             System.setProperty("java.security.policy", "server_rules.policy");
+             if (System.getSecurityManager() == null) {
+                System.setSecurityManager(new SecurityManager());
+             }
             final Registry reg = LocateRegistry.getRegistry(host, Registry.REGISTRY_PORT);
             this.registration = (RegistrationServer) reg.lookup("logpushserver");
             this.handler = UnicastRemoteObject.exportObject(model, 0);
