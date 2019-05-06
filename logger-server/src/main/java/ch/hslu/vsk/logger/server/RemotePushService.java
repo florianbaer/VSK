@@ -37,10 +37,6 @@ public class RemotePushService implements RegistrationServer {
 
         if (instance == null) {
             try {
-                 System.setProperty("java.security.policy", "server_rules.policy");
-                 if (System.getSecurityManager() == null) {
-                    System.setSecurityManager(new SecurityManager());
-                 }
                 pushServer = new RemotePushService();
                 registry = LocateRegistry.getRegistry(Registry.REGISTRY_PORT);
                 instance = (RegistrationServer) UnicastRemoteObject.exportObject(pushServer, 0);
