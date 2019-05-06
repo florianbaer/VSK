@@ -74,7 +74,7 @@ public abstract class AbstractBasicMessageHandler {
      * @param msg Message.
      * @throws IOException IO-Fehler.
      */
-    public final void sendMsg(final AbstractBasicMessage msg) throws IOException {
+    public final synchronized void sendMsg(final AbstractBasicMessage msg) throws IOException {
         final DataOutputStream dataOutputStream = new DataOutputStream(msgOut);
 
         dataOutputStream.writeUTF(msg.getMessageId());

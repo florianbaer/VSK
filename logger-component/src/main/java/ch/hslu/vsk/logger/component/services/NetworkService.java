@@ -67,12 +67,7 @@ public final class NetworkService implements NetworkCommunication {
     @Override
     public void sendMessageToServer(final String messageToSend) {
         LogMessage message = new LogMessage(messageToSend);
-        List<LogMessage> messages = clientLogPersister.getAllLocalLogs();
         try {
-            if(messages.size() > 0 && clientSocket != null && logCommunicationHandler != null) {
-                sendAllLocalLogs(messages);
-                clientLogPersister.clearLocalLogFile();
-            }
             logCommunicationHandler.sendMsg(message);
         } catch (Exception e) {
             storeLogsLocally(Instant.now(), message);
@@ -117,6 +112,14 @@ public final class NetworkService implements NetworkCommunication {
                     clientSocket = new Socket(host, port);
                     logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
                             clientSocket.getOutputStream());
+
+                    // send all local logs
+                    List<LogMessage> messages = clientLogPersister.getAllLocalLogs();
+
+                    if(messages.size() > 0 && clientSocket != null && logCommunicationHandler != null) {
+                        sendAllLocalLogs(messages);
+                        clientLogPersister.clearLocalLogFile();
+                    }
                 } catch (Exception e) {
                     clientSocket = null;
                     logCommunicationHandler = null;
