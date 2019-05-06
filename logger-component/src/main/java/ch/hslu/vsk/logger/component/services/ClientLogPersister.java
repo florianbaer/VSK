@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * This class is used to log messages into a local logFile during the time the server is not reachable.
  */
-class ClientLogPersister extends FileHandler {
+public class ClientLogPersister extends FileHandler {
 
     private StringPersistorAdapter stringPersistorAdapter = null;
     private File logFile = null;
@@ -31,14 +31,12 @@ class ClientLogPersister extends FileHandler {
      * Constructor.
      */
     ClientLogPersister() {
-
         try {
             this.logFile = this.getLoggerFile();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         this.stringPersistorAdapter = this.setupPersisterAdapter();
-
     }
 
     /**
@@ -57,8 +55,7 @@ class ClientLogPersister extends FileHandler {
      */
     public List<LogMessage> getAllLocalLogs() {
         List<LogMessage> logMessages = new ArrayList<>();
-        for (PersistedString persistedString
-                : stringPersistorAdapter.getAllPersistedStrings()) {
+        for (PersistedString persistedString : this.stringPersistorAdapter.getAllPersistedStrings()) {
             logMessages.add(new LogMessage(persistedString.getPayload()));
         }
         return logMessages;
@@ -87,7 +84,7 @@ class ClientLogPersister extends FileHandler {
         clientProperties.loadProperties();
         var logFilePath = clientProperties.getPropertyLocalFile();
         File logFile = null;
-        if (logFilePath == null || logFilePath.isEmpty()) {
+        if (logFilePath == null || new File(logFilePath).isFile()) {
             System.out.println("No valid LogFile defined, logging to tmp File...");
             logFile = File.createTempFile("MessageLoggerClient", ".log"); //creates File in %localappdata%
         } else {

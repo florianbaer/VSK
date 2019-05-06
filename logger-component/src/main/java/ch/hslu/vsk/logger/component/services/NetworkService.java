@@ -6,6 +6,7 @@ import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.Instant;
+import java.util.List;
 import java.util.TimerTask;
 
 /**
@@ -66,27 +67,29 @@ public final class NetworkService implements NetworkCommunication {
     @Override
     public void sendMessageToServer(final String messageToSend) {
         LogMessage message = new LogMessage(messageToSend);
+        List<LogMessage> messages = clientLogPersister.getAllLocalLogs();
         try {
-            if(clientLogPersister.getAllLocalLogs().size() > 0 && clientSocket != null && logCommunicationHandler != null) {
-                sendAllLocalLogs();
+            clientLogPersister.clearLocalLogFile();
+            if(messages.size() > 0 && clientSocket != null && logCommunicationHandler != null) {
+                sendAllLocalLogs(messages);
             }
             logCommunicationHandler.sendMsg(message);
         } catch (Exception e) {
-            storeLogsLocally(Instant.now(), message);
+            messages.add(message);
+            messages.stream().forEach(x -> storeLogsLocally(Instant.now(), x));
         }
     }
 
     /**
      * Send all local logs that were persisted while connection was not available.
+     * @param messages The messages to send.
      */
-    private void sendAllLocalLogs() {
+    private void sendAllLocalLogs(List<LogMessage> messages) {
         try {
-            for (LogMessage logMessage
-                    : clientLogPersister.getAllLocalLogs()) {
+            for (LogMessage logMessage : messages) {
                 logCommunicationHandler.sendMsg(logMessage);
             }
             System.out.println("All local logs sent successfully.");
-            clientLogPersister.clearLocalLogFile();
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
