@@ -4,7 +4,6 @@ import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Vector;
 
 /**
@@ -56,6 +55,7 @@ public abstract class AbstractBasicMessage implements Serializable {
      * This methods is responsible for determing actions after it was received.
      * Add your logic here.
      * @param persistor LogPersistor to use
+     * @param notifier to use
      *
      * @return true if successfull
      */

@@ -3,12 +3,10 @@ package ch.hslu.vsk.logger.common.messagepassing;
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
-import jdk.jshell.spi.ExecutionControl;
 
 import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InvalidObjectException;
 import java.io.OutputStream;
 
 /**
@@ -24,10 +22,10 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
      *  @param inputStream  Inputstream
      * @param outputStream Outputstream
      * @param persistor LogPersistor
-     * @param pushServer
+     * @param pushServer RegistrationServer
      */
     public LogServerCommunicationHandler(final InputStream inputStream, final OutputStream outputStream,
-                                         final LogPersistor persistor, RegistrationServer pushServer) {
+                                         final LogPersistor persistor, final RegistrationServer pushServer) {
         super(inputStream, outputStream);
         this.persistor = persistor;
         this.pushServer = pushServer;
@@ -66,8 +64,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
             // exchange, and let this message-processing thread die.
 
             // CODE VON DOZENTEN...
-        }
-        catch (OperationNotSupportedException ex){
+        } catch (OperationNotSupportedException ex) {
             System.out.println("Error while reading incoming message");
             ex.printStackTrace();
         }

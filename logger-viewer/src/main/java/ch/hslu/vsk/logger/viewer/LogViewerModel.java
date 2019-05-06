@@ -1,13 +1,9 @@
 package ch.hslu.vsk.logger.viewer;
 
 import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
-import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.rmi.RemoteException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

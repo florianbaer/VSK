@@ -64,8 +64,8 @@ public class LoggerProperties {
 
         if (configFile.createNewFile()) {
             FileWriter writer = new FileWriter(configFile);
-            writer.append(PROPERTY_MIN_LOG_LEVEL + "=" + (minLogLevel.isEmpty() || minLogLevel == null?
-                    "OFF" : minLogLevel) + System.lineSeparator());
+            writer.append(PROPERTY_MIN_LOG_LEVEL + "=" + (minLogLevel.isEmpty() || minLogLevel == null
+                    ? "OFF" : minLogLevel) + System.lineSeparator());
             writer.append(PROPERTY_CONNECTION_STRING + "=" + (connectionString.isEmpty() || connectionString == null
                     ? "localhost:1234" : connectionString) + System.lineSeparator());
             writer.append(PROPERTY_IDENTIFIER + "=NoIdentifierSpecified" + System.lineSeparator());
@@ -73,7 +73,7 @@ public class LoggerProperties {
             writer.flush();
             writer.close();
 
-            if(configFile.lastModified() > System.currentTimeMillis() + 5000) {
+            if (configFile.lastModified() > System.currentTimeMillis() + 5000) {
                 this.configFileFreshlyInstalled = false;
             }
         }
@@ -104,7 +104,7 @@ public class LoggerProperties {
     }
 
     /**
-     * Get the local file path to store log messages
+     * Get the local file path to store log messages.
      * @return the local file path
      */
     public String getPropertyLocalFile() {

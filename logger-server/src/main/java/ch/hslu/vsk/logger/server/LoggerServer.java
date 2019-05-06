@@ -44,6 +44,7 @@ public final class LoggerServer implements Runnable {
      *
      * @param serverProperties The properties to be used in the server.
      * @param threadPool       The executor service to be used.
+     * @param server to register
      */
     public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool,
                         final RegistrationServer server) {

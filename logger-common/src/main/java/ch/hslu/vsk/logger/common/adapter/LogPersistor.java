@@ -13,6 +13,7 @@ public interface LogPersistor {
     /**
      * Saves the payload of the given message.
      * @param payload Message of which the payload should be saved.
+     * @param instant (time).
      */
     void save(Instant instant, LogMessage payload);
 

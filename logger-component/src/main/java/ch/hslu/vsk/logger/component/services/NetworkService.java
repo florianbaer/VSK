@@ -5,11 +5,8 @@ import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.time.Instant;
-import java.util.Arrays;
 
 /**
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
@@ -60,7 +57,7 @@ public final class NetworkService implements NetworkCommunication {
      * @param connectionString for the service
      * @return Instance of NetworkService to be used
      */
-    public static NetworkService getInstance(String connectionString) {
+    public static NetworkService getInstance(final String connectionString) {
 
         synchronized (NetworkService.class) {
             if (networkService == null) {
@@ -107,7 +104,8 @@ public final class NetworkService implements NetworkCommunication {
                     System.out.println("Server seems to be available, but the message could not be sent!");
                 }
             } else {
-                System.out.println("Server is still not reachable. Storing logs locally until server is reachable again");
+                System.out.println("Server is still not reachable. "
+                        + "Storing logs locally until server is reachable again");
                 this.storeLogsLocally(Instant.now(), message);
             }
         } else {
@@ -119,7 +117,8 @@ public final class NetworkService implements NetworkCommunication {
                     System.out.println("Server online. Sent message directly");
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("Exception while sending message to server, even though server was reachable shortly before");
+                    System.out.println("Exception while sending message to server, "
+                            + "even though server was reachable shortly before");
                 }
             } else {
                 System.out.println("Server not reachable anymore, switching to local logging.");
@@ -131,6 +130,9 @@ public final class NetworkService implements NetworkCommunication {
         }
     }
 
+    /**
+     * Send all local logs that were persisted while connection was not available.
+     */
     private void sendAllLocalLogs() {
         try {
             for (LogMessage logMessage
@@ -145,6 +147,9 @@ public final class NetworkService implements NetworkCommunication {
 
     }
 
+    /**
+     * Initialize Sockets and Streams.
+     */
     private void setupServerSocketAndStream() {
         try {
             clientSocket = new Socket(this.host, this.port);
@@ -155,6 +160,10 @@ public final class NetworkService implements NetworkCommunication {
         }
     }
 
+    /**
+     * Used to check if host (server) is still reachable.
+     * @return true if reachable, false if not
+     */
     private boolean setupTestSocket() {
 
         try {
@@ -197,6 +206,7 @@ public final class NetworkService implements NetworkCommunication {
      * Sends the logmessage to the ClientPersistor in order to store the log locally.
      *
      * @param messageToPersistLocally Message that will be persisted in the local logfile.
+     * @param instant to save besides the message.
      */
     private void storeLogsLocally(final Instant instant, final LogMessage messageToPersistLocally) {
         clientLogPersister.persistLocally(instant, messageToPersistLocally);

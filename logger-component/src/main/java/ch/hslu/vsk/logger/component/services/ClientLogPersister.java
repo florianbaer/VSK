@@ -28,7 +28,7 @@ class ClientLogPersister extends FileHandler {
 
 
     /**
-     * Constructor
+     * Constructor.
      */
     ClientLogPersister() {
 
@@ -42,25 +42,32 @@ class ClientLogPersister extends FileHandler {
     }
 
     /**
-     * Method to persist a message locally using the StringPersister
+     * Method to persist a message locally using the StringPersister.
      *
      * @param messageToPersist Message that will be persistet locally
      * @param timeStamp        timestamp to use
      */
-    public void persistLocally(Instant timeStamp, final LogMessage messageToPersist) {
+    public void persistLocally(final Instant timeStamp, final LogMessage messageToPersist) {
         this.stringPersistorAdapter.save(timeStamp, messageToPersist);
         System.out.println("Message persisted locally");
     }
 
+    /**
+     * Get all local logs.
+     * @return log message stored locally.
+     */
     public List<LogMessage> getAllLocalLogs() {
         List<LogMessage> logMessages = new ArrayList<>();
-        for (PersistedString persistedString :
-                stringPersistorAdapter.getAllPersistedStrings()) {
+        for (PersistedString persistedString
+                : stringPersistorAdapter.getAllPersistedStrings()) {
             logMessages.add(new LogMessage(persistedString.getPayload()));
         }
         return logMessages;
     }
 
+    /**
+     * Clears the log file.
+     */
     public void clearLocalLogFile() {
         try (PrintWriter writer = new PrintWriter(this.logFile)) {
             writer.write("");
@@ -93,7 +100,7 @@ class ClientLogPersister extends FileHandler {
     }
 
     /**
-     * Sets up the StringPersistorAdapter
+     * Sets up the StringPersistorAdapter.
      *
      * @return the stringPersistorAdapter
      */

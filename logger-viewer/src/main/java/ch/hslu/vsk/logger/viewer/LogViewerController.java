@@ -55,6 +55,6 @@ public class LogViewerController {
     public void updateTable() {
         ObservableList<TableEntryOfLogMessages> observableList = this.model.getListOfLogMessages();
         this.logTable.setItems(observableList);
-        Platform.runLater( () -> logTable.scrollTo(observableList.size()-1) );
+        Platform.runLater(() -> logTable.scrollTo(observableList.size() - 1));
     }
 }
