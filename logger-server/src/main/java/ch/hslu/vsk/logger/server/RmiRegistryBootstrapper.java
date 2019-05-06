@@ -9,10 +9,7 @@ public class RmiRegistryBootstrapper implements Runnable {
         @Override
         public void run() {
             System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
-            System.setProperty("java.security.policy", "reg_rules.policy");
-             if (System.getSecurityManager() == null) {
-                 System.setSecurityManager(new SecurityManager());
-             }
+
 
             try {
                 final Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);

@@ -23,6 +23,10 @@ public final class Program {
      * @param args The main method arguments.
      */
     public static void main(final String[] args) {
+        System.setProperty("java.security.policy", "reg_rules.policy");
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
         Thread serverThread = null;
         RegistrationServer pushServer = null;
 
