@@ -56,7 +56,6 @@ public class RemotePushService implements RegistrationServer {
     /**
      * Registers a viewer.
      * @param viewer a viewer to register.
-     * @throws RemoteException RMI exception.
      */
     @Override
     public void register(final Viewer viewer) {
@@ -83,7 +82,6 @@ public class RemotePushService implements RegistrationServer {
 
     /**
      * Stops the RMI registry.
-     * @throws RemoteException The rmi exception.
      */
     @Override
     public void stop() {
