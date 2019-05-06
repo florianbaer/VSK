@@ -24,7 +24,6 @@ public class ClientLogPersister extends FileHandler {
 
     private StringPersistorAdapter stringPersistorAdapter = null;
     private File logFile = null;
-    private static final String PROPERTY_LOGFILE = "ch.hslu.vsk.logger.logFile";
 
 
     /**
