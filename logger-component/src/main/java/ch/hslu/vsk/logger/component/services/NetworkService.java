@@ -4,9 +4,9 @@ import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.Instant;
+import java.util.TimerTask;
 
 /**
  * This class is responsible interacting with the server where LOG-Messages are logged to. It is
@@ -18,11 +18,8 @@ public final class NetworkService implements NetworkCommunication {
     private static NetworkService networkService;
     private LogCommunicationHandler logCommunicationHandler;
     private Socket clientSocket;
-    private Socket testSocket;
     private String host;
     private int port;
-
-    private boolean isLoggingLocally;
     private ClientLogPersister clientLogPersister;
 
 
@@ -36,17 +33,8 @@ public final class NetworkService implements NetworkCommunication {
     private NetworkService(final String host, final int port) {
         this.host = host;
         this.port = port;
-        this.isLoggingLocally = true;
-
         this.clientLogPersister = new ClientLogPersister();
-
-        if (isServerReachable()) {
-            setupServerSocketAndStream();
-            isLoggingLocally = false;
-        } else {
-            isLoggingLocally = true;
-        }
-
+        this.startConnectionTimer();
     }
 
 
@@ -74,59 +62,17 @@ public final class NetworkService implements NetworkCommunication {
         return networkService;
     }
 
-    /**
-     * Return the connection string.
-     *
-     * @return host:port
-     */
-    public String getConnectionDetails() {
-        return "Host: " + this.host + ", Port: " + port;
-    }
 
     @Override
     public void sendMessageToServer(final String messageToSend) {
         LogMessage message = new LogMessage(messageToSend);
-
-        if (isLoggingLocally) {
-            //LoggerComponent was logging locally at this point.
-            if (isServerReachable()) {
-                //Looks like server defined by LoggerComponent is available again. Trying to reach server now.
-                setupServerSocketAndStream();
-                setupTestSocket();
-                try {
-                    this.sendAllLocalLogs();
-                    logCommunicationHandler.sendMsg(message);
-                    System.out.println("Message sent successfully");
-                    this.isLoggingLocally = false;
-                } catch (IOException e) {
-                    this.isLoggingLocally = true;
-                    System.out.println(e.getMessage());
-                    System.out.println("Server seems to be available, but the message could not be sent!");
-                }
-            } else {
-                System.out.println("Server is still not reachable. "
-                        + "Storing logs locally until server is reachable again");
-                this.storeLogsLocally(Instant.now(), message);
+        try {
+            if(clientLogPersister.getAllLocalLogs().size() > 0 && clientSocket != null && logCommunicationHandler != null) {
+                sendAllLocalLogs();
             }
-        } else {
-            //LoggerComponent was logging on the server at this point.
-            if (isServerReachable()) {
-                //server is reachable, trying to send message
-                try {
-                    logCommunicationHandler.sendMsg(message);
-                    System.out.println("Server online. Sent message directly");
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                    System.out.println("Exception while sending message to server, "
-                            + "even though server was reachable shortly before");
-                }
-            } else {
-                System.out.println("Server not reachable anymore, switching to local logging.");
-                this.isLoggingLocally = true;
-                storeLogsLocally(Instant.now(), message);
-            }
-
-
+            logCommunicationHandler.sendMsg(message);
+        } catch (Exception e) {
+            storeLogsLocally(Instant.now(), message);
         }
     }
 
@@ -147,60 +93,6 @@ public final class NetworkService implements NetworkCommunication {
 
     }
 
-    /**
-     * Initialize Sockets and Streams.
-     */
-    private void setupServerSocketAndStream() {
-        try {
-            clientSocket = new Socket(this.host, this.port);
-            logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
-                    clientSocket.getOutputStream());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Used to check if host (server) is still reachable.
-     * @return true if reachable, false if not
-     */
-    private boolean setupTestSocket() {
-
-        try {
-            this.testSocket = new Socket(this.host, this.port);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-
-    /**
-     * Checks if the server, which is specified in the LoggerComponent, is reachable or not.
-     *
-     * @return true if server is reachable; false if server is unreachable.
-     */
-    private boolean isServerReachable() {
-
-        try {
-            if (testSocket == null && !setupTestSocket()) {
-                return false;
-            } else if (!setupTestSocket()) {
-                return false;
-            } else if (testSocket == null) {
-                setupTestSocket();
-            }
-
-            return !(new PrintWriter(testSocket.getOutputStream()).checkError());
-        } catch (
-                IOException ioe) {
-            System.out.println(ioe.getMessage());
-            return false;
-        }
-
-
-    }
-
 
     /**
      * Sends the logmessage to the ClientPersistor in order to store the log locally.
@@ -210,5 +102,25 @@ public final class NetworkService implements NetworkCommunication {
      */
     private void storeLogsLocally(final Instant instant, final LogMessage messageToPersistLocally) {
         clientLogPersister.persistLocally(instant, messageToPersistLocally);
+    }
+
+    /**
+     * Timer that tries to establish connection every 5 seconds if connection is lost.
+     */
+    private void startConnectionTimer () {
+        new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    clientSocket = new Socket(host, port);
+                    logCommunicationHandler = new LogCommunicationHandler(clientSocket.getInputStream(),
+                            clientSocket.getOutputStream());
+                } catch (Exception e) {
+                    clientSocket = null;
+                    logCommunicationHandler = null;
+                    System.out.println("Timer couldn't establish connection");
+                }
+            }
+        },0, 5000);
     }
 }

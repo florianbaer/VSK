@@ -49,7 +49,6 @@ class ClientLogPersister extends FileHandler {
      */
     public void persistLocally(final Instant timeStamp, final LogMessage messageToPersist) {
         this.stringPersistorAdapter.save(timeStamp, messageToPersist);
-        System.out.println("Message persisted locally");
     }
 
     /**
