@@ -30,7 +30,7 @@ public final class Program {
 
         try {
             registryBootstrapper.start();
-            pushServer = RemotePushServer.getInstance();
+            pushServer = RemotePushService.getInstance();
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
             LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool(), pushServer);

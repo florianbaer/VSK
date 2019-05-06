@@ -37,7 +37,7 @@ final class LoggerServerTests {
     public void setupPersistorAdapterTest() throws IOException {
         var properties = mock(ServerProperties.class);
         var threadPool = mock(ExecutorService.class);
-        var pushServer = mock(RemotePushServer.class);
+        var pushServer = mock(RemotePushService.class);
         LoggerServer server = new LoggerServer(properties, threadPool, pushServer);
         File file = new File("File.tmp");
         file.delete(); //for windows only
@@ -52,7 +52,7 @@ final class LoggerServerTests {
     public void loggerServerHandleTest() throws IOException {
         var properties = mock(ServerProperties.class);
         var threadPool = mock(ExecutorService.class);
-        var pushServer = mock(RemotePushServer.class);
+        var pushServer = mock(RemotePushService.class);
         var socket = mock(Socket.class);
 
         LoggerServer server = new LoggerServer(properties, threadPool, pushServer);
