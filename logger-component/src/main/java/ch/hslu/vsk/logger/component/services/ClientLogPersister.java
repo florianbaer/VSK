@@ -84,7 +84,7 @@ public class ClientLogPersister extends FileHandler {
         clientProperties.loadProperties();
         var logFilePath = clientProperties.getPropertyLocalFile();
         File logFile = null;
-        if (logFilePath == null || new File(logFilePath).isFile()) {
+        if (logFilePath == null || !new File(logFilePath).isFile()) {
             System.out.println("No valid LogFile defined, logging to tmp File...");
             logFile = File.createTempFile("MessageLoggerClient", ".log"); //creates File in %localappdata%
         } else {
