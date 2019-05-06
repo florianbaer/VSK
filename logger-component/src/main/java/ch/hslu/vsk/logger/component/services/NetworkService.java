@@ -71,9 +71,9 @@ public final class NetworkService implements NetworkCommunication {
         try {
             if(messages.size() > 0 && clientSocket != null && logCommunicationHandler != null) {
                 sendAllLocalLogs(messages);
+                clientLogPersister.clearLocalLogFile();
             }
             logCommunicationHandler.sendMsg(message);
-            clientLogPersister.clearLocalLogFile();
         } catch (Exception e) {
             storeLogsLocally(Instant.now(), message);
         }
