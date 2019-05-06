@@ -69,14 +69,13 @@ public final class NetworkService implements NetworkCommunication {
         LogMessage message = new LogMessage(messageToSend);
         List<LogMessage> messages = clientLogPersister.getAllLocalLogs();
         try {
-            clientLogPersister.clearLocalLogFile();
             if(messages.size() > 0 && clientSocket != null && logCommunicationHandler != null) {
                 sendAllLocalLogs(messages);
             }
             logCommunicationHandler.sendMsg(message);
+            clientLogPersister.clearLocalLogFile();
         } catch (Exception e) {
-            messages.add(message);
-            messages.stream().forEach(x -> storeLogsLocally(Instant.now(), x));
+            storeLogsLocally(Instant.now(), message);
         }
     }
 
