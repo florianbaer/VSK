@@ -43,6 +43,7 @@ public abstract class AbstractBasicMessageHandler {
      *
      * @return Message with arguments
      * @throws IOException that can occur during reading
+     * @throws OperationNotSupportedException than can be thrown
      */
     public final AbstractBasicMessage readMsg() throws IOException, OperationNotSupportedException {
         final DataInputStream din = new DataInputStream(msgIn);
@@ -97,6 +98,8 @@ public abstract class AbstractBasicMessageHandler {
      * Build a message with the given id.
      *
      * @param msgId MessageID.
+     * @throws OperationNotSupportedException that can be thrown
+     *
      * @return Message
      */
     protected abstract AbstractBasicMessage buildMessage(String msgId) throws OperationNotSupportedException;

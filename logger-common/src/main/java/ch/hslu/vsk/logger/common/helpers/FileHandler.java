@@ -3,6 +3,9 @@ package ch.hslu.vsk.logger.common.helpers;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * File handler class.
+ */
 public abstract class FileHandler {
 
     /**

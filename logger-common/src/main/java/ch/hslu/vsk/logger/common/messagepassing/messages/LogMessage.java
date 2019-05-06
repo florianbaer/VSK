@@ -5,8 +5,6 @@ import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 
-
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.time.Instant;
 import java.util.Vector;
@@ -47,19 +45,20 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(final LogPersistor persistor, RegistrationServer notifier) {
+    public boolean operate(final LogPersistor persistor, final RegistrationServer notifier) {
         final Instant now = Instant.now();
 
         if (persistor != null) {
             persistor.save(now, this);
         }
-        if(notifier != null) {
+        if (notifier != null) {
             try {
                 notifier.notifyViewers(LogMessageDTO.fromLogMessage(now, this));
             } catch (RemoteException e) {
                 e.printStackTrace();
-            } catch (ArrayIndexOutOfBoundsException ex){
-                System.out.println("MessagePassing did not pass all the used data to the server. Skipping this message.");
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                System.out.println("MessagePassing did not pass all "
+                        + "the used data to the server. Skipping this message.");
             }
         }
 

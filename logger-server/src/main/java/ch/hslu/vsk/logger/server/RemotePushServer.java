@@ -1,7 +1,6 @@
 package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
-import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
 import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 
@@ -9,7 +8,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

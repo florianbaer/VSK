@@ -1,7 +1,6 @@
 package ch.hslu.vsk.logger.component;
 
 import ch.hslu.vsk.logger.api.LogLevel;
-import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 import ch.hslu.vsk.logger.component.logger.LoggerProperties;

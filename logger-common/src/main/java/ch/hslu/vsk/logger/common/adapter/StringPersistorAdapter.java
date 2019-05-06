@@ -35,14 +35,15 @@ public class StringPersistorAdapter implements LogPersistor {
      * Saves the a passed {@link LogMessage}.
      *
      * @param log The logmessage to save.
+     * @param timeStamp to add to message
      */
-    public void save(Instant timeStamp, final LogMessage log) {
+    public void save(final Instant timeStamp, final LogMessage log) {
         this.stringPersistor.save(timeStamp, log.getMessageText());
     }
 
 
     /**
-     * Returns the whole content of the logFile that was given to the FileStringPersistor
+     * Returns the whole content of the logFile that was given to the FileStringPersistor.
      * @return List of PersistedString's
      */
     public List<PersistedString> getAllPersistedStrings() {
