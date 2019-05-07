@@ -1,6 +1,6 @@
 package ch.hslu.vsk.logger.viewer;
 
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class LogViewer extends Application {
     private Remote handler;
-    private RegistrationServer registration;
+    private RegistrationService registration;
     private LogViewerModel model;
 
     /**
@@ -65,7 +65,7 @@ public class LogViewer extends Application {
                 System.setSecurityManager(new SecurityManager());
              }
             final Registry reg = LocateRegistry.getRegistry(host, Registry.REGISTRY_PORT);
-            this.registration = (RegistrationServer) reg.lookup("logpushserver");
+            this.registration = (RegistrationService) reg.lookup("logpushserver");
             this.handler = UnicastRemoteObject.exportObject(model, 0);
             registration.register((Viewer) this.handler);
         } catch (Exception e) {
