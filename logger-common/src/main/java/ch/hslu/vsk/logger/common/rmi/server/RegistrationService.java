@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 /**
  * Interfacer for the registration of viewers using rmi.
  */
-public interface RegistrationServer extends Remote {
+public interface RegistrationService extends Remote {
 
     /**
      * Method to register a viewer.

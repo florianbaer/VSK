@@ -1,7 +1,7 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 
 import java.io.Serializable;
 import java.util.Vector;
@@ -59,6 +59,6 @@ public abstract class AbstractBasicMessage implements Serializable {
      *
      * @return true if successfull
      */
-    public abstract boolean operate(LogPersistor persistor, RegistrationServer notifier);
+    public abstract boolean operate(LogPersistor persistor, RegistrationService notifier);
 }
 

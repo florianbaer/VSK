@@ -1,7 +1,7 @@
 package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 import ch.hslu.vsk.logger.common.rmi.viewer.Viewer;
 
 import java.rmi.RemoteException;
@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * Implements a service to push notifications the the viewers.
  */
-public class RemotePushService implements RegistrationServer {
+public class RemotePushService implements RegistrationService {
 
     private List<Viewer> viewers = new ArrayList<>();
     private static Registry registry;
 
-    private static RegistrationServer instance;
-    private static RegistrationServer pushServer;
+    private static RegistrationService instance;
+    private static RegistrationService pushServer;
 
     /**
      * Private constructor.
@@ -33,13 +33,13 @@ public class RemotePushService implements RegistrationServer {
      * Gets the instance of the remote push service.
      * @return The instance.
      */
-    public static RegistrationServer getInstance() {
+    public static RegistrationService getInstance() {
 
         if (instance == null) {
             try {
                 pushServer = new RemotePushService();
                 registry = LocateRegistry.getRegistry(Registry.REGISTRY_PORT);
-                instance = (RegistrationServer) UnicastRemoteObject.exportObject(pushServer, 0);
+                instance = (RegistrationService) UnicastRemoteObject.exportObject(pushServer, 0);
                 registry.bind("logpushserver", instance);
 
             } catch (Exception e) {

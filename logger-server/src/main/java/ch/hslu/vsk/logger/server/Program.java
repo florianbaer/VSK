@@ -1,7 +1,7 @@
 package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.ExceptionSerializer.ExceptionToStringSerializer;
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -28,7 +28,7 @@ public final class Program {
             System.setSecurityManager(new SecurityManager());
         }
         Thread serverThread = null;
-        RegistrationServer pushServer = null;
+        RegistrationService pushServer = null;
 
         Thread registryBootstrapper = new Thread(new RmiRegistryBootstrapper());
 
