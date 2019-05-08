@@ -2,7 +2,7 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 import org.junit.jupiter.api.Test;
 
 import javax.naming.OperationNotSupportedException;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
  */
 public class LogServerCommunicationHandlerTest {
     private final LogPersistor persMock = mock(LogPersistor.class);
-    private final RegistrationServer serverMock = mock(RegistrationServer.class);
+    private final RegistrationService serverMock = mock(RegistrationService.class);
 
     @Test
     public void sendAndReadLogMessage() throws IOException, OperationNotSupportedException {

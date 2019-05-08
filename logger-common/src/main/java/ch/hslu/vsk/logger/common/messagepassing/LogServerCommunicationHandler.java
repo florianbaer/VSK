@@ -2,7 +2,7 @@ package ch.hslu.vsk.logger.common.messagepassing;
 
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.messages.LogMessage;
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 
 import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.io.OutputStream;
 public final class LogServerCommunicationHandler extends AbstractBasicMessageHandler implements Runnable {
 
     private final LogPersistor persistor;
-    private RegistrationServer pushServer;
+    private RegistrationService pushServer;
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ public final class LogServerCommunicationHandler extends AbstractBasicMessageHan
      * @param pushServer RegistrationServer
      */
     public LogServerCommunicationHandler(final InputStream inputStream, final OutputStream outputStream,
-                                         final LogPersistor persistor, final RegistrationServer pushServer) {
+                                         final LogPersistor persistor, final RegistrationService pushServer) {
         super(inputStream, outputStream);
         this.persistor = persistor;
         this.pushServer = pushServer;

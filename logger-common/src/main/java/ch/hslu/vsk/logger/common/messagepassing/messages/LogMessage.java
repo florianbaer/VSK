@@ -3,7 +3,7 @@ package ch.hslu.vsk.logger.common.messagepassing.messages;
 import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
-import ch.hslu.vsk.logger.common.rmi.server.RegistrationServer;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 
 import java.rmi.RemoteException;
 import java.time.Instant;
@@ -45,7 +45,7 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(final LogPersistor persistor, final RegistrationServer notifier) {
+    public boolean operate(final LogPersistor persistor, final RegistrationService notifier) {
         final Instant now = Instant.now();
 
         if (persistor != null) {
