@@ -60,7 +60,7 @@ public class LogViewer extends Application {
         try {
             String host = "localhost";
              System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
-             System.setProperty("java.security.policy", "server_rules.policy");
+             System.setProperty("java.security.policy", "reg_rules.policy");
              if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
              }
