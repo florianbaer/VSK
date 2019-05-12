@@ -17,8 +17,11 @@ package ch.hslu.vsk.logger.server;
 
 import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
+import ch.hslu.vsk.stringpersistor.impl.FileContext;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -33,11 +36,21 @@ public final class LoggerServer implements Runnable {
 
     private final ServerProperties serverProperties;
     private ExecutorService threadPool = null;
+    private RegistrationService pushServer;
     private StringPersistorAdapter persistorAdapter = null;
 
-    public LoggerServer(ServerProperties serverProperties, ExecutorService threadPool) {
+    /**
+     * The loggerserver which handles the requests.
+     *
+     * @param serverProperties The properties to be used in the server.
+     * @param threadPool       The executor service to be used.
+     * @param server to register
+     */
+    public LoggerServer(final ServerProperties serverProperties, final ExecutorService threadPool,
+                        final RegistrationService server) {
         this.serverProperties = serverProperties;
         this.threadPool = threadPool;
+        this.pushServer = server;
     }
 
 
@@ -52,16 +65,12 @@ public final class LoggerServer implements Runnable {
 
                 persistorAdapter = this.setupPersistorAdapter(loggerFile);
 
-                Socket client;
-
-
                 while (!(Thread.currentThread().isInterrupted())) {
                     listen.setSoTimeout(5000);
-                    try{
-                        client = listen.accept();
+                    try {
+                        Socket client = listen.accept();
                         this.handleMessage(client);
-                    }
-                    catch(SocketTimeoutException ex){
+                    } catch (SocketTimeoutException ex) {
                         // ignore, because there is no other solution
                     }
                 }
@@ -70,21 +79,33 @@ public final class LoggerServer implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println("Error while initialization of the server...");
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-
-    public void handleMessage(Socket client) throws IOException {
-        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(client.getInputStream(), client.getOutputStream(), this.persistorAdapter);
+    /**
+     * The method to handle the incoming messages.
+     *
+     * @param client The socket client which has the connections.
+     * @throws IOException unhandled io exception.
+     */
+    public void handleMessage(final Socket client) throws IOException {
+        LogServerCommunicationHandler handler = new LogServerCommunicationHandler(
+                client.getInputStream(), client.getOutputStream(), this.persistorAdapter, this.pushServer);
         this.threadPool.execute(handler);
     }
 
-    public StringPersistorAdapter setupPersistorAdapter(File loggerFile) {
-        FileStringPersistor filePersistor = new FileStringPersistor(new PersistedStringCsvConverter());
+    /**
+     * Creates the persistor adapter.
+     *
+     * @param loggerFile The loggerfile used to setup the persistor.
+     * @return StringPersistorAdapter using the given logger file.
+     */
+    public StringPersistorAdapter setupPersistorAdapter(final File loggerFile) {
+        FileStringPersistor filePersistor = new FileStringPersistor(new FileContext(new PersistedStringCsvConverter()));
 
         filePersistor.setFile(loggerFile);
         return new StringPersistorAdapter(filePersistor);

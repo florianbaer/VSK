@@ -1,27 +1,31 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import ch.hslu.vsk.logger.common.messagepassing.LogCommunicationHandler;
+import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import javax.naming.OperationNotSupportedException;
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Test class for the LogCommunicationHandler.
+ */
 public class LogCommunicationHandlerTest {
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-    private final InputStream originalIn = System.in;
 
+    @Test
+    public void sendAndReadLogMessage() throws IOException, OperationNotSupportedException {
+        PipedOutputStream out = new PipedOutputStream();
+        PipedInputStream in = new PipedInputStream(out);
 
-    @BeforeEach
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-        System.setIn(originalIn);
-    }
+        LogCommunicationHandler handler = new LogCommunicationHandler(in, out);
 
-    @AfterEach
-    public void restoreStreams() {
-        System.setOut(originalOut);
-        System.setIn(originalIn);
+        LogMessage msg = new LogMessage();
+        msg.addArg("Test");
+
+        handler.sendMsg(msg);
+        assertTrue(((LogMessage) handler.readMsg()).getMessageText().equals("Test"));
     }
 }

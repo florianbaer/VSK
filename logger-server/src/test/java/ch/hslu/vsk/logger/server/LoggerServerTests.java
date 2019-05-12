@@ -22,17 +22,14 @@ import ch.hslu.vsk.logger.common.adapter.StringPersistorAdapter;
 import ch.hslu.vsk.logger.common.messagepassing.LogServerCommunicationHandler;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
 import org.junit.jupiter.api.Test;
-import org.mockito.Matchers;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Logger;
 
 /**
- * Testfälle für RemoveMeTest.
+ * Logger server test cases
  */
 final class LoggerServerTests {
 
@@ -40,21 +37,25 @@ final class LoggerServerTests {
     public void setupPersistorAdapterTest() throws IOException {
         var properties = mock(ServerProperties.class);
         var threadPool = mock(ExecutorService.class);
-        LoggerServer server = new LoggerServer(properties, threadPool);
+        var pushServer = mock(RemotePushService.class);
+        LoggerServer server = new LoggerServer(properties, threadPool, pushServer);
         File file = new File("File.tmp");
-        assertThat(file.createNewFile()).isTrue();
+        file.delete(); //for windows only
         file.deleteOnExit();
+        assertThat(file.createNewFile()).isTrue();
         StringPersistorAdapter persistor = server.setupPersistorAdapter(file);
         assertThat(persistor.getStringPersistor()).isInstanceOf(FileStringPersistor.class);
+
     }
 
     @Test
     public void loggerServerHandleTest() throws IOException {
         var properties = mock(ServerProperties.class);
         var threadPool = mock(ExecutorService.class);
+        var pushServer = mock(RemotePushService.class);
         var socket = mock(Socket.class);
 
-        LoggerServer server = new LoggerServer(properties, threadPool);
+        LoggerServer server = new LoggerServer(properties, threadPool, pushServer);
         server.handleMessage(socket);
         verify(threadPool, times(1)).execute(isA(LogServerCommunicationHandler.class));
     }

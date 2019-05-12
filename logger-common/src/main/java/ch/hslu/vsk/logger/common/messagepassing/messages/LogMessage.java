@@ -1,11 +1,12 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
+import ch.hslu.vsk.logger.common.DTO.LogMessageDTO;
 import ch.hslu.vsk.logger.common.adapter.LogPersistor;
 import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessage;
-import ch.hslu.vsk.logger.common.messagepassing.AbstractBasicMessageHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import ch.hslu.vsk.logger.common.rmi.server.RegistrationService;
 
+import java.rmi.RemoteException;
+import java.time.Instant;
 import java.util.Vector;
 
 /**
@@ -16,9 +17,9 @@ public class LogMessage extends AbstractBasicMessage {
     private static final String MESSAGE_ID = "log";
 
     /**
-     * Default Konstruktor
+     * Default Konstruktor.
      */
-    public LogMessage(){
+    public LogMessage() {
         super(MESSAGE_ID);
     }
 
@@ -44,19 +45,32 @@ public class LogMessage extends AbstractBasicMessage {
      * Kommunikation mit dem CLient.
      */
     @Override
-    public boolean operate(LogPersistor persistor) {
-        if(persistor != null){
-            persistor.save(this);
+    public boolean operate(final LogPersistor persistor, final RegistrationService notifier) {
+        final Instant now = Instant.now();
+
+        if (persistor != null) {
+            persistor.save(now, this);
+        }
+        if (notifier != null) {
+            try {
+                notifier.notifyViewers(LogMessageDTO.fromLogMessage(now, this));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                System.out.println("MessagePassing did not pass all "
+                        + "the used data to the server. Skipping this message.");
+            }
         }
 
         return true;
     }
 
+
     /**
      * Returns message Text. Currently message text is always the second element in the argument list
-     * @return
+     * @return first Argument of Arg-List
      */
-    public String getMessageText(){
+    public String getMessageText() {
         Vector<String> args = super.getArgList();
 
         return String.valueOf(args.get(0));

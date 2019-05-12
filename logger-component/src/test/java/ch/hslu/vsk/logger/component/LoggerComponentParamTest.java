@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.component;
 import ch.hslu.vsk.logger.api.LogLevel;
+import ch.hslu.vsk.logger.api.Logger;
 import ch.hslu.vsk.logger.api.LoggerSetupFactory;
 import ch.hslu.vsk.logger.component.logger.LoggerComponent;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class LoggerComponentParamTest {
     @Test
     public void testSetupPropertiesFile() throws IOException {
         ServerSocket socket = new ServerSocket(59090);
-        final LoggerComponent component = (LoggerComponent) LoggerSetupFactory.createSetup().build();
+        final Logger component = LoggerSetupFactory.createSetup().build();
         assertArrayEquals(new String[]{LogLevel.DEBUG.name()}, new String[]{component.getMinLogLevel().name()});
 
         socket.close();

@@ -1,12 +1,12 @@
 package ch.hslu.vsk.logger.common.messagepassing.messages;
 
 import ch.hslu.vsk.logger.api.LogLevel;
-import ch.hslu.vsk.logger.common.ExceptionSerializer.ExceptionToStringSerializer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test class for the payload creator
@@ -15,25 +15,23 @@ public class PayloadCreatorTest {
 
     @Test
     public void testNormalPayload(){
-        String payload = PayloadCreator.generatePayload(LogLevel.INFO, "TestClient", this.getClass(), "This is a test");
-        assertTrue(payload.contains("TestClient") && payload.contains("INFO") && payload.contains(this.getClass().getSimpleName())
-                && payload.contains("This is a test"));
+        Instant instant = Instant.now();
+        String payload = PayloadCreator.generatePayload(instant, LogLevel.INFO, "TestClient", this.getClass(), "This " +
+                "is a test");
+        assertEquals( instant.toString() + "|TestClient|INFO|PayloadCreatorTest|This is a test", payload);
     }
 
-    @Test
-    public void testNormalPayloadNoLoggingClass(){
-        String payload = PayloadCreator.generatePayload(LogLevel.INFO, "TestClient", null, "This is a test");
-        assertTrue(payload.contains("TestClient") && payload.contains("INFO") && payload.contains("null")
-                && payload.contains("This is a test"));
-    }
 
     @Test
     public void testPayloadWithThrowable(){
+        Instant instant = Instant.now();
         IOException ex = new IOException("test");
-        String payload = PayloadCreator.generatePayload(LogLevel.INFO, "TestClient", this.getClass(), "This is a test", ex);
-        assertTrue(payload.contains("TestClient") && payload.contains("INFO") && payload.contains(this.getClass().getSimpleName())
-                && payload.contains("This is a test") && payload.contains(ExceptionToStringSerializer.Execute(ex)));
-
-
+        String payload = PayloadCreator.generatePayload(instant, LogLevel.INFO, "TestClient", this.getClass(), "This is a " +
+                "test", ex);
+        System.out.println(payload);
+        assertEquals(instant.toString() + "|TestClient|INFO|PayloadCreatorTest|This is a test|test|ch.hslu.vsk.logger" +
+                ".common" +
+                ".messagepassing.messages.PayloadCreatorTest.testPayloadWithThrowable(PayloadCreatorTest.java:28)",
+                payload);
     }
 }

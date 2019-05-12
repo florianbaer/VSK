@@ -1,5 +1,6 @@
 package ch.hslu.vsk.logger.common.messagepassing;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.Vector;
 
 
 /**
- * BasicMessageHandler
+ * BasicMessageHandler.
  */
 public abstract class AbstractBasicMessageHandler {
     private static AbstractBasicMessageHandler current;
@@ -30,8 +31,8 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Returns the static message handler object
-     * @return current.
+     * Returns the static message handler object.
+     * @return current
      */
     public static AbstractBasicMessageHandler getMessageHandler() {
         return current;
@@ -41,20 +42,23 @@ public abstract class AbstractBasicMessageHandler {
      * Reads an incoming message and returns it.
      *
      * @return Message with arguments
-     * @throws IOException
+     * @throws IOException that can occur during reading
+     * @throws OperationNotSupportedException than can be thrown
      */
-    public final AbstractBasicMessage readMsg() throws IOException {
+    public final AbstractBasicMessage readMsg() throws IOException, OperationNotSupportedException {
         final DataInputStream din = new DataInputStream(msgIn);
         String token = din.readUTF();
-        AbstractBasicMessage msg = buildMessage(token);
+        AbstractBasicMessage msg = null;
+
+        msg = buildMessage(token);
 
         if (msg != null) {
             boolean endOfMessage = false;
 
-            while (!endOfMessage){
+            while (!endOfMessage) {
                 token = din.readUTF();
 
-                if(token.compareTo(END_TOKEN) == 0){
+                if (token.compareTo(END_TOKEN) == 0) {
                     endOfMessage = true;
                 } else {
                     msg.addArg(token);
@@ -65,12 +69,12 @@ public abstract class AbstractBasicMessageHandler {
     }
 
     /**
-     * Writes the given message to the output-stream and marks it's end with the END_TOKEN
+     * Writes the given message to the output-stream and marks it's end with the END_TOKEN.
      *
      * @param msg Message.
      * @throws IOException IO-Fehler.
      */
-    public final void sendMsg(final AbstractBasicMessage msg) throws IOException {
+    public final synchronized void sendMsg(final AbstractBasicMessage msg) throws IOException {
         final DataOutputStream dataOutputStream = new DataOutputStream(msgOut);
 
         dataOutputStream.writeUTF(msg.getMessageId());
@@ -80,7 +84,7 @@ public abstract class AbstractBasicMessageHandler {
         int argSize = arguments.size();
 
         // schreibe alle Argumente in den DataOutputStream
-        for (int i = 0; i < argSize; i ++){
+        for (int i = 0; i < argSize; i++) {
             dataOutputStream.writeUTF(arguments.elementAt(i));
         }
 
@@ -91,11 +95,13 @@ public abstract class AbstractBasicMessageHandler {
 
 
     /**
-     * Build a message with the given id
+     * Build a message with the given id.
      *
      * @param msgId MessageID.
+     * @throws OperationNotSupportedException that can be thrown
+     *
      * @return Message
      */
-    protected abstract AbstractBasicMessage buildMessage(String msgId);
+    protected abstract AbstractBasicMessage buildMessage(String msgId) throws OperationNotSupportedException;
 }
 
