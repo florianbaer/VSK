@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 
 /**
  * Class that initilaizes the LogViwer GUI.
@@ -22,6 +23,7 @@ public class LogViewer extends Application {
     private Remote handler;
     private RegistrationService registration;
     private LogViewerModel model;
+    private String rmiHost;
 
     /**
      * Entry point of the javafx application.
@@ -30,6 +32,11 @@ public class LogViewer extends Application {
      */
     @Override
     public void start(final Stage stage) throws Exception {
+        System.out.println("Please enter the ip of the server:");
+        Scanner scanner = new Scanner(System.in);
+        this.rmiHost = scanner.nextLine();
+        System.out.println("You entered:" + rmiHost);
+
         final BorderPane root = new BorderPane();
 
         // Load resources
@@ -47,7 +54,20 @@ public class LogViewer extends Application {
         stage.setScene(new Scene(root, 1024, 512));
         stage.show();
 
+
         this.registerViewer();
+    }
+
+    /**
+     * unregister Viewer because error is elsewise thrown at server
+     */
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        // unregister viewer
+        if (this.handler!= null && this.registration != null) {
+           registration.unregister((Viewer) this.handler);
+        }
     }
 
 
@@ -58,13 +78,12 @@ public class LogViewer extends Application {
      */
     private void registerViewer() {
         try {
-            String host = "localhost";
              System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
              System.setProperty("java.security.policy", "reg_rules.policy");
              if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
              }
-            final Registry reg = LocateRegistry.getRegistry(host, Registry.REGISTRY_PORT);
+            final Registry reg = LocateRegistry.getRegistry(rmiHost, Registry.REGISTRY_PORT);
             this.registration = (RegistrationService) reg.lookup("logpushserver");
             this.handler = UnicastRemoteObject.exportObject(model, 0);
             registration.register((Viewer) this.handler);
