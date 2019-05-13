@@ -23,7 +23,12 @@ public final class Program {
      * @param args The main method arguments.
      */
     public static void main(final String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the servers ip...");
+        String serverIp = scanner.nextLine();
+        System.out.println(String.format("You entered %s", serverIp));
         System.setProperty("java.security.policy", "reg_rules.policy");
+        System.setProperty("java.rmi.server.hostname", serverIp);
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
