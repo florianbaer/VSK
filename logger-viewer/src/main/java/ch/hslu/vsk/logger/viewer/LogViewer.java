@@ -24,6 +24,7 @@ public class LogViewer extends Application {
     private RegistrationService registration;
     private LogViewerModel model;
     private String rmiHost;
+    private String rmiHostLocal;
 
     /**
      * Entry point of the javafx application.
@@ -32,10 +33,13 @@ public class LogViewer extends Application {
      */
     @Override
     public void start(final Stage stage) throws Exception {
-        System.out.println("Please enter the ip of the server:");
+        System.out.println("Please enter the ip of the server that the rmi-messages should be received from:");
         Scanner scanner = new Scanner(System.in);
         this.rmiHost = scanner.nextLine();
-        System.out.println("You entered:" + rmiHost);
+        System.out.println("You entered: " + rmiHost);
+        System.out.println("Please enter the ip of the machine the viewer runs on:");
+        this.rmiHostLocal = scanner.nextLine();
+        System.out.println("You entered: " + rmiHostLocal);
 
         final BorderPane root = new BorderPane();
 
@@ -80,6 +84,7 @@ public class LogViewer extends Application {
         try {
              System.setProperty("java.rmi.server.codebase", "http://localhost:8080/");
              System.setProperty("java.security.policy", "reg_rules.policy");
+             System.setProperty("java.rmi.server.hostname", rmiHostLocal);
              if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
              }
