@@ -60,6 +60,17 @@ public class RemotePushService implements RegistrationService {
     }
 
     /**
+     * Mehtod to unregister a viewer
+     * @param viewer to unregister
+     * @throws RemoteException Exception to throw
+     */
+    @Override
+    public void unregister(Viewer viewer) throws RemoteException {
+        System.out.println("unregister viewer...");
+        this.viewers.remove(viewer);
+    }
+
+    /**
      * Notifies all the viewers.
      * @param message The LogMessage to send to the viewers.
      */
