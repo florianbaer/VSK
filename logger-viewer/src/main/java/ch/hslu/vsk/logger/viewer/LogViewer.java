@@ -40,6 +40,7 @@ public class LogViewer extends Application {
         System.out.println("Please enter the ip of the machine the viewer runs on:");
         this.rmiHostLocal = scanner.nextLine();
         System.out.println("You entered: " + rmiHostLocal);
+        System.out.println("LogViewer starting, please wait...");
 
         final BorderPane root = new BorderPane();
 

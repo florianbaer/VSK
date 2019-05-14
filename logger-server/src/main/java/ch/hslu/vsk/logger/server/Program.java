@@ -27,6 +27,7 @@ public final class Program {
         System.out.println("Please enter the servers ip...");
         String serverIp = scanner.nextLine();
         System.out.println(String.format("You entered %s", serverIp));
+        System.out.println("Server is starting, please wait...");
         System.setProperty("java.security.policy", "reg_rules.policy");
         System.setProperty("java.rmi.server.hostname", serverIp);
         if (System.getSecurityManager() == null) {
