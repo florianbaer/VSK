@@ -43,7 +43,7 @@ public final class Program {
             pushServer = RemotePushService.getInstance();
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
-            LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool(), pushServer);
+            LoggerServer server = new LoggerServer(serverProperties, Executors.newFixedThreadPool(30), pushServer);
 
             serverThread = new Thread(server);
             Scanner keyboard = new Scanner(System.in);
