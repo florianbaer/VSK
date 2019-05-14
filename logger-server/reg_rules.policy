@@ -17,5 +17,5 @@ grant {
 	permission java.lang.RuntimePermission "shutdownHooks";
 	permission java.util.PropertyPermission "sun.*", "read";
 	permission java.util.PropertyPermission "decora.*", "read";
-	permission java.lang.RuntimePermission "getStackWalkerWithClassReference"
+	permission java.lang.RuntimePermission "getStackWalkerWithClassReference";
 };
