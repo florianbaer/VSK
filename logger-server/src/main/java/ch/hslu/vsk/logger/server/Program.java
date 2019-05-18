@@ -23,7 +23,13 @@ public final class Program {
      * @param args The main method arguments.
      */
     public static void main(final String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the servers ip...");
+        String serverIp = scanner.nextLine();
+        System.out.println(String.format("You entered %s", serverIp));
+        System.out.println("Server is starting, please wait...");
         System.setProperty("java.security.policy", "reg_rules.policy");
+        System.setProperty("java.rmi.server.hostname", serverIp);
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
@@ -37,7 +43,7 @@ public final class Program {
             pushServer = RemotePushService.getInstance();
             ServerProperties serverProperties = new ServerProperties();
             serverProperties.loadProperties();
-            LoggerServer server = new LoggerServer(serverProperties, Executors.newCachedThreadPool(), pushServer);
+            LoggerServer server = new LoggerServer(serverProperties, Executors.newFixedThreadPool(30), pushServer);
 
             serverThread = new Thread(server);
             Scanner keyboard = new Scanner(System.in);

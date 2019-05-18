@@ -7,7 +7,7 @@ import ch.hslu.vsk.logger.component.logger.LoggerProperties;
 import ch.hslu.vsk.stringpersistor.api.PersistedString;
 import ch.hslu.vsk.stringpersistor.impl.FileContext;
 import ch.hslu.vsk.stringpersistor.impl.FileStringPersistor;
-import ch.hslu.vsk.stringpersistor.impl.PersistedStringCsvConverter;
+import ch.hslu.vsk.stringpersistor.impl.MessageLastStrategy;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -100,7 +100,7 @@ public class ClientLogPersister extends FileHandler {
      * @return the stringPersistorAdapter
      */
     private StringPersistorAdapter setupPersisterAdapter() {
-        FileStringPersistor filePersister = new FileStringPersistor(new FileContext(new PersistedStringCsvConverter()));
+        FileStringPersistor filePersister = new FileStringPersistor();
         filePersister.setFile(logFile);
         return new StringPersistorAdapter(filePersister);
     }

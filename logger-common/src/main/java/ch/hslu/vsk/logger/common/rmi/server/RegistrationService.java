@@ -18,6 +18,13 @@ public interface RegistrationService extends Remote {
     void register(Viewer server) throws RemoteException;
 
     /**
+     * Method to unregister a viewer.
+     * @param viewer to unregister
+     * @throws RemoteException that can be thrown
+     */
+    void unregister(Viewer viewer) throws RemoteException;
+
+    /**
      * Stops the rmi registry.
      * @throws RemoteException that can be thrown
      */
